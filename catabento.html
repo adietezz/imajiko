@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manga Bento Catalog | Imajiko Card Store</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Bento Cyber-Manga Catalog Specific Styles -->
+    <style>
+        :root {
+            --color-manga-black: #121212;
+            --color-manga-white: #ffffff;
+            --color-neon-pink: #fe2c55;
+            --color-neon-blue: #00f0ff;
+            --color-neon-yellow: #e2e77d;
+            --color-neon-purple: #8257e5;
+            --color-neon-green: #00ff66;
+            --color-neon-orange: #ff9900;
+            --color-neon-red: #ff3333;
+            
+            --screentone-dot: radial-gradient(rgba(0, 0, 0, 0.15) 18%, transparent 19%);
+        }
+
+        body.bento-manga-alley {
+            background-color: #0d0914;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(130, 87, 229, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(254, 44, 85, 0.12) 0px, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            font-family: var(--font-modern);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 80px 20px 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- SOUND COMPLIANCE OVERLAY --- */
+        .manga-overlay-start {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(13, 9, 20, 0.98);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .manga-overlay-start.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .manga-start-card {
+            background-color: #ffffff;
+            border: var(--border-thick);
+            box-shadow: 12px 12px 0px #000;
+            color: #121212;
+            max-width: 480px;
+            padding: 40px 30px;
+            text-align: center;
+            background-image: var(--screentone-dot);
+            background-size: 10px 10px;
+            position: relative;
+        }
+        .manga-card-decor {
+            position: absolute;
+            font-family: var(--font-pixel);
+            font-size: 0.6rem;
+            color: rgba(0,0,0,0.15);
+            font-weight: bold;
+        }
+        .manga-card-decor.d1 { top: 15px; left: 15px; }
+        .manga-card-decor.d2 { bottom: 15px; right: 15px; }
+
+        .manga-start-title {
+            font-family: var(--font-pixel);
+            font-size: 1.1rem;
+            color: #fe2c55;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-shadow: 2px 2px 0 #ffd13b;
+        }
+        .manga-start-desc {
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #222;
+            font-weight: 600;
+        }
+        .btn-manga-audio {
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
+            background-color: var(--color-bg-yellow);
+            color: #121212;
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0 #000;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-manga-audio:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        /* --- NAVIGATION LEVER --- */
+        .bento-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .btn-bento-back {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background-color: var(--color-bg-yellow);
+            color: #121212;
+            border: var(--border-thin);
+            box-shadow: 4px 4px 0 #000;
+            padding: 10px 18px;
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-bento-back:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        /* Title block */
+        .bento-header {
+            text-align: center;
+            margin-bottom: 45px;
+            max-width: 750px;
+            z-index: 5;
+        }
+        .bento-header h1 {
+            font-family: var(--font-pixel);
+            font-size: 1.7rem;
+            color: var(--color-bg-yellow);
+            text-shadow: 4px 4px 0 #000, 0 0 20px rgba(226, 231, 125, 0.4);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bento-header p {
+            font-family: var(--font-code);
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        /* --- BENTO COMIC GRID --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 240px;
+            grid-auto-flow: dense;
+            gap: 24px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Individual Bento Panels */
+        .bento-box {
+            background-color: var(--color-manga-white);
+            border: var(--border-thick);
+            color: var(--color-manga-black);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: var(--screentone-dot);
+            background-size: 10px 10px;
+            box-shadow: var(--shadow-flat);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s;
+        }
+
+        /* Box Sizes Spans */
+        .span-tall { grid-column: span 1; grid-row: span 2; }
+        .span-wide { grid-column: span 2; grid-row: span 1; }
+        .span-standard { grid-column: span 1; grid-row: span 1; }
+
+        /* Onomatopoeia Overlay Texts */
+        .manga-sfx-text {
+            position: absolute;
+            font-family: var(--font-pixel);
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.85);
+            -webkit-text-stroke: 1.5px #fff;
+            pointer-events: none;
+            z-index: 4;
+            transition: color 0.3s, transform 0.3s, text-shadow 0.3s;
+        }
+
+        /* Labels and typography inside panel */
+        .bento-box .bento-label-tag {
+            font-family: var(--font-pixel);
+            font-size: 0.5rem;
+            background-color: var(--color-manga-black);
+            color: var(--color-manga-white);
+            padding: 4px 8px;
+            width: fit-content;
+            margin-bottom: 12px;
+            border-radius: 1px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .bento-box .manga-title {
+            font-family: var(--font-pixel);
+            font-size: 0.82rem;
+            color: var(--color-manga-black);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            transition: color 0.3s;
+        }
+        .bento-box .manga-desc {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: #444;
+            margin-bottom: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        /* Grayscale images in normal state */
+        .bento-box .manga-visual-icon {
+            filter: grayscale(1) contrast(1.2);
+            transition: filter 0.3s, transform 0.3s;
+        }
+
+        /* Buy buttons */
+        .btn-manga-buy {
+            padding: 10px 18px;
+            background-color: var(--color-manga-black);
+            color: var(--color-manga-white);
+            border: var(--border-thin);
+            box-shadow: 3px 3px 0 #000;
+            text-decoration: none;
+            font-family: var(--font-pixel);
+            font-size: 0.6rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .bento-price-tag {
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--color-manga-black);
+            transition: color 0.3s;
+        }
+
+        /* --- EXPLOSIVE GLOW HOVER DECORATION --- */
+        .bento-box:hover {
+            transform: translateY(-5px);
+            background-color: #0e0e0e; /* inverted background */
+            color: #ffffff;
+            background-image: repeating-linear-gradient(45deg, #1d1d1d 0px, #1d1d1d 4px, #111111 4px, #111111 8px);
+            border-color: #000;
+        }
+        .bento-box:hover .manga-title {
+            color: #fff;
+        }
+        .bento-box:hover .manga-desc {
+            color: #bbb;
+        }
+        .bento-box:hover .bento-price-tag {
+            color: #fff;
+        }
+        .bento-box:hover .manga-visual-icon {
+            filter: none;
+        }
+
+        /* Custom color shadow presets per box theme */
+        /* Pink (Anniversary, Valentine) */
+        .bento-box.pink-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-pink), 0 0 20px var(--color-neon-pink);
+            background-image: radial-gradient(rgba(254, 44, 85, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #1e1217 0px, #1e1217 4px, #120a0d 4px, #120a0d 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.pink-theme:hover .manga-title { color: var(--color-neon-pink); text-shadow: 0 0 10px rgba(254, 44, 85, 0.6); }
+        .bento-box.pink-theme:hover .manga-sfx-text { color: var(--color-neon-pink); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-pink); transform: scale(1.1) rotate(-5deg); }
+        .bento-box.pink-theme:hover .btn-manga-buy { background-color: var(--color-neon-pink); color: #fff; border-color: #000; }
+        
+        /* Yellow (Birthday) */
+        .bento-box.yellow-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-yellow), 0 0 20px var(--color-neon-yellow);
+            background-image: radial-gradient(rgba(226, 231, 125, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #1e1e12 0px, #1e1e12 4px, #12120a 4px, #12120a 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.yellow-theme:hover .manga-title { color: var(--color-neon-yellow); text-shadow: 0 0 10px rgba(226, 231, 125, 0.6); }
+        .bento-box.yellow-theme:hover .manga-sfx-text { color: var(--color-neon-yellow); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-yellow); transform: scale(1.1) rotate(5deg); }
+        .bento-box.yellow-theme:hover .btn-manga-buy { background-color: var(--color-neon-yellow); color: #000; border-color: #000; }
+
+        /* Blue/Cyan (Graduation, Mother's Day) */
+        .bento-box.blue-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-blue), 0 0 20px var(--color-neon-blue);
+            background-image: radial-gradient(rgba(0, 240, 255, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #121e1e 0px, #121e1e 4px, #0a1212 4px, #0a1212 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.blue-theme:hover .manga-title { color: var(--color-neon-blue); text-shadow: 0 0 10px rgba(0, 240, 255, 0.6); }
+        .bento-box.blue-theme:hover .manga-sfx-text { color: var(--color-neon-blue); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-blue); transform: scale(1.1) rotate(-3deg); }
+        .bento-box.blue-theme:hover .btn-manga-buy { background-color: var(--color-neon-blue); color: #000; border-color: #000; }
+
+        /* Purple (Wedding, Custom Request) */
+        .bento-box.purple-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-purple), 0 0 20px var(--color-neon-purple);
+            background-image: radial-gradient(rgba(130, 87, 229, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #18121e 0px, #18121e 4px, #0e0a12 4px, #0e0a12 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.purple-theme:hover .manga-title { color: var(--color-neon-purple); text-shadow: 0 0 10px rgba(130, 87, 229, 0.6); }
+        .bento-box.purple-theme:hover .manga-sfx-text { color: var(--color-neon-purple); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-purple); transform: scale(1.1) rotate(6deg); }
+        .bento-box.purple-theme:hover .btn-manga-buy { background-color: var(--color-neon-purple); color: #fff; border-color: #000; }
+
+        /* Green (Hari Raya / Mother's Day) */
+        .bento-box.green-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-green), 0 0 20px var(--color-neon-green);
+            background-image: radial-gradient(rgba(0, 255, 102, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #121e12 0px, #121e12 4px, #0a120a 4px, #0a120a 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.green-theme:hover .manga-title { color: var(--color-neon-green); text-shadow: 0 0 10px rgba(0, 255, 102, 0.6); }
+        .bento-box.green-theme:hover .manga-sfx-text { color: var(--color-neon-green); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-green); transform: scale(1.1) rotate(-6deg); }
+        .bento-box.green-theme:hover .btn-manga-buy { background-color: var(--color-neon-green); color: #000; border-color: #000; }
+
+        /* Orange (Thank You) */
+        .bento-box.orange-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-orange), 0 0 20px var(--color-neon-orange);
+            background-image: radial-gradient(rgba(255, 153, 0, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #1e1812 0px, #1e1812 4px, #120f0a 4px, #120f0a 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.orange-theme:hover .manga-title { color: var(--color-neon-orange); text-shadow: 0 0 10px rgba(255, 153, 0, 0.6); }
+        .bento-box.orange-theme:hover .manga-sfx-text { color: var(--color-neon-orange); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-orange); transform: scale(1.1) rotate(-4deg); }
+        .bento-box.orange-theme:hover .btn-manga-buy { background-color: var(--color-neon-orange); color: #000; border-color: #000; }
+
+        /* Red (Christmas / Valentine) */
+        .bento-box.red-theme:hover {
+            box-shadow: 10px 10px 0px var(--color-neon-red), 0 0 20px var(--color-neon-red);
+            background-image: radial-gradient(rgba(255, 51, 51, 0.15) 18%, transparent 19%), repeating-linear-gradient(45deg, #1e1212 0px, #1e1212 4px, #120a0a 4px, #120a0a 8px);
+            background-size: 10px 10px, auto;
+        }
+        .bento-box.red-theme:hover .manga-title { color: var(--color-neon-red); text-shadow: 0 0 10px rgba(255, 51, 51, 0.6); }
+        .bento-box.red-theme:hover .manga-sfx-text { color: var(--color-neon-red); -webkit-text-stroke-color: #000; text-shadow: 0 0 8px var(--color-neon-red); transform: scale(1.1) rotate(5deg); }
+        .bento-box.red-theme:hover .btn-manga-buy { background-color: var(--color-neon-red); color: #fff; border-color: #000; }
+
+        /* --- THE WIDGET CONTAINERS --- */
+        .tall-layout-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .wide-layout-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        /* Preview monitor boxes (LCD matrix screens) */
+        .manga-lcd-screen {
+            background-color: #050803;
+            border: var(--border-thin);
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 12px rgba(0, 255, 102, 0.2);
+        }
+        .manga-lcd-screen::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            z-index: 5;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* --- CSS LIVE PREVIEW ANIMATIONS --- */
+        
+        /* 1. Anniversary heart countdown */
+        .lcd-heart-beat {
+            font-size: 2.2rem;
+            animation: heartPulseManga 0.8s infinite;
+        }
+        @keyframes heartPulseManga {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.18); }
+        }
+        .lcd-countdown-timer {
+            font-family: var(--font-pixel);
+            font-size: 6px;
+            color: #fff;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--color-neon-pink);
+            padding: 3px 5px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+
+        /* 2. Birthday candle & balloons */
+        .lcd-candle {
+            width: 8px;
+            height: 35px;
+            background: linear-gradient(to right, #ff4c4c, #ff9999);
+            border-radius: 1px;
+            position: relative;
+        }
+        .lcd-candle::after {
+            content: '';
+            position: absolute;
+            top: -9px; left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 10px;
+            background-color: #ff9900;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 8px #ff9900, 0 0 15px #ff3300;
+            animation: candleFlicker 0.15s infinite alternate;
+        }
+        @keyframes candleFlicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+        }
+        .lcd-balloons-box {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .lcd-balloon-el {
+            position: absolute;
+            bottom: -25px;
+            width: 10px;
+            height: 14px;
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: floatBalloonUpManga 3.8s linear infinite;
+        }
+        @keyframes floatBalloonUpManga {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-240px) rotate(15deg); }
+        }
+
+        /* 3. Graduation mortarboard */
+        .lcd-toga-hat {
+            width: 32px;
+            height: 9px;
+            background-color: var(--color-neon-blue);
+            box-shadow: 0 0 8px var(--color-neon-blue);
+            transform: rotate(-10deg);
+            animation: floatHatManga 2s ease-in-out infinite;
+            position: relative;
+        }
+        .lcd-toga-hat::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: 3px;
+            width: 26px;
+            height: 6px;
+            background-color: var(--color-neon-blue);
+            transform: skewX(-45deg);
+        }
+        @keyframes floatHatManga {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-6px) rotate(-6deg); }
+        }
+        .lcd-toga-float-box {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+        }
+        .lcd-flying-cap {
+            position: absolute;
+            font-size: 9px;
+            animation: flyCapManga 3s linear infinite;
+        }
+        @keyframes flyCapManga {
+            0% { transform: translateY(220px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10px) rotate(360deg); opacity: 0; }
+        }
+
+        /* 4. Wedding Sakura petals float */
+        .lcd-wedding-rings {
+            font-size: 2.2rem;
+            color: var(--color-neon-purple);
+            text-shadow: 0 0 8px var(--color-neon-purple);
+            animation: rotateRings 6s infinite linear;
+        }
+        @keyframes rotateRings {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .lcd-wedding-flower {
+            position: absolute;
+            font-size: 8px;
+            color: #ffb3d9;
+            animation: fallFlower 4s linear infinite;
+        }
+        @keyframes fallFlower {
+            0% { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.9; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(200px) translateX(40px) rotate(360deg); opacity: 0; }
+        }
+
+        /* 5. Mother's Day Rose growing */
+        .lcd-rose-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 60px;
+            position: relative;
+        }
+        .lcd-rose-stem {
+            width: 3px;
+            height: 0px;
+            background-color: var(--color-neon-green);
+            box-shadow: 0 0 5px var(--color-neon-green);
+            animation: growStem 4s infinite ease-in-out;
+            position: relative;
+        }
+        .lcd-rose-flower {
+            font-size: 1.4rem;
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            animation: bloomRose 4s infinite ease-in-out;
+        }
+        @keyframes growStem {
+            0%, 20% { height: 0px; }
+            70%, 100% { height: 40px; }
+        }
+        @keyframes bloomRose {
+            0%, 55% { transform: translateX(-50%) scale(0); }
+            80%, 100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* 6. Valentine's Day Heart shooting */
+        .lcd-cupid-heart {
+            font-size: 1.8rem;
+            color: var(--color-neon-red);
+            text-shadow: 0 0 10px var(--color-neon-red);
+            animation: beatHeart 0.6s infinite alternate;
+        }
+        .lcd-floating-hearts {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+        }
+        .lcd-mini-heart {
+            position: absolute;
+            font-size: 8px;
+            color: #ff3333;
+            animation: floatHearts 3.5s linear infinite;
+        }
+        @keyframes floatHearts {
+            0% { transform: translateY(120px) translateX(0) scale(0.5); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-20px) translateX(-30px) scale(1); opacity: 0; }
+        }
+
+        /* 7. Idul Fitri Crescent Moon & twinking stars */
+        .lcd-crescent-moon {
+            font-size: 2rem;
+            color: var(--color-neon-green);
+            text-shadow: 0 0 12px var(--color-neon-green);
+            animation: floatMoon 3s ease-in-out infinite;
+        }
+        @keyframes floatMoon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(5deg); }
+        }
+        .lcd-star-twinkle {
+            position: absolute;
+            font-size: 6px;
+            color: #ffd13b;
+            animation: starFlicker 1.5s infinite alternate;
+        }
+        @keyframes starFlicker {
+            0% { opacity: 0.2; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* 8. Christmas Snowy tree */
+        .lcd-snow-box {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .lcd-christmas-tree {
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            animation: pulseTree 2s infinite alternate;
+        }
+        @keyframes pulseTree {
+            0% { transform: scale(0.95); filter: hue-rotate(0deg); }
+            100% { transform: scale(1.05); filter: hue-rotate(45deg); }
+        }
+        .lcd-snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 6px;
+            pointer-events: none;
+            animation: fallSnow 4s linear infinite;
+        }
+        @keyframes fallSnow {
+            0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(180px) translateX(20px); opacity: 0; }
+        }
+
+        /* 9. Thank You stars */
+        .lcd-thanks-bubble {
+            font-family: var(--font-pixel);
+            font-size: 6.5px;
+            color: #ff9900;
+            border: 1.5px solid #ff9900;
+            padding: 4px 6px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255, 153, 0, 0.5);
+            animation: wobbleBubble 2s infinite ease-in-out;
+        }
+        @keyframes wobbleBubble {
+            0%, 100% { transform: scale(1) rotate(-3deg); }
+            50% { transform: scale(1.05) rotate(3deg); }
+        }
+        .lcd-star-sparkle {
+            position: absolute;
+            font-size: 10px;
+            color: #ffd13b;
+            animation: popSparkle 1s ease-out infinite;
+        }
+        @keyframes popSparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.2) rotate(180deg); opacity: 0; }
+        }
+
+        /* 10. Custom Request blinking terminal cursor */
+        .lcd-console-window {
+            width: 85%;
+            font-family: var(--font-code);
+            font-size: 1.1rem;
+            color: var(--color-neon-blue);
+            text-align: left;
+            padding-left: 10px;
+        }
+        .lcd-console-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: var(--color-neon-blue);
+            box-shadow: 0 0 5px var(--color-neon-blue);
+            animation: blinkCursor 0.8s infinite alternate;
+        }
+        @keyframes blinkCursor {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* --- MOBILE LAYOUT STACK RULES --- */
+        @media (max-width: 991px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+            }
+            .span-tall, .span-wide, .span-standard {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+            }
+            .bento-box {
+                min-height: 280px;
+                height: auto;
+            }
+            .tall-layout-container {
+                height: auto;
+                min-height: 240px;
+            }
+            .tall-preview-monitor {
+                height: 160px;
+            }
+            .wide-layout-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+            }
+            .wide-monitor-screen {
+                height: 160px;
+            }
+            .manga-lcd-screen {
+                height: 160px;
+            }
+        }
+
+        /* --- CATEGORY FILTER BAR --- */
+        .bento-filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: -10px auto 45px auto;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 10px;
+        }
+        .bento-filter-btn {
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            font-weight: bold;
+            background-color: var(--color-manga-white);
+            color: var(--color-manga-black);
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0px #000;
+            padding: 12px 22px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transform: skewX(-10deg);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s, color 0.2s, border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            outline: none;
+        }
+        .bento-filter-btn span.jp-char {
+            font-size: 0.55rem;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .bento-filter-btn:hover {
+            transform: skewX(-10deg) translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--hover-glow-color, var(--color-neon-pink));
+            background-color: var(--color-manga-black);
+            color: var(--color-manga-white);
+        }
+        .bento-filter-btn.active {
+            background-color: var(--color-manga-black);
+            color: var(--color-manga-white);
+            border-color: var(--active-border-color, var(--color-neon-yellow));
+            box-shadow: 6px 6px 0px var(--active-glow-color, var(--color-neon-yellow));
+            transform: skewX(-10deg) translate(-2px, -2px);
+        }
+        
+        /* Hide panel animation and class */
+        .bento-box.hide-panel {
+            display: none !important;
+        }
+
+        @keyframes panelPop {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body class="bento-manga-alley">
+
+    <!-- 1. STREET NAVIGATION -->
+    <div class="bento-nav">
+        <a href="index.html" class="btn-bento-back">⬅ KEMBALI KE STORE</a>
+    </div>
+
+    <!-- 2. AUDIO LOADER COMPLIANCE TRIGGER -->
+    <div id="bentoInitOverlay" class="manga-overlay-start">
+        <div class="manga-start-card">
+            <div class="manga-card-decor d1">HARAJUKU POP</div>
+            <div class="manga-card-decor d2">CYBER MANGA</div>
+            
+            <h2 class="manga-start-title">🕹️ CYBER-MANGA BENTO CATALOG 🕹️</h2>
+            <p class="manga-start-desc">Halaman ini memuat Bento Box Catalog bertema pop-art komik Jepang (Persona 5/ZZZ style) dengan screentone panel, onomatopoeia, dan visual preview murni CSS. Tekan tombol untuk memulai.</p>
+            <button id="btnInitBento" class="btn-manga-audio">AKTIFKAN BENTO</button>
+        </div>
+    </div>
+
+    <!-- 3. TOP TYPOGRAPHY -->
+    <header class="bento-header">
+        <h1>MANGA BENTO CATALOG</h1>
+        <p>10 Template Website Ucapan dan Undangan Kreatif yang disusun dalam panel screentone pop-art dengan ledakan neon hover.</p>
+    </header>
+
+    <!-- CATEGORY FILTER BAR -->
+    <div class="bento-filter-container">
+        <button class="bento-filter-btn active" data-category="all" style="--hover-glow-color: var(--color-neon-yellow); --active-glow-color: var(--color-neon-yellow); --active-border-color: var(--color-neon-yellow);">
+            ALL <span class="jp-char">全て</span>
+        </button>
+        <button class="bento-filter-btn" data-category="ucapan" style="--hover-glow-color: var(--color-neon-pink); --active-glow-color: var(--color-neon-pink); --active-border-color: var(--color-neon-pink);">
+            UCAPAN <span class="jp-char">祝い</span>
+        </button>
+        <button class="bento-filter-btn" data-category="undangan" style="--hover-glow-color: var(--color-neon-blue); --active-glow-color: var(--color-neon-blue); --active-border-color: var(--color-neon-blue);">
+            UNDANGAN <span class="jp-char">招待</span>
+        </button>
+        <button class="bento-filter-btn" data-category="kustom" style="--hover-glow-color: var(--color-neon-purple); --active-glow-color: var(--color-neon-purple); --active-border-color: var(--color-neon-purple);">
+            KUSTOM <span class="jp-char">カスタム</span>
+        </button>
+    </div>
+
+    <!-- 4. CYBER-MANGA BENTO GRIDS (10 Product Panels) -->
+    <main class="bento-grid">
+        
+        <!-- Template 1: Anniversary (Tall, spans 1 col, 2 rows) -->
+        <section class="bento-box span-tall pink-theme" id="card-anniversary" data-category="ucapan">
+            <div class="manga-sfx-text" style="top: 20px; right: 20px; transform: rotate(15deg);">ゴゴゴ...</div>
+            <div class="tall-layout-container">
+                <div>
+                    <div class="bento-label-tag">ITEM 01</div>
+                    <h2 class="manga-title">ANNIVERSARY<br>アニバーサリー</h2>
+                    <p class="manga-desc">Hadiah romantis dengan hitung waktu jadian, amplop surat cinta interaktif, dan album foto kenangan.</p>
+                </div>
+                
+                <div class="manga-lcd-screen" style="height: 180px; margin: 15px 0;">
+                    <span class="manga-visual-icon lcd-heart-beat">💖</span>
+                    <div class="lcd-countdown-timer">00d : 12h : 44m : 55s</div>
+                </div>
+                
+                <div class="bento-action-row">
+                    <span class="bento-price-tag">Rp 45.000</span>
+                    <a href="https://lynk.id/imajiko/anniv" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 2: Birthday (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide yellow-theme" id="card-birthday" data-category="ucapan">
+            <div class="manga-sfx-text" style="top: 15px; left: 45%; transform: rotate(-5deg);">ドドド!</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">ITEM 02</div>
+                        <h2 class="manga-title">HAPPY BIRTHDAY / 誕生日</h2>
+                        <p class="manga-desc">Kejutan ulang tahun spesial dengan lilin digital interaktif yang bisa ditiup dan balon warna-warni terbang.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">Rp 35.000</span>
+                        <a href="https://lynk.id/imajiko/ultah" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-candle"></div>
+                    <div class="lcd-balloons-box" id="mangaBalloons"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 3: Graduation (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide blue-theme" id="card-graduation" data-category="ucapan">
+            <div class="manga-sfx-text" style="bottom: 80px; left: 42%; transform: rotate(10deg);">シャキーン!</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">ITEM 03</div>
+                        <h2 class="manga-title">GRADUATION / 卒業</h2>
+                        <p class="manga-desc">Scrapbook kenangan wisuda kuliah/sekolah dengan interaksi lempar topi toga kelulusan terbang.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">Rp 39.000</span>
+                        <a href="https://lynk.id/imajiko/wisuda" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-toga-hat"></div>
+                    <div class="lcd-toga-float-box" id="mangaGradCaps"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 4: Wedding (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide purple-theme" id="card-wedding" data-category="undangan">
+            <div class="manga-sfx-text" style="top: 20px; left: 45%; transform: rotate(-8deg);">フワフワ~</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">ITEM 04</div>
+                        <h2 class="manga-title">WEDDING INV / 結婚式</h2>
+                        <p class="manga-desc">Undangan pernikahan digital premium dengan peta rute, galeri scrapbook, lagu romantis, dan RSVP form.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">Rp 49.000</span>
+                        <a href="https://lynk.id/imajiko/wedding" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-wedding-rings">💍💍</div>
+                    <div class="lcd-toga-float-box" id="mangaWeddingSakura"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 5: Mother's Day (Standard, spans 1 col, 1 row) -->
+        <section class="bento-box span-standard green-theme" id="card-mothersday" data-category="ucapan">
+            <div class="manga-sfx-text" style="bottom: 20px; right: 20px; transform: rotate(-15deg); font-size: 0.95rem;">アリガトウ</div>
+            <div class="tall-layout-container">
+                <div>
+                    <div class="bento-label-tag">ITEM 05</div>
+                    <h2 class="manga-title">MOTHER'S DAY / 母の日</h2>
+                </div>
+                
+                <div class="manga-lcd-screen" style="height: 80px; margin-bottom: 10px;">
+                    <div class="manga-visual-icon lcd-rose-box">
+                        <div class="lcd-rose-stem"></div>
+                        <span class="lcd-rose-flower">🌹</span>
+                    </div>
+                </div>
+                
+                <div class="bento-action-row">
+                    <span class="bento-price-tag">Rp 29.000</span>
+                    <a href="https://lynk.id/imajiko/ibu" target="_blank" class="btn-manga-buy" style="padding: 6px 12px; font-size: 0.55rem;">MILIKI</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 6: Valentine's (Standard, spans 1 col, 1 row) -->
+        <section class="bento-box span-standard red-theme" id="card-valentines" data-category="ucapan">
+            <div class="manga-sfx-text" style="top: 20px; right: 20px; transform: rotate(12deg); font-size: 0.95rem;">キュン!</div>
+            <div class="tall-layout-container">
+                <div>
+                    <div class="bento-label-tag">ITEM 06</div>
+                    <h2 class="manga-title">VALENTINE / バレンタイン</h2>
+                </div>
+                
+                <div class="manga-lcd-screen" style="height: 80px; margin-bottom: 10px;">
+                    <div class="manga-visual-icon lcd-cupid-heart">💘</div>
+                    <div class="lcd-floating-hearts" id="mangaValentineHearts"></div>
+                </div>
+                
+                <div class="bento-action-row">
+                    <span class="bento-price-tag">Rp 35.000</span>
+                    <a href="https://lynk.id/imajiko/val" target="_blank" class="btn-manga-buy" style="padding: 6px 12px; font-size: 0.55rem;">MILIKI</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 7: Hari Raya / Idul Fitri (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide green-theme" id="card-hariraya" data-category="undangan">
+            <div class="manga-sfx-text" style="top: 15px; left: 45%; transform: rotate(-5deg);">ピカピカ!</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">ITEM 07</div>
+                        <h2 class="manga-title">IDUL FITRI / イドゥル</h2>
+                        <p class="manga-desc">Undangan silaturahmi & ucapan maaf lahir batin digital dengan ornamen lentera gantung dan musik takbiran syahdu.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">Rp 32.000</span>
+                        <a href="https://lynk.id/imajiko/fitri" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-crescent-moon">🌙</div>
+                    <div class="lcd-toga-float-box" id="mangaHariRayaStars"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 8: Christmas (Tall, spans 1 col, 2 rows) -->
+        <section class="bento-box span-tall red-theme" id="card-christmas" data-category="ucapan">
+            <div class="manga-sfx-text" style="bottom: 80px; right: 20px; transform: rotate(-10deg);">シャンシャン!</div>
+            <div class="tall-layout-container">
+                <div>
+                    <div class="bento-label-tag">ITEM 08</div>
+                    <h2 class="manga-title">CHRISTMAS / クリスマス</h2>
+                    <p class="manga-desc">Kartu ucapan selamat natal hangat dengan efek salju berjatuhan di layar, hiasan pohon natal kelap-kelip, dan instrumen jingle bells.</p>
+                </div>
+                
+                <div class="manga-lcd-screen" style="height: 180px; margin: 15px 0;">
+                    <div class="manga-visual-icon lcd-snow-box">
+                        <span class="lcd-christmas-tree">🎄</span>
+                        <div class="lcd-toga-float-box" id="mangaChristmasSnow"></div>
+                    </div>
+                </div>
+                
+                <div class="bento-action-row">
+                    <span class="bento-price-tag">Rp 35.000</span>
+                    <a href="https://lynk.id/imajiko/natal" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 9: Thank You (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide orange-theme" id="card-thankyou" data-category="ucapan">
+            <div class="manga-sfx-text" style="top: 20px; left: 45%; transform: rotate(8deg);">キラキラ~</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">ITEM 09</div>
+                        <h2 class="manga-title">THANK YOU / 感謝</h2>
+                        <p class="manga-desc">Pesan terima kasih personal interaktif untuk teman, rekan kerja, atau klien dengan animasi kembang api digital yang meriah.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">Rp 25.000</span>
+                        <a href="https://lynk.id/imajiko/thanks" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-thanks-bubble">arigatou!</div>
+                    <div class="lcd-toga-float-box" id="mangaThanksSparkles"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template 10: Custom Request (Wide, spans 2 cols, 1 row) -->
+        <section class="bento-box span-wide purple-theme" id="card-customreq" data-category="kustom">
+            <div class="manga-sfx-text" style="bottom: 75px; left: 45%; transform: rotate(-5deg);">シャキーン!</div>
+            <div class="wide-layout-container">
+                <div class="tall-layout-container">
+                    <div>
+                        <div class="bento-label-tag">CUSTOM ORDER</div>
+                        <h2 class="manga-title">CUSTOM REQUEST / オーダー</h2>
+                        <p class="manga-desc">Ingin desain kustom diluar template? Konsultasikan ide undangan/ucapan impianmu langsung dengan tim developer profesional kami.</p>
+                    </div>
+                    <div class="bento-action-row">
+                        <span class="bento-price-tag">TANYA ADMIN</span>
+                        <a href="https://lynk.id/imajiko/custom" target="_blank" class="btn-manga-buy">KONSULTASI WA</a>
+                    </div>
+                </div>
+                
+                <div class="manga-lcd-screen">
+                    <div class="manga-visual-icon lcd-console-window">
+                        <span>> IMAJIKO_</span><span class="lcd-console-cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/sound.js"></script>
+    <script>
+        const bentoInitOverlay = document.getElementById("bentoInitOverlay");
+        const btnInitBento = document.getElementById("btnInitBento");
+
+        // Initialize Audio engine on gesture
+        btnInitBento.addEventListener("click", () => {
+            bentoInitOverlay.classList.add("hidden");
+            window.Sound.init();
+            window.Sound.playGameStart();
+            window.Sound.startBGM();
+        });
+
+        // Trigger chiptune blip playHover() on entering bento panels
+        const bentoBoxes = document.querySelectorAll(".bento-box");
+        bentoBoxes.forEach(box => {
+            box.addEventListener("mouseenter", () => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    window.Sound.playHover();
+                }
+            });
+        });
+
+        // Category filtering logic
+        const filterButtons = document.querySelectorAll(".bento-filter-btn");
+        filterButtons.forEach(btn => {
+            btn.addEventListener("mouseenter", () => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    window.Sound.playHover();
+                }
+            });
+
+            btn.addEventListener("click", () => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    window.Sound.playClick();
+                }
+
+                filterButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                const category = btn.getAttribute("data-category");
+
+                bentoBoxes.forEach(box => {
+                    const boxCategory = box.getAttribute("data-category");
+                    if (category === "all" || boxCategory === category) {
+                        box.classList.remove("hide-panel");
+                        // Reset animation to pop again
+                        box.style.animation = "none";
+                        box.offsetHeight; /* trigger reflow */
+                        box.style.animation = "panelPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    } else {
+                        box.classList.add("hide-panel");
+                    }
+                });
+            });
+        });
+
+        // Previews Sub-animations
+        function initMangaPreviews() {
+            // 1. Balloons (Birthday)
+            const mangaBalloons = document.getElementById("mangaBalloons");
+            const balloonColors = ["#fe2c55", "#ca1437", "#ffd13b", "#ffe675", "#00ff66", "#00f0ff"];
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const b = document.createElement("div");
+                    b.className = "lcd-balloon-el";
+                    b.style.backgroundColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                    b.style.left = `${5 + Math.random() * 90}%`;
+                    b.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    mangaBalloons.appendChild(b);
+                    setTimeout(() => b.remove(), 5000);
+                }
+            }, 800);
+
+            // 2. Caps (Graduation)
+            const mangaGradCaps = document.getElementById("mangaGradCaps");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const cap = document.createElement("span");
+                    cap.className = "lcd-flying-cap";
+                    cap.textContent = "🎓";
+                    cap.style.left = `${5 + Math.random() * 90}%`;
+                    cap.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    mangaGradCaps.appendChild(cap);
+                    setTimeout(() => cap.remove(), 5000);
+                }
+            }, 700);
+
+            // 3. Wedding Sakura petals
+            const mangaWeddingSakura = document.getElementById("mangaWeddingSakura");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const petal = document.createElement("span");
+                    petal.className = "lcd-wedding-flower";
+                    petal.textContent = "🌸";
+                    petal.style.left = `${5 + Math.random() * 90}%`;
+                    petal.style.animationDuration = `${3.5 + Math.random() * 1.5}s`;
+                    mangaWeddingSakura.appendChild(petal);
+                    setTimeout(() => petal.remove(), 5000);
+                }
+            }, 600);
+
+            // 4. Valentine's mini hearts
+            const mangaValentineHearts = document.getElementById("mangaValentineHearts");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const heart = document.createElement("span");
+                    heart.className = "lcd-mini-heart";
+                    heart.textContent = "❤️";
+                    heart.style.left = `${15 + Math.random() * 70}%`;
+                    heart.style.animationDuration = `${3 + Math.random() * 1.5}s`;
+                    mangaValentineHearts.appendChild(heart);
+                    setTimeout(() => heart.remove(), 4500);
+                }
+            }, 500);
+
+            // 5. Twinkling Stars (Hari Raya)
+            const mangaHariRayaStars = document.getElementById("mangaHariRayaStars");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const star = document.createElement("span");
+                    star.className = "lcd-star-twinkle";
+                    star.textContent = "⭐";
+                    star.style.left = `${5 + Math.random() * 90}%`;
+                    star.style.top = `${5 + Math.random() * 85}%`;
+                    mangaHariRayaStars.appendChild(star);
+                    setTimeout(() => star.remove(), 3000);
+                }
+            }, 400);
+
+            // 6. Snowflakes (Christmas)
+            const mangaChristmasSnow = document.getElementById("mangaChristmasSnow");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const snow = document.createElement("span");
+                    snow.className = "lcd-snowflake";
+                    snow.textContent = "❄️";
+                    snow.style.left = `${5 + Math.random() * 90}%`;
+                    snow.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    mangaChristmasSnow.appendChild(snow);
+                    setTimeout(() => snow.remove(), 5000);
+                }
+            }, 450);
+
+            // 7. Pop Sparkles (Thank You)
+            const mangaThanksSparkles = document.getElementById("mangaThanksSparkles");
+            setInterval(() => {
+                if (bentoInitOverlay.classList.contains("hidden")) {
+                    const sparkle = document.createElement("span");
+                    sparkle.className = "lcd-star-sparkle";
+                    sparkle.textContent = "✨";
+                    sparkle.style.left = `${10 + Math.random() * 80}%`;
+                    sparkle.style.top = `${10 + Math.random() * 80}%`;
+                    mangaThanksSparkles.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1000);
+                }
+            }, 300);
+        }
+        initMangaPreviews();
+    </script>
+</body>
+
+</html>

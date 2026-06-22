@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Imajiko Collectible Card Shop | Kartu Ucapan Digital Epik</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="Koleksi kartu ucapan digital terkeren bertema pixel art Jepang (Sengan-ji, Gunung Fuji, Shibuya) dengan efek 3D tilt, holografik foil SSR, suara retro, dan animasi interaktif.">
+    <meta name="keywords" content="kartu ucapan digital, pixel art, collectible cards, card store, 3d tilt card, hologram card, imajiko">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css?v=2.7">
+    
+    <!-- Specific Collectible Card Styles -->
+    <style>
+        :root {
+            --color-manga-black: #121212;
+            --color-manga-white: #ffffff;
+            --color-neon-pink: #fe2c55;
+            --color-neon-blue: #00f0ff;
+            --color-neon-yellow: #e2e77d;
+            --color-neon-purple: #8257e5;
+            --color-neon-green: #00ff66;
+            --color-neon-orange: #ff9900;
+            --color-neon-red: #ff3333;
+            
+            --screentone-dot: radial-gradient(rgba(0, 0, 0, 0.15) 18%, transparent 19%);
+        }
+
+        body.collect-alley {
+            background-color: #0b0713;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(130, 87, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(254, 44, 85, 0.15) 0px, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            font-family: var(--font-modern);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 80px 20px 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- AUDIO LOADER COMPLIANCE OVERLAY --- */
+        .collect-overlay-start {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(11, 7, 19, 0.98);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .collect-overlay-start.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .collect-start-card {
+            background-color: #ffffff;
+            border: var(--border-thick);
+            box-shadow: 12px 12px 0px #000;
+            color: #121212;
+            max-width: 480px;
+            padding: 40px 30px;
+            text-align: center;
+            background-image: var(--screentone-dot);
+            background-size: 10px 10px;
+            position: relative;
+        }
+        .collect-card-decor {
+            position: absolute;
+            font-family: var(--font-pixel);
+            font-size: 0.6rem;
+            color: rgba(0,0,0,0.15);
+            font-weight: bold;
+        }
+        .collect-card-decor.d1 { top: 15px; left: 15px; }
+        .collect-card-decor.d2 { bottom: 15px; right: 15px; }
+
+        .collect-start-title {
+            font-family: var(--font-pixel);
+            font-size: 1.1rem;
+            color: var(--color-neon-pink);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-shadow: 2px 2px 0 #ffd13b;
+        }
+        .collect-start-desc {
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #222;
+            font-weight: 600;
+        }
+        .btn-collect-audio {
+            font-family: var(--font-pixel);
+            font-size: 0.75rem;
+            background-color: var(--color-bg-yellow);
+            color: #121212;
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0 #000;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-collect-audio:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        /* --- NAVIGATION --- */
+        .collect-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .btn-collect-back {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background-color: var(--color-bg-yellow);
+            color: #121212;
+            border: var(--border-thin);
+            box-shadow: 4px 4px 0 #000;
+            padding: 10px 18px;
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-collect-back:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        /* Header typography */
+        .collect-header {
+            text-align: center;
+            margin-bottom: 10px;
+            max-width: 800px;
+            z-index: 5;
+        }
+        .collect-header h1 {
+            font-family: var(--font-pixel);
+            font-size: 1.7rem;
+            color: var(--color-bg-yellow);
+            text-shadow: 4px 4px 0 #000, 0 0 20px rgba(226, 231, 125, 0.4);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .collect-header p {
+            font-family: var(--font-modern);
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body class="collect-alley">
+
+    <!-- 1. STREET NAVIGATION -->
+    <div class="collect-nav">
+        <a href="index.html" class="btn-collect-back">⬅ KEMBALI KE STORE</a>
+    </div>
+
+    <!-- 2. AUDIO LOADER COMPLIANCE TRIGGER -->
+    <div id="collectInitOverlay" class="collect-overlay-start">
+        <div class="collect-start-card">
+            <div class="collect-card-decor d1">IMAJIKO SHOP</div>
+            <div class="collect-card-decor d2">BEST DEAL COLLECTIBLE</div>
+            
+            <h2 class="collect-start-title">🕹️ IMAJIKO CARD SHOP 🕹️</h2>
+            <p class="collect-start-desc">Halaman ini memuat Koleksi Kartu Ucapan Digital Epik bertema pixel art Jepang dengan efek 3D tilt responsif, hologram rare foil (Best Deal), dan audio retro. Tekan tombol untuk membuka dek.</p>
+            <button id="btnInitCollect" class="btn-collect-audio">AKTIFKAN DEK KARTU</button>
+        </div>
+    </div>
+
+    <header class="collect-header">
+        <h1>IMAJIKO CARD DECK</h1>
+        <p>Koleksi Kartu Ucapan Digital Epik untuk Momen Spesialmu! Gerakkan mouse untuk memiringkan hologram kartu (Best Deal) atau ketuk untuk melihat isinya.</p>
+    </header>
+
+    <!-- CATEGORY FILTER BAR -->
+    <div class="category-filter-bar">
+        <button class="btn-filter active" data-filter="all">SEMUA KARTU</button>
+        <button class="btn-filter" data-filter="birthday">🎂 ULANG TAHUN</button>
+        <button class="btn-filter" data-filter="anniversary">💖 ANNIVERSARY</button>
+        <button class="btn-filter" data-filter="graduation">🎓 WISUDA</button>
+        <button class="btn-filter" data-filter="festive">🌸 EDISI KHUSUS</button>
+    </div>
+
+    <!-- 4. CARDS GRID CONTAINER -->
+    <main class="cards-grid-wrapper" id="cardsGrid">
+        
+        <!-- CARD 1: Birthday (Senganto visual) -->
+        <div class="card-container" id="card-birthday" data-category="birthday">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_pagoda.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #02</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">SENGANTO BIRTHDAY / 誕生日</h2>
+                        <p class="card-back-desc">Kejutan ulang tahun spesial bernuansa kuil pagoda retro. Lengkap dengan lilin tiup digital interaktif dan balon terbang.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-candle"></div>
+                        <div class="lcd-balloons-box" id="birthdayBalloons"></div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 35.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/ultah" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2: Anniversary (Fuji visual) -->
+        <div class="card-container" id="card-anniversary" data-category="anniversary">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_fuji.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #01</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">FUJI ANNIVERSARY / 記念日</h2>
+                        <p class="card-back-desc">Ungkapkan perasaan cintamu berlatar Gunung Fuji yang syahdu. Fitur hitung mundur jadian dan amplop surat cinta.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <span class="lcd-heart-beat">💖</span>
+                        <div class="lcd-countdown-timer">00d : 12h : 44m : 55s</div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 45.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/anniv" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3: Graduation (Shibuya visual) -->
+        <div class="card-container" id="card-graduation" data-category="graduation">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_shibuya.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #03</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">SHIBUYA GRADUATION / 卒業</h2>
+                        <p class="card-back-desc">Rayakan kelulusan kuliah/sekolah di megahnya jalanan neon Shibuya. Fitur interaktif melempar toga kelulusan.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-toga-hat"></div>
+                        <div class="lcd-toga-float-box" id="graduationCaps"></div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 39.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/wisuda" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 4: Retro Arcade Birthday (Arcade visual) -->
+        <div class="card-container" id="card-retro-birthday" data-category="birthday">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_retro_arcade.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #04</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">RETRO ARCADE BIRTHDAY / 誕生日</h2>
+                        <p class="card-back-desc">Rayakan ulang tahun bergaya gamer 80-an dengan lilin neon tiup dan kabinet arcade interaktif.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-arcade-screen">
+                            1UP LEVEL UP!<br>🎂 Press Start 🕹️
+                        </div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 37.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/ultah" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 5: Sakura Confession (Sakura visual) -->
+        <div class="card-container" id="card-sakura-anniv" data-category="anniversary">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_sakura.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #05</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">SAKURA CONFESSION / 告白</h2>
+                        <p class="card-back-desc">Ungkapkan cinta berlatar jembatan sakura romantis dengan kelopak bunga berguguran di layar ponsel.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-sakura-float-box" id="sakuraPetals"></div>
+                        <span class="lcd-heart-beat">🌸</span>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 42.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/anniv" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 6: Kyoto Starry Night (Starry night visual) -->
+        <div class="card-container" id="card-kyoto-starry" data-category="anniversary">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_starry_night.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #06</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">KYOTO STARRY NIGHT / 記念日</h2>
+                        <p class="card-back-desc">Ungkapkan momen anniversary di sejuknya Kyoto dengan pemandangan rasi bintang berkelip yang indah.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-stars-box" id="starryStars"></div>
+                        <span class="lcd-moon">🌙</span>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 47.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/anniv" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 7: Harajuku Graduation (Harajuku visual) -->
+        <div class="card-container" id="card-harajuku-grad" data-category="graduation">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_shibuya.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #07</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">HARAJUKU GRADUATION / 卒業</h2>
+                        <p class="card-back-desc">Rayakan kelulusan meriah bertema Harajuku dengan street fashion pixelated yang unik dan estetik.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-harajuku-run">🎓🏃‍♀️💨✨</div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 39.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/wisuda" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 8: Eid Mubarak Pixel (Eid visual) -->
+        <div class="card-container" id="card-eid-mubarak" data-category="festive">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_pagoda.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #08</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">EID MUBARAK PIXEL / 祝日</h2>
+                        <p class="card-back-desc">Kartu ucapan Lebaran digital bertema masjid pixel art Jepang dengan dekorasi lampion bersinar interaktif.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-lantern-glow">🏮✨</div>
+                        <div class="lcd-crescent">🌙⭐ EID MUBARAK</div>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 35.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/lebaran" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 9: Neon Christmas (Christmas visual) -->
+        <div class="card-container" id="card-neon-christmas" data-category="festive">
+            <div class="card-inner">
+                <div class="card-face card-front" style="background-image: url('images/card_neon_christmas.png');">
+                    <div class="card-glare"></div>
+                    <div class="card-hologram"></div>
+                    <div class="card-rarity-badge">BEST DEAL</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-back-header">
+                        <span class="card-back-rarity">BEST DEAL #09</span>
+                        <button class="btn-flip-back" title="Balik Kartu">↺</button>
+                    </div>
+                    <div class="card-back-info">
+                        <h2 class="card-back-title">NEON CHRISTMAS CABIN / クリスマス</h2>
+                        <p class="card-back-desc">Ucapan Natal bersalju di pondok kayu Jepang, lengkap dengan efek hujan salju neon di layar handphone.</p>
+                    </div>
+                    <div class="card-lcd-preview">
+                        <div class="lcd-snow-box" id="christmasSnow"></div>
+                        <span>❄️🎄 MERRY XMAS</span>
+                    </div>
+                    <div class="card-back-action">
+                        <span class="card-price">Rp 35.000</span>
+                        <div class="card-action-buttons">
+                            <a href="https://tiktok.com/@imajiko.store" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
+                                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39V186.36A210.76,210.76,0,0,1,448,209.91Z"/>
+                                </svg>
+                            </a>
+                            <a href="https://lynk.id/imajiko/natal" target="_blank" class="btn-manga-buy">MILIKI SEKARANG</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 5. SINGLE RETRO CURSOR ELEMENTS (NO TRAILS) -->
+    <div id="cursor" class="custom-cursor">
+        <svg viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0V26.2L7.3 19.3L11.5 28L15.7 26L11.5 17.3L19 17.3L0 0Z" fill="white" stroke="black"
+                stroke-width="2.5" stroke-linejoin="miter" />
+        </svg>
+    </div>
+    <div id="pointer" class="custom-cursor other">
+        <svg viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M7 6V1C7 0.45 6.55 0 6 0C5.45 0 5 0.45 5 1V13.8L3.2 13C2.85 12.85 2.45 13 2.25 13.35C2.1 13.65 2.15 14.05 2.45 14.25L7.2 18.25V24C7.2 24.55 7.65 25 8.2 25H16.2C16.75 25 17.2 24.55 17.2 24V14C17.2 13.45 16.75 13 16.2 13H15.2V10C15.2 9.45 14.75 9 14.2 9H13.2V8C13.2 7.45 12.75 7 12.2 7H11.2V6C11.2 5.45 10.75 5 10.2 5H7.2Z"
+                fill="white" stroke="black" stroke-width="2.5" />
+        </svg>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/sound.js"></script>
+    <script>
+        const collectInitOverlay = document.getElementById("collectInitOverlay");
+        const btnInitCollect = document.getElementById("btnInitCollect");
+
+        // Audio Activation
+        btnInitCollect.addEventListener("click", () => {
+            collectInitOverlay.classList.add("hidden");
+            window.Sound.init();
+            window.Sound.playGameStart();
+            window.Sound.startBGM();
+        });
+
+        // 3D Tilt Card and Glare coordinate updates
+        function initCard3DTilt() {
+            const cardContainers = document.querySelectorAll(".card-container");
+            cardContainers.forEach(container => {
+                const inner = container.querySelector(".card-inner");
+                const glare = container.querySelector(".card-glare");
+                const holo = container.querySelector(".card-hologram");
+
+                // Play chiptune blip on hover
+                container.addEventListener("mouseenter", () => {
+                    if (collectInitOverlay.classList.contains("hidden") && !container.classList.contains("flipped")) {
+                        window.Sound.playHover();
+                    }
+                    inner.style.transition = "transform 0.1s ease";
+                });
+
+                container.addEventListener("mousemove", (e) => {
+                    // Stop tilting if card is flipped to the back details
+                    if (container.classList.contains("flipped")) return;
+
+                    container.classList.add("hovered");
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const w = rect.width;
+                    const h = rect.height;
+
+                    const rotX = ((y / h) - 0.5) * -30;
+                    const rotY = ((x / w) - 0.5) * 30;
+
+                    const px = (x / w) * 100;
+                    const py = (y / h) * 100;
+
+                    inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.08)`;
+                    if (glare) {
+                        glare.style.setProperty("--glare-x", `${100 - px}%`);
+                        glare.style.setProperty("--glare-y", `${100 - py}%`);
+                    }
+                    if (holo) {
+                        holo.style.setProperty("--holo-x", `${px}%`);
+                        holo.style.setProperty("--holo-y", `${py}%`);
+                    }
+                });
+
+                container.addEventListener("mouseleave", () => {
+                    container.classList.remove("hovered");
+                    inner.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+                    inner.style.transform = "";
+
+                    if (glare) {
+                        glare.style.setProperty("--glare-x", "50%");
+                        glare.style.setProperty("--glare-y", "50%");
+                    }
+                    if (holo) {
+                        holo.style.setProperty("--holo-x", "50%");
+                        holo.style.setProperty("--holo-y", "50%");
+                    }
+                });
+
+                // Card details modal popup handler
+                container.addEventListener("click", (e) => {
+                    // Ignore clicks on target links or buttons
+                    if (e.target.closest(".btn-manga-buy") || e.target.closest(".btn-card-tiktok") || e.target.closest(".btn-flip-back")) {
+                        return;
+                    }
+
+                    // If modal is active, ignore
+                    const cardModal = document.getElementById("cardModal");
+                    if (cardModal && cardModal.classList.contains("active")) {
+                        return;
+                    }
+
+                    openCardModal(container);
+                });
+            });
+        }
+
+        // Global listeners for details modal
+        const cardModal = document.getElementById("cardModal");
+        const cardModalContent = document.getElementById("cardModalContent");
+
+        window.openCardModal = function(container) {
+            const inner = container.querySelector(".card-inner");
+            const cardBack = container.querySelector(".card-back");
+            if (!cardBack || !inner || !cardModal || !cardModalContent) return;
+
+            // Read category and set it on modal
+            const category = container.getAttribute("data-category") || "birthday";
+            cardModal.setAttribute("data-category", category);
+
+            // Save references to restore later
+            cardModal._activeCardBack = cardBack;
+            cardModal._activeOriginalParent = inner;
+
+            // Change btn-flip-back text to ✕
+            const closeBtn = cardBack.querySelector(".btn-flip-back");
+            if (closeBtn) closeBtn.textContent = "✕";
+
+            // Reparent card back to modal content
+            cardBack.classList.add("in-modal");
+            cardModalContent.appendChild(cardBack);
+
+            // Inject pulsating manga SFX overlay badge
+            const sfxMap = {
+                birthday: "ドドド!",
+                anniversary: "ゴゴゴ...",
+                graduation: "シャキーン!",
+                festive: "ニコニコ!"
+            };
+            const sfxText = sfxMap[category] || "ゴゴゴ...";
+            const sfxEl = document.createElement("div");
+            sfxEl.className = "modal-sfx-text";
+            sfxEl.textContent = sfxText;
+            cardModalContent.appendChild(sfxEl);
+
+            // Show modal overlay
+            cardModal.classList.add("active");
+
+            if (collectInitOverlay.classList.contains("hidden")) {
+                window.Sound.playClick();
+            }
+        };
+
+        window.closeCardModal = function() {
+            if (!cardModal || !cardModalContent) return;
+            const cardBack = cardModal._activeCardBack;
+            const originalParent = cardModal._activeOriginalParent;
+
+            // Remove manga SFX overlay badge
+            const sfxEl = cardModalContent.querySelector(".modal-sfx-text");
+            if (sfxEl) sfxEl.remove();
+
+            if (cardBack && originalParent) {
+                // Remove class override
+                cardBack.classList.remove("in-modal");
+
+                // Reset close button text back to ↺
+                const closeBtn = cardBack.querySelector(".btn-flip-back");
+                if (closeBtn) closeBtn.textContent = "↺";
+
+                // Move element back to original container
+                originalParent.appendChild(cardBack);
+            }
+
+            cardModal._activeCardBack = null;
+            cardModal._activeOriginalParent = null;
+            cardModal.removeAttribute("data-category");
+
+            // Hide modal overlay
+            cardModal.classList.remove("active");
+
+            if (collectInitOverlay.classList.contains("hidden")) {
+                window.Sound.playClick();
+            }
+        };
+
+        // Close when clicking the backdrop
+        if (cardModal) {
+            cardModal.addEventListener("click", (e) => {
+                if (e.target === cardModal || e.target === cardModalContent) {
+                    closeCardModal();
+                }
+            });
+        }
+
+        // Esc keypress close
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && cardModal && cardModal.classList.contains("active")) {
+                closeCardModal();
+            }
+        });
+
+        // Flip back buttons (close modal button) click handling globally
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".btn-flip-back");
+            if (btn) {
+                e.stopPropagation();
+                if (cardModal && cardModal.classList.contains("active")) {
+                    closeCardModal();
+                }
+            }
+        });
+
+        initCard3DTilt();
+
+        // Buy buttons play coin thud sound
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".btn-manga-buy");
+            if (btn) {
+                if (collectInitOverlay.classList.contains("hidden")) {
+                    window.Sound.playCoin();
+                }
+            }
+        });
+
+        // Category Filtering Logic
+        function initCategoryFilters() {
+            const filterButtons = document.querySelectorAll(".btn-filter");
+            const cardsGrid = document.getElementById("cardsGrid");
+            const cardContainers = document.querySelectorAll(".card-container");
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const category = btn.getAttribute("data-filter");
+
+                    // Play click sound
+                    if (collectInitOverlay.classList.contains("hidden")) {
+                        window.Sound.playClick();
+                    }
+
+                    // Update active button state
+                    filterButtons.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+
+                    // Trigger grid fade out
+                    cardsGrid.classList.add("filtering");
+
+                    setTimeout(() => {
+                        cardContainers.forEach(container => {
+                            // Unflip cards when filtering to prevent glitchy back faces
+                            container.classList.remove("flipped");
+
+                            const cardCategory = container.getAttribute("data-category");
+                            if (category === "all" || cardCategory === category) {
+                                container.classList.remove("filtered-out");
+                            } else {
+                                container.classList.add("filtered-out");
+                            }
+                        });
+
+                        // Fade grid back in
+                        cardsGrid.classList.remove("filtering");
+                    }, 250);
+                });
+            });
+        }
+        initCategoryFilters();
+
+        // Lightweight Custom Cursor Tracker
+        const cursor = document.getElementById("cursor");
+        const pointer = document.getElementById("pointer");
+        
+        if (cursor && pointer) {
+            document.addEventListener("mousemove", (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+                pointer.style.left = `${e.clientX}px`;
+                pointer.style.top = `${e.clientY}px`;
+            });
+            
+            // Show pointer on interactive elements
+            document.addEventListener("mouseenter", (e) => {
+                const target = e.target;
+                if (target.closest && target.closest("a, button, .card-container, .btn-filter")) {
+                    cursor.style.display = "none";
+                    pointer.style.display = "block";
+                }
+            }, true);
+
+            document.addEventListener("mouseleave", (e) => {
+                const target = e.target;
+                if (target.closest && target.closest("a, button, .card-container, .btn-filter")) {
+                    cursor.style.display = "block";
+                    pointer.style.display = "none";
+                }
+            }, true);
+            
+            // Show base cursor on start
+            document.addEventListener("mouseenter", () => {
+                cursor.style.display = "block";
+            });
+            document.addEventListener("mouseleave", () => {
+                cursor.style.display = "none";
+                pointer.style.display = "none";
+            });
+        }
+
+        // Previews Sub-animations spawning logic
+        function initCardPreviews() {
+            // 1. Balloons (Birthday)
+            const birthdayBalloons = document.getElementById("birthdayBalloons");
+            const balloonColors = ["#fe2c55", "#ca1437", "#ffd13b", "#ffe675", "#00ff66", "#00f0ff"];
+            setInterval(() => {
+                if (collectInitOverlay.classList.contains("hidden") && birthdayBalloons) {
+                    const b = document.createElement("div");
+                    b.className = "lcd-balloon-el";
+                    b.style.backgroundColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                    b.style.left = `${5 + Math.random() * 90}%`;
+                    b.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    birthdayBalloons.appendChild(b);
+                    setTimeout(() => b.remove(), 5000);
+                }
+            }, 800);
+
+            // 2. Caps (Graduation)
+            const graduationCaps = document.getElementById("graduationCaps");
+            setInterval(() => {
+                if (collectInitOverlay.classList.contains("hidden") && graduationCaps) {
+                    const cap = document.createElement("span");
+                    cap.className = "lcd-flying-cap";
+                    cap.textContent = "🎓";
+                    cap.style.left = `${5 + Math.random() * 90}%`;
+                    cap.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    graduationCaps.appendChild(cap);
+                    setTimeout(() => cap.remove(), 5000);
+                }
+            }, 700);
+
+            // 3. Sakura Petals (Sakura Confession)
+            const sakuraPetals = document.getElementById("sakuraPetals");
+            setInterval(() => {
+                if (collectInitOverlay.classList.contains("hidden") && sakuraPetals) {
+                    const petal = document.createElement("div");
+                    petal.className = "lcd-sakura-petal";
+                    petal.style.left = `${5 + Math.random() * 90}%`;
+                    petal.style.animationDuration = `${3 + Math.random() * 2}s`;
+                    sakuraPetals.appendChild(petal);
+                    setTimeout(() => petal.remove(), 4000);
+                }
+            }, 700);
+
+            // 4. Stars (Kyoto Starry Night)
+            const starryStars = document.getElementById("starryStars");
+            if (starryStars) {
+                for (let i = 0; i < 15; i++) {
+                    const star = document.createElement("span");
+                    star.className = "lcd-star";
+                    star.textContent = "★";
+                    star.style.left = `${5 + Math.random() * 90}%`;
+                    star.style.top = `${5 + Math.random() * 90}%`;
+                    star.style.animationDelay = `${Math.random() * 1.2}s`;
+                    starryStars.appendChild(star);
+                }
+            }
+
+            // 5. Snow (Neon Christmas)
+            const christmasSnow = document.getElementById("christmasSnow");
+            setInterval(() => {
+                if (collectInitOverlay.classList.contains("hidden") && christmasSnow) {
+                    const flake = document.createElement("span");
+                    flake.className = "lcd-snowflake";
+                    flake.textContent = "❄";
+                    flake.style.left = `${5 + Math.random() * 90}%`;
+                    flake.style.animationDuration = `${2.5 + Math.random() * 2}s`;
+                    christmasSnow.appendChild(flake);
+                    setTimeout(() => flake.remove(), 4500);
+                }
+            }, 500);
+        }
+        initCardPreviews();
+    </script>
+
+    <!-- PREMIUM CARD DETAILS MODAL -->
+    <div class="card-modal-overlay" id="cardModal">
+        <div class="card-modal-content" id="cardModalContent">
+            <!-- Dynamically populated by JS reparenting -->
+        </div>
+    </div>
+</body>
+</html>

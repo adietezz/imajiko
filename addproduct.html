@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imajiko Catalog Dashboard | Pengelola Produk Kartu</title>
+    
+    <!-- Link to the main style sheet to load fonts and design elements -->
+    <link rel="stylesheet" href="css/style.css?v=2.8">
+
+    <style>
+        body.dashboard-body {
+            background-color: #ffd6eb;
+            color: #4a0022;
+            padding: 40px 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-y: auto;
+            cursor: auto !important; /* Restore normal cursor */
+        }
+
+        * {
+            cursor: auto !important; /* Force restore cursor */
+        }
+
+        .dash-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media(min-width: 992px) {
+            .dash-container {
+                grid-template-columns: 450px 1fr;
+            }
+        }
+
+        /* Brutalist Headers */
+        .dash-header {
+            grid-column: span 1;
+            background-color: #ffffff;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-flat);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        @media(min-width: 992px) {
+            .dash-header {
+                grid-column: span 2;
+            }
+        }
+
+        .dash-title {
+            font-family: var(--font-pixel);
+            font-size: 1.5rem;
+            color: var(--color-neon-pink);
+            text-shadow: 2px 2px 0px #000;
+            margin-bottom: 10px;
+        }
+
+        .dash-subtitle {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .dash-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--color-bg-yellow);
+            color: #000;
+            border: var(--border-thin);
+            box-shadow: 2px 2px 0px #000;
+            padding: 8px 16px;
+            font-family: var(--font-pixel);
+            font-size: 0.6rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .dash-back-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        /* Panel Boxes */
+        .dash-panel {
+            background-color: #ffffff;
+            border: var(--border-thick);
+            box-shadow: 6px 6px 0px #ff007f;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-title {
+            font-family: var(--font-pixel);
+            font-size: 0.8rem;
+            color: #ff007f;
+            border-bottom: var(--border-thin);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        /* Form styling */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-row.two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row label {
+            font-family: var(--font-pixel);
+            font-size: 0.55rem;
+            color: #4a0022;
+            font-weight: bold;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: var(--border-thin);
+            font-family: inherit;
+            font-size: 0.85rem;
+            background-color: #fff0f6;
+            color: #000;
+            box-sizing: border-box;
+            outline: none;
+            transition: background-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            background-color: #ffffff;
+            border-color: #ff007f;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        /* Dashboard Buttons */
+        .dash-btn {
+            padding: 12px;
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            border: var(--border-thick);
+            box-shadow: 3px 3px 0px #000;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .dash-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .dash-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .dash-btn.primary {
+            background-color: #ff007f;
+            color: #ffffff;
+        }
+
+        .dash-btn.secondary {
+            background-color: var(--color-bg-yellow);
+            color: #000000;
+        }
+
+        .dash-btn.danger {
+            background-color: #ff3333;
+            color: #ffffff;
+        }
+
+        .dash-btn.neutral {
+            background-color: #e0e0e0;
+            color: #000000;
+        }
+
+        .button-group-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Product List Grid */
+        .product-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            border: var(--border-thin);
+            padding: 10px;
+            background-color: #fcfcfc;
+        }
+
+        .product-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border: var(--border-thin);
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.8);
+            padding: 12px 15px;
+            gap: 15px;
+        }
+
+        .product-item-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .product-item-title {
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            color: #121212;
+        }
+
+        .product-item-badge {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #ff007f;
+        }
+
+        .product-item-price {
+            font-family: var(--font-pixel);
+            font-size: 0.55rem;
+            color: #008530;
+        }
+
+        .product-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-icon-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: var(--border-thin);
+            box-shadow: 1.5px 1.5px 0px #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .action-icon-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 2px 2px 0px #000;
+        }
+        .action-icon-btn.edit {
+            background-color: var(--color-bg-yellow);
+        }
+        .action-icon-btn.delete {
+            background-color: #ff3333;
+            color: white;
+        }
+
+        /* Export block */
+        .export-textarea {
+            width: 100%;
+            height: 180px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: var(--border-thin);
+            background-color: #f5f5f5;
+            padding: 10px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        /* Toast notification */
+        .toast-notify {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #121212;
+            color: #fff;
+            padding: 15px 25px;
+            font-family: var(--font-pixel);
+            font-size: 0.65rem;
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0px #ff007f;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <div class="dash-container">
+        
+        <!-- Header -->
+        <header class="dash-header">
+            <a href="index.html" class="dash-back-btn">⬅ LIHAT TOKO</a>
+            <h1 class="dash-title">IMAJIKO CATALOG DASHBOARD</h1>
+            <p class="dash-subtitle">Pengelola Koleksi Kartu Toko Undangan & Ucapan Premium</p>
+        </header>
+
+        <!-- Form Editor Panel (Left) -->
+        <aside class="dash-panel">
+            <h2 class="panel-title" id="formPanelTitle">TAMBAH PRODUK BARU</h2>
+            
+            <form id="productForm" class="form-grid" onsubmit="event.preventDefault(); saveProduct();">
+                <input type="hidden" id="editingIndex" value="-1">
+                
+                <div class="form-row">
+                    <label for="txtId">CARD ID (Unik, huruf/angka/strip)</label>
+                    <input type="text" id="txtId" class="form-input" placeholder="contoh: card-birthday-anime" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="selCategory">KATEGORI</label>
+                    <select id="selCategory" class="form-select" required>
+                        <option value="birthday">🎂 Ulang Tahun (Birthday)</option>
+                        <option value="anniversary">💖 Anniversary / Ucapan Sayang</option>
+                        <option value="graduation">🎓 Wisuda (Graduation)</option>
+                        <option value="festive">🌸 Edisi Khusus / Festive</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtTitle">JUDUL KARTU (Serta Sub-judul Jepang)</label>
+                    <input type="text" id="txtTitle" class="form-input" placeholder="contoh: OLEH-OLEH BALI / お土産" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtDesc">DESKRIPSI LENGKAP KARTU</label>
+                    <textarea id="txtDesc" class="form-textarea" placeholder="Tulis rincian isi template website ucapan..." required></textarea>
+                </div>
+
+                <div class="form-row two-col">
+                    <div>
+                        <label for="txtPrice">HARGA DISPLAY</label>
+                        <input type="text" id="txtPrice" class="form-input" placeholder="Rp 35.000" required>
+                    </div>
+                    <div>
+                        <label for="txtBadge">BADGE DEPAN</label>
+                        <input type="text" id="txtBadge" class="form-input" placeholder="BEST DEAL" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtRarityTag">RARITY TAG BELAKANG</label>
+                    <input type="text" id="txtRarityTag" class="form-input" placeholder="BEST DEAL #10" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtFrontImage">FRONT IMAGE PATH</label>
+                    <input type="text" id="txtFrontImage" class="form-input" placeholder="images/card_pagoda.png" required>
+                </div>
+
+                <div class="form-row two-col">
+                    <div>
+                        <label for="txtLcdImage">LCD IMAGE PATH</label>
+                        <input type="text" id="txtLcdImage" class="form-input" placeholder="images/lcd_pagoda.png" required>
+                    </div>
+                    <div>
+                        <label for="selLcdOverlay">LCD OVERLAY</label>
+                        <select id="selLcdOverlay" class="form-select" required>
+                            <option value="none">Tanpa Animasi</option>
+                            <option value="balloons">🎈 Balon Terbang</option>
+                            <option value="countdown">⏱️ Countdown Timer</option>
+                            <option value="graduationCaps">🎓 Toga Terbang</option>
+                            <option value="arcade">🕹️ Retro Arcade Text</option>
+                            <option value="sakuraPetals">🌸 Kelopak Sakura Gugur</option>
+                            <option value="starryStars">⭐ Bintang Berkelip</option>
+                            <option value="harajukuRun">🏃‍♀️ Harajuku Running</option>
+                            <option value="mosque">🌙 Kubah Masjid Glow</option>
+                            <option value="christmasSnow">❄️ Hujan Salju</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtTiktokUrl">TIKTOK DEMO URL</label>
+                    <input type="text" id="txtTiktokUrl" class="form-input" placeholder="https://tiktok.com/@imajiko.store" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtCheckoutUrl">LINK CHECKOUT (Lynk.id)</label>
+                    <input type="text" id="txtCheckoutUrl" class="form-input" placeholder="https://lynk.id/imajiko/..." required>
+                </div>
+
+                <div class="button-group-row">
+                    <button type="submit" class="dash-btn primary" id="btnSubmitForm">SIMPAN</button>
+                    <button type="button" class="dash-btn neutral" onclick="resetForm()">BATAL</button>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Product Manager (Right) -->
+        <main class="dash-panel" style="gap: 25px;">
+            <h2 class="panel-title">KOLEKSI PRODUK SAAT INI</h2>
+
+            <!-- Cards Management List -->
+            <div class="product-list-container" id="productList">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Global Action Controls -->
+            <div class="form-grid" style="border-top: var(--border-thin); padding-top: 20px;">
+                <h3 class="panel-title" style="border: none; font-size: 0.65rem;">PERSISTENSI & EKSPOR DATA</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <button class="dash-btn primary" onclick="saveToBrowser()">💾 SIMPAN KE BROWSER</button>
+                    <button class="dash-btn secondary" onclick="exportData()">📤 EKSPOR products.js</button>
+                    <button class="dash-btn danger" onclick="resetDefault()">🔄 RESET DEFAULT</button>
+                </div>
+            </div>
+
+            <!-- Code Export Area -->
+            <div id="exportArea" style="display: none; flex-direction: column; gap: 10px;">
+                <label for="codeOutput" style="font-family: var(--font-pixel); font-size: 0.55rem; font-weight: bold;">SALIN DAN TIMPA FILE: /js/products.js</label>
+                <textarea id="codeOutput" class="export-textarea" readonly onclick="this.select()"></textarea>
+                <button class="dash-btn secondary" onclick="downloadJSFile()">💾 DOWNLOAD BERKAS .JS</button>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Toast notifier -->
+    <div class="toast-notify" id="toast">NOTIFIKASI BERHASIL!</div>
+
+    <!-- Scripts -->
+    <script src="js/products.js"></script>
+    
+    <script>
+        // Copy base array references
+        let currentProducts = [];
+        
+        // Initializer
+        window.addEventListener("DOMContentLoaded", () => {
+            loadCatalog();
+            renderProductList();
+        });
+
+        // Load catalog from localStorage or products.js
+        function loadCatalog() {
+            const localData = localStorage.getItem("imajiko_catalog");
+            const fallbackData = (typeof cardsData !== "undefined") ? cardsData : (window.cardsData || []);
+            if (localData) {
+                try {
+                    currentProducts = JSON.parse(localData);
+                } catch (e) {
+                    console.error("Failed to parse local catalog data:", e);
+                    currentProducts = [...fallbackData];
+                }
+            } else {
+                currentProducts = [...fallbackData];
+            }
+        }
+
+        // Render products managed list
+        function renderProductList() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+
+            currentProducts.forEach((product, index) => {
+                const row = document.createElement("div");
+                row.className = "product-item-row";
+                row.innerHTML = `
+                    <div class="product-item-meta">
+                        <span class="product-item-badge">${product.badge} • ${product.category.toUpperCase()}</span>
+                        <h4 class="product-item-title">${product.title}</h4>
+                        <span class="product-item-price">${product.price}</span>
+                    </div>
+                    <div class="product-item-actions">
+                        <button class="action-icon-btn" title="Pindahkan Ke Atas" onclick="moveProduct(${index}, -1)">▲</button>
+                        <button class="action-icon-btn" title="Pindahkan Ke Bawah" onclick="moveProduct(${index}, 1)">▼</button>
+                        <button class="action-icon-btn edit" title="Edit Item" onclick="editProduct(${index})">📝</button>
+                        <button class="action-icon-btn delete" title="Hapus Item" onclick="deleteProduct(${index})">🗑️</button>
+                    </div>
+                `;
+                productList.appendChild(row);
+            });
+        }
+
+        // Add/Save product
+        function saveProduct() {
+            const index = parseInt(document.getElementById("editingIndex").value);
+            const product = {
+                id: document.getElementById("txtId").value.trim(),
+                category: document.getElementById("selCategory").value,
+                frontImage: document.getElementById("txtFrontImage").value.trim(),
+                badge: document.getElementById("txtBadge").value.trim(),
+                rarityTag: document.getElementById("txtRarityTag").value.trim(),
+                title: document.getElementById("txtTitle").value.trim(),
+                desc: document.getElementById("txtDesc").value.trim(),
+                price: document.getElementById("txtPrice").value.trim(),
+                tiktokUrl: document.getElementById("txtTiktokUrl").value.trim(),
+                checkoutUrl: document.getElementById("txtCheckoutUrl").value.trim(),
+                lcdImage: document.getElementById("txtLcdImage").value.trim(),
+                lcdOverlay: document.getElementById("selLcdOverlay").value
+            };
+
+            if (index === -1) {
+                // Add new
+                currentProducts.push(product);
+                showToast("PRODUK BARU BERHASIL DITAMBAHKAN!");
+            } else {
+                // Update existing
+                currentProducts[index] = product;
+                showToast("PRODUK BERHASIL DIPERBARUI!");
+            }
+
+            resetForm();
+            renderProductList();
+        }
+
+        // Edit product
+        function editProduct(index) {
+            const product = currentProducts[index];
+            document.getElementById("editingIndex").value = index;
+            document.getElementById("txtId").value = product.id;
+            document.getElementById("selCategory").value = product.category;
+            document.getElementById("txtFrontImage").value = product.frontImage;
+            document.getElementById("txtBadge").value = product.badge;
+            document.getElementById("txtRarityTag").value = product.rarityTag;
+            document.getElementById("txtTitle").value = product.title;
+            document.getElementById("txtDesc").value = product.desc;
+            document.getElementById("txtPrice").value = product.price;
+            document.getElementById("txtTiktokUrl").value = product.tiktokUrl;
+            document.getElementById("txtCheckoutUrl").value = product.checkoutUrl;
+            document.getElementById("txtLcdImage").value = product.lcdImage;
+            document.getElementById("selLcdOverlay").value = product.lcdOverlay;
+
+            document.getElementById("formPanelTitle").textContent = `EDIT KARTU: #${index + 1}`;
+            document.getElementById("btnSubmitForm").textContent = "PERBARUI";
+            
+            // Scroll form into view on mobile
+            document.getElementById("productForm").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Delete product
+        function deleteProduct(index) {
+            if (confirm(`Apakah Anda yakin ingin menghapus produk: "${currentProducts[index].title}"?`)) {
+                currentProducts.splice(index, 1);
+                showToast("PRODUK BERHASIL DIHAPUS!");
+                renderProductList();
+                resetForm();
+            }
+        }
+
+        // Move Product Order (Up/Down)
+        function moveProduct(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= currentProducts.length) return;
+
+            // Swap items
+            const temp = currentProducts[index];
+            currentProducts[index] = currentProducts[targetIndex];
+            currentProducts[targetIndex] = temp;
+
+            renderProductList();
+            showToast("URUTAN PRODUK DIUBAH!");
+        }
+
+        // Reset form to default Add state
+        function resetForm() {
+            document.getElementById("productForm").reset();
+            document.getElementById("editingIndex").value = "-1";
+            document.getElementById("formPanelTitle").textContent = "TAMBAH PRODUK BARU";
+            document.getElementById("btnSubmitForm").textContent = "SIMPAN";
+        }
+
+        // Save entire state locally
+        function saveToBrowser() {
+            localStorage.setItem("imajiko_catalog", JSON.stringify(currentProducts));
+            showToast("KATALOG DISIMPAN KE PENYIMPANAN BROWSER!");
+        }
+
+        // Reset localStorage catalog to original products.js
+        function resetDefault() {
+            if (confirm("Apakah Anda yakin ingin memulihkan katalog ke bawaan pabrik (products.js)? Seluruh modifikasi lokal akan dihapus.")) {
+                localStorage.removeItem("imajiko_catalog");
+                loadCatalog();
+                renderProductList();
+                resetForm();
+                showToast("KATALOG DIPULIHKAN KE DEFAULTS!");
+                document.getElementById("exportArea").style.display = "none";
+            }
+        }
+
+        // Export data to javascript code block
+        function exportData() {
+            const codeOutput = document.getElementById("codeOutput");
+            const dataString = JSON.stringify(currentProducts, null, 2);
+            const jsContent = `/**\n * Imajiko Product Catalog Database\n * Add, remove, or modify objects in this array to update the store catalog dynamically.\n */\nconst cardsData = ${dataString};\n\n// Ensure availability on the global window object across script boundaries\nif (typeof window !== "undefined") {\n  window.cardsData = cardsData;\n}\n`;
+            
+            codeOutput.value = jsContent;
+            document.getElementById("exportArea").style.display = "flex";
+            codeOutput.scrollIntoView({ behavior: 'smooth' });
+            showToast("KODE EKSPOR DIHASILKAN! Silakan salin ke berkas products.js");
+        }
+
+        // Download generated Javascript file
+        function downloadJSFile() {
+            const codeOutput = document.getElementById("codeOutput").value;
+            if (!codeOutput) return;
+
+            const blob = new Blob([codeOutput], { type: "application/javascript;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "products.js";
+            link.click();
+            showToast("MENGUNDUH BERKAS products.js!");
+        }
+
+        // Show cute brutalist Toast notification
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.style.display = "block";
+            
+            setTimeout(() => {
+                toast.style.display = "none";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

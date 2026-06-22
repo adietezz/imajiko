@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Imajiko Card Store | Tempat Keren Buat Website Undangan & Ucapan Kamu</title>
+
+    <!-- Meta SEO -->
+    <meta name="description"
+        content="Koleksi template website ucapan selamat ulang tahun, wisuda, dan anniversary terkeren dengan musik latar, animasi interaktif, dan kustomisasi tulisan gaya Figma.">
+    <meta name="keywords"
+        content="website ucapan ulang tahun, website wisuda, website anniversary, figma customizer, google dino game, imajiko store">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css?v=2.7">
+</head>
+
+<body>
+
+    <!-- 1. LOADING PROGRESS SCREEN -->
+    <div id="loader" class="section loader">
+        <div class="loader-percent-2">
+            <h1 id="progress">00%</h1>
+        </div>
+
+        <!-- Dino Loader Container -->
+        <div class="dino-loader">
+            <div class="dino-runner">
+                <div class="dino-sprite"></div>
+            </div>
+            <div class="dino-obstacle"></div>
+            <div class="dino-ground"></div>
+            <div class="dino-meteor"></div>
+            <div class="dino-explosion"></div>
+        </div>
+
+        <div class="loader-sub-text-2">
+            <p class="intro-paragraph loader">////</p>
+            <p class="intro-paragraph loader" id="loaderText">** Level up event ucapanmu bersama Imajiko Card Store.
+                Lebih dari sekadar kartu kertas biasa.</p>
+        </div>
+        <!-- Flashing enter button appearing at 100% (compliance with browser autoplay audio policy) -->
+        <button id="btnStartStore" class="btn-start-store">CLICK TO LEVEL UP</button>
+    </div>
+
+    <!-- SVG Fractal Noise and Displacement Filter for Pixel Scramble Glitch -->
+    <svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1"
+        xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="glitch-scramble">
+                <!-- Generate high frequency pixelated noise -->
+                <feTurbulence type="fractalNoise" baseFrequency="0.99" numOctaves="1" result="noise">
+                    <animate attributeName="baseFrequency" values="0.99;0.99;0.95;0.99;0.90;0.99" dur="5s"
+                        repeatCount="1" fill="freeze" />
+                </feTurbulence>
+
+                <!-- Displace Source Graphic pixels based on noise (scramble/scatter) -->
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"
+                    result="scrambled">
+                    <animate attributeName="scale" values="0;0;40;150;350;350" keyTimes="0;0.64;0.65;0.70;0.75;1"
+                        dur="5s" fill="freeze" />
+                </feDisplacementMap>
+
+                <!-- Convert the noise's Red channel to alpha so we can use it as a mask -->
+                <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0
+                                 0 0 0 0 0
+                                 0 0 0 0 0
+                                 1 0 0 0 0" result="noiseAlpha" />
+
+                <!-- Animate threshold offset to erase pixels one-by-one -->
+                <feComponentTransfer in="noiseAlpha" result="eraseMask">
+                    <feFuncA type="linear" slope="20">
+                        <animate attributeName="intercept" values="1;1;0;-10;-20;-20" keyTimes="0;0.64;0.65;0.70;0.75;1"
+                            dur="5s" fill="freeze" />
+                    </feFuncA>
+                </feComponentTransfer>
+
+                <!-- Composite the scrambled pixels with the erasing mask -->
+                <feComposite operator="in" in="scrambled" in2="eraseMask" />
+            </filter>
+            <filter id="threshold">
+                <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0
+                                 0 1 0 0 0
+                                 0 0 1 0 0
+                                 0 0 0 255 -140" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- 2. SINGLE CUSTOM PIXEL CURSOR (No Trails) -->
+    <div id="cursor" class="custom-cursor">
+        <svg viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0V26.2L7.3 19.3L11.5 28L15.7 26L11.5 17.3L19 17.3L0 0Z" fill="white" stroke="black"
+                stroke-width="2.5" stroke-linejoin="miter" />
+        </svg>
+    </div>
+    <div id="pointer" class="custom-cursor other">
+        <svg viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M7 6V1C7 0.45 6.55 0 6 0C5.45 0 5 0.45 5 1V13.8L3.2 13C2.85 12.85 2.45 13 2.25 13.35C2.1 13.65 2.15 14.05 2.45 14.25L7.2 18.25V24C7.2 24.55 7.65 25 8.2 25H16.2C16.75 25 17.2 24.55 17.2 24V14C17.2 13.45 16.75 13 16.2 13H15.2V10C15.2 9.45 14.75 9 14.2 9H13.2V8C13.2 7.45 12.75 7 12.2 7H11.2V6C11.2 5.45 10.75 5 10.2 5H7.2Z"
+                fill="white" stroke="black" stroke-width="2.5" />
+        </svg>
+    </div>
+
+    <!-- 3. SIDE HAMBURGER MENU DRAWER -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-drawer" id="menuDrawer">
+        <button class="menu-close-btn" id="menuCloseBtn">X</button>
+        <div class="menu-links">
+            <a href="#" class="menu-link-item">BERANDA</a>
+            <a href="#customizer-section" class="menu-link-item">EDITOR FIGMA</a>
+            <a href="vending.html" class="menu-link-item"
+                style="color: #fe2c55; text-shadow: 0 0 5px rgba(254,44,85,0.5);">🕹️ JIHANKI DISPENSER</a>
+            <a href="catabento.html" class="menu-link-item"
+                style="color: #ffe675; text-shadow: 0 0 5px rgba(255,230,117,0.5);">🍱 BENTO BOX CATALOG</a>
+            <a href="collect.html" class="menu-link-item"
+                style="color: #00f0ff; text-shadow: 0 0 5px rgba(0,240,255,0.5);">🃏 COLLECTIBLE CARDS</a>
+            <a href="#dinoCanvas" class="menu-link-item">DINO RUNNER</a>
+        </div>
+        <div class="menu-sound-control">
+            <button id="menuSoundBtn" class="btn-menu-sound">SUARA: HIDUP</button>
+        </div>
+    </div>
+
+    <!-- 4. TOP NAVIGATION HUD -->
+    <nav class="navigation">
+        <a href="#" class="logo">
+            <span class="logo-text-desktop">IMAJIKO CARD STORE</span>
+            <span class="logo-text-mobile">IMAJIKO</span>
+        </a>
+
+        <!-- Score & hearts & tickets -->
+        <div class="score-block">
+            <div class="score-text">SCORE : <span id="score">0</span></div>
+            <div class="ticket-hud">🎟️ TICKETS : <span id="hudTickets">0</span></div>
+            <div id="scoreHearts" class="score-hearts">
+                <!-- Managed dynamically in JS -->
+            </div>
+        </div>
+
+        <div class="cta-s">
+            <button class="hamburger-menu" id="hamburgerBtn" title="Menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 5. HERO SECTION (DARK + PURPLE HALFTONE DOTS - Image 1) -->
+    <section class="section hero" id="home">
+        <div class="container hero">
+            <div class="hero-layout">
+                <div>
+                    <h1 class="hero-main-title">
+                        Level up
+                        <span class="figma-box">
+                            <span class="gooey-container">
+                                <span class="gooey-placeholder" aria-hidden="true">YOUR DESIGN</span>
+                                <span id="gooeyText1" class="gooey-text"></span>
+                                <span id="gooeyText2" class="gooey-text"></span>
+                            </span>
+                        </span>
+                        Skillz.
+                    </h1>
+                    <p class="hero-subtext">
+                        ** Merayakan hari spesial orang terdekat dalam bentuk website ucapan interaktif. Dilengkapi
+                        galeri foto scrapbook, pemutar musik otomatis, dan lilin tiup digital.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#catalog-section" class="btn-hero primary">MILIKI WEBSITE</a>
+                        <a href="#customizer-section" class="btn-hero secondary">UBAH TULISAN</a>
+                    </div>
+                </div>
+
+                <!-- Big pixel mouse cursor in 3D center (Image 1) -->
+                <div class="hero-animation-pane">
+                    <div class="hero-glow-ring r1"></div>
+                    <div class="hero-glow-ring r2"></div>
+
+                    <!-- Detailed SVG 3D Pixel Cursor -->
+                    <svg class="hero-big-cursor" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g filter="url(#drop-shadow-hero)">
+                            <path d="M0 0 V30 L8.5 22.3 L13.5 32 L18.5 29.5 L13.5 19.8 L22 19.8 Z" fill="#4a4a4a"
+                                stroke="#000000" stroke-width="2" />
+                            <path d="M2 3 V25.5 L8.5 19.8 L13.5 29.5 L15.5 28.5 L10.5 18.8 L19 18.8 Z" fill="#888888" />
+                            <path d="M4 6 V21 L8.5 17 L10.5 21 L12 20 L10.2 16.5 L16 16.5 Z" fill="#d9dedc" />
+                        </g>
+                        <defs>
+                            <filter id="drop-shadow-hero">
+                                <feDropShadow dx="3" dy="3" stdDeviation="0" flood-color="#000" flood-opacity="1" />
+                            </filter>
+                        </defs>
+                    </svg>
+
+                    <!-- Floating Yellow Coins around -->
+                    <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63b48103bb97e62102eb1445_rotating-money.gif"
+                        alt="Coin" class="intro-coin" style="top: 20px; left: 40px;" />
+                    <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63b48103bb97e62102eb1445_rotating-money.gif"
+                        alt="Coin" class="intro-coin" style="bottom: 40px; right: 20px; animation-delay: -2s;" />
+                </div>
+
+                <!-- Hero bottom indicators (Image 1) -->
+                <div class="hero-bottom-row">
+                    <div class="hero-bottom-left">SCROLL <span class="scroll-arrow">▼</span></div>
+                    <a href="https://www.tiktok.com/@imajiko" target="_blank" rel="noopener noreferrer"
+                        class="hero-bottom-right">
+                        <span>@IMAJIKO</span>
+                        <svg viewBox="0 0 448 512" class="brief-svg" fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a72.43,72.43,0,1,0,32.72,60.27V0h90.41a121.26,121.26,0,0,0,23,63.15A121.76,121.76,0,0,0,448,107v102.91Z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+    </section>
+
+    <!-- 6. MARQUEE BANNER -->
+    <div class="marquee-bar">
+        <div class="marquee-content">
+            <div class="marquee-item">INTERACTIVE CARD WEBSITES</div>
+            <div class="marquee-item">100% RESPONSIVE</div>
+            <div class="marquee-item">BUILT-IN BACKGROUND MUSIC</div>
+            <div class="marquee-item">EASY GREETINGS EDITING</div>
+            <div class="marquee-item">WHATSAPP ORDER SECURE</div>
+
+            <!-- Duplicate for infinite effect -->
+            <div class="marquee-item">INTERACTIVE CARD WEBSITES</div>
+            <div class="marquee-item">100% RESPONSIVE</div>
+            <div class="marquee-item">BUILT-IN BACKGROUND MUSIC</div>
+            <div class="marquee-item">EASY GREETINGS EDITING</div>
+            <div class="marquee-item">WHATSAPP ORDER SECURE</div>
+        </div>
+    </div>
+
+
+
+    <!-- 8. PRODUCTS CATALOG (DARK THEME + FLIPPING 3D CARDS) -->
+    <section id="catalog-section" class="section catalog"
+        style="background-color: #0b0713; border-top: var(--border-thick); padding: 80px 20px 40px 20px; position: relative;">
+        <div class="catalog-header"
+            style="text-align: center; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto; z-index: 5; position: relative;">
+            <h2
+                style="font-family: var(--font-pixel); font-size: 1.7rem; color: var(--color-bg-yellow); text-shadow: 4px 4px 0 #000, 0 0 20px rgba(226, 231, 125, 0.4); margin-bottom: 15px; text-transform: uppercase;">
+                PILIH WEBSITE UCAPANMU</h2>
+            <p
+                style="font-family: var(--font-modern); font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); line-height: 1.5; margin-bottom: 25px;">
+                Koleksi Kartu Ucapan Digital Premium untuk momen terindahmu! Saring berdasarkan kategori, miringkan
+                hologram kartu (Best Deal), atau klik kartu untuk melihat isinya.</p>
+
+            <!-- CATEGORY FILTER BAR -->
+            <div class="category-filter-bar">
+                <button class="btn-filter active" data-filter="all">SEMUA KARTU</button>
+                <button class="btn-filter" data-filter="birthday">🎂 ULANG TAHUN</button>
+                <button class="btn-filter" data-filter="anniversary">💖 ANNIVERSARY</button>
+                <button class="btn-filter" data-filter="graduation">🎓 WISUDA</button>
+                <button class="btn-filter" data-filter="festive">🌸 EDISI KHUSUS</button>
+            </div>
+        </div>
+
+        <!-- CARDS GRID CONTAINER -->
+        <main class="cards-grid-wrapper" id="cardsGrid">
+            <!-- Rendered dynamically from js/products.js -->
+        </main>
+    </section>
+
+    <!-- 7. PURIKURA CARD CUSTOMIZER (PINK BOOTH THEME) -->
+    <section id="customizer-section" class="section customizer">
+        <!-- Outlined background styling -->
+        <div class="background-outlined-text t1">PURIKURA</div>
+        <div class="background-outlined-text t2">BOOTH</div>
+
+        <div class="container customizer scroll-reveal">
+
+            <!-- Left controls panel (Camera & Filters - Vertical) -->
+            <div class="customizer-sidebar">
+                <h3 class="sidebar-title">PURIKURA BOOTH</h3>
+
+                <!-- Camera controls -->
+                <div class="control-group">
+                    <div class="control-label">BILIK FOTO / WEBCAM</div>
+                    <div class="sticker-buttons-grid camera-grid">
+                        <button class="btn-sticker" id="btnToggleCamera">📸 KAMERA</button>
+                        <button class="btn-sticker" id="btnCapturePhoto" disabled>⚡ JEPRET</button>
+                        <button class="btn-sticker" id="btnRestartPhoto">🔄 RESET</button>
+                    </div>
+                    <input type="file" id="fileUploadInput" accept="image/*" style="display: none;">
+                    <button class="btn-copy-text" id="btnUploadProxy"
+                        style="background-color: var(--color-accent-blue); color: var(--color-text-dark); margin-top: 8px; box-shadow: 4px 4px 0 #ff007f;">📤
+                        UNGGAH FOTO</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="control-group">
+                    <div class="control-label">FILTER FOTO</div>
+                    <div class="sticker-buttons-grid" id="filterButtonsGrid"
+                        style="grid-template-columns: repeat(2, 1fr);">
+                        <button class="btn-sticker active-filter" data-filter="normal">Normal</button>
+                        <button class="btn-sticker" data-filter="mono">Grayscale</button>
+                        <button class="btn-sticker" data-filter="pink">Soft Pink</button>
+                        <button class="btn-sticker" data-filter="vintage">Vintage</button>
+                        <button class="btn-sticker" data-filter="pixel" style="grid-column: span 2;">👾 Pixelate
+                            (8-Bit)</button>
+                    </div>
+                </div>
+
+                <!-- Frames -->
+                <div class="control-group">
+                    <div class="control-label">PILIH BINGKAI</div>
+                    <div class="sticker-buttons-grid" id="frameButtonsGrid">
+                        <button class="btn-sticker active-frame btn-frame-choice" data-frame="none">None</button>
+                        <button class="btn-sticker btn-frame-choice" data-frame="polaroid">Polaroid</button>
+                        <button class="btn-sticker btn-frame-choice" data-frame="arcade">Arcade</button>
+                        <button class="btn-sticker btn-frame-choice locked" data-frame="ssr" data-cost="500">SSR
+                            Card</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right canvas editor + Bottom Bar (forming the L-shape) -->
+            <div class="customizer-workspace">
+                <div class="workspace-artboard">
+                    <!-- Purikura Frame representing the photo booth screen -->
+                    <div class="workspace-preview-monitor">
+                        <div class="monitor-header">
+                            <span>🌸 PURIKURA_BOOTH_V3.JPEG</span>
+                            <span style="color: #666;">X</span>
+                        </div>
+
+                        <div class="monitor-screen-area" id="purikuraScreen">
+                            <!-- Video webcam capture stream -->
+                            <video id="purikuraVideo" class="purikura-video-stream" autoplay playsinline
+                                style="display: none;"></video>
+
+                            <!-- Background photo loaded from snapshot or file upload -->
+                            <img id="purikuraPhoto" class="purikura-bg-photo filter-normal"
+                                src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63bc260a92d847b2c95e54d6_halftone-dot.png"
+                                alt="Photo Background" crossOrigin="anonymous">
+
+                            <!-- Draggable text overlay bubble -->
+                            <div id="purikuraTextOverlay" class="placed-text-overlay font-kawaii">Selamat ulang tahun
+                                yaaa! 💕✨</div>
+
+                            <!-- Frame overlay -->
+                            <div id="purikuraFrameOverlay" class="purikura-frame-overlay frame-none"></div>
+                        </div>
+                    </div>
+
+                    <!-- Floating themed accessory badges -->
+                    <div class="floating-figma-badge final-psd">
+                        <span>💖 PURIKURA_V3</span>
+                    </div>
+                    <div class="floating-figma-badge learn-pros">
+                        <span>🌈 KAWAII DECOR</span>
+                    </div>
+                    <div class="floating-figma-badge awwwards">
+                        <span>✨ PREVIEW_MODE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Horizontal controls bar underneath workspace -->
+            <div class="workspace-bottom-bar">
+                <!-- Overlay Teks -->
+                <div class="bottom-bar-group text-group">
+                    <div class="control-label">OVERLAY TEKS</div>
+                    <div class="bottom-bar-row">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="chkToggleTextOverlay" class="check" checked>
+                            <label for="chkToggleTextOverlay" class="label">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="24" height="24" rx="4" fill="#fff" stroke="#ff007f" stroke-width="3" />
+                                    <g>
+                                        <path class="path1" d="M6 12l4 4 8-8" stroke="#ff007f" stroke-width="3.5"
+                                            stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                    </g>
+                                </svg>
+                                TAMPILKAN
+                            </label>
+                        </div>
+                        <input type="text" id="txtCustomOverlayText" class="purikura-text-input"
+                            placeholder="Tulis ucapan kustom..." maxlength="80">
+                    </div>
+
+                    <div class="figma-radios horizontal-radios">
+                        <label class="figma-radio-label" id="label-aeonik">
+                            <input type="radio" name="figma-font" id="radio-aeonik" checked>
+                            Kawaii 🌸
+                        </label>
+                        <label class="figma-radio-label" id="label-helvetica">
+                            <input type="radio" name="figma-font" id="radio-helvetica">
+                            Romantis 💕
+                        </label>
+                        <label class="figma-radio-label" id="label-comic" style="color: var(--color-neon-pink);">
+                            <input type="radio" name="figma-font" id="radio-comic">
+                            Tsundere 💢
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Stiker Digital -->
+                <div class="bottom-bar-group sticker-group">
+                    <div class="control-label">TEMPEL STIKER</div>
+                    <div class="sticker-buttons-grid horizontal-stickers"
+                        style="grid-template-columns: repeat(4, 1fr);">
+                        <button class="btn-sticker" data-sticker="❤️">❤️ Love</button>
+                        <button class="btn-sticker" data-sticker="⭐">⭐ Star</button>
+                        <button class="btn-sticker" data-sticker="✨">✨ Sparkle</button>
+                        <button class="btn-sticker" data-sticker="🐱">🐱 Neko</button>
+                        <button class="btn-sticker locked" data-sticker="👑" data-cost="100">👑 Crown</button>
+                        <button class="btn-sticker locked" data-sticker="🕶️" data-cost="200">🕶️ Glass</button>
+                        <button class="btn-sticker locked" data-sticker="🦖" data-cost="300">🦖 Dino</button>
+                    </div>
+                    <button id="btnClearStickers" class="btn-sticker clear-btn" style="margin-top: 8px;">🗑️
+                        HAPUS</button>
+                </div>
+
+                <!-- Export actions -->
+                <div class="bottom-bar-group export-group">
+                    <div class="control-label">SIMPAN & BAGIKAN</div>
+                    <button id="btnDownloadPurikura" class="btn-copy-text export-btn save-btn">💾 DOWNLOAD FOTO
+                        (PNG)</button>
+                    <button id="btnCopyCustomText" class="btn-copy-text export-btn copy-btn">📋 SALIN UCAPAN</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 8b. CUSTOMER TESTIMONIALS (JAPANESE PASTEL STATIONERY BOARD) -->
+    <section id="testimonials-section" class="section testimonials"
+        style="padding: 80px 20px; background-color: #fff0f6; background-image: radial-gradient(#ffd6eb 15%, transparent 15%), radial-gradient(#ffd6eb 15%, transparent 15%); background-size: 20px 20px; background-position: 0 0, 10px 10px; border-top: var(--border-thick); position: relative; overflow: hidden;">
+        <div class="catalog-header"
+            style="text-align: center; margin-bottom: 45px; max-width: 800px; margin-left: auto; margin-right: auto; z-index: 5; position: relative;">
+            <h2
+                style="font-family: var(--font-pixel); font-size: 1.7rem; color: #ff007f; text-shadow: 3px 3px 0 #fff, 5px 5px 0 #000; margin-bottom: 15px; text-transform: uppercase;">
+                CUSTOMER FEEDBACK</h2>
+            <p
+                style="font-family: var(--font-modern); font-size: 0.95rem; color: #4a0022; font-weight: 600; line-height: 1.5;">
+                Apa kata mereka yang telah merayakan momen bahagia bersama website undangan & ucapan premium dari
+                Imajiko Store?</p>
+        </div>
+
+        <!-- Desktop grid simulator containing testimonials memo pads -->
+        <div class="desktop-workspace" id="brutalistGrid"
+            style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; position: relative; z-index: 5;">
+            <!-- Mapped dynamically in JS -->
+        </div>
+
+        <!-- Floating money bills drifting across section background (Image 2) -->
+        <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63b6ce794cd6e2bcacaeddf2_fly-money.gif"
+            alt="Cash" class="flying-cash" style="top: 10%; animation-delay: 0s;" />
+        <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63b6ce794cd6e2bcacaeddf2_fly-money.gif"
+            alt="Cash" class="flying-cash" style="top: 40%; animation-delay: -5s; animation-duration: 12s;" />
+        <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63b6ce794cd6e2bcacaeddf2_fly-money.gif"
+            alt="Cash" class="flying-cash" style="top: 70%; animation-delay: -10s; animation-duration: 18s;" />
+    </section>
+
+    <!-- 9. LIVES LOSS / KO SYSTEM OVERLAY MODAL -->
+    <div class="ko-modal">
+        <div class="ko-details">
+            <!-- Warning graphic -->
+            <img src="https://cdn.prod.website-files.com/6372430429fe8ce1b14c1fa8/63bc084fa84f8c02f0383924_KO.webp"
+                alt="Warning KO" class="ko-icon" />
+            <p class="ko-paragraph">
+                PILIHAN DESAIN KURANG COCOK! NYAWA KAMU BERKURANG 1.
+            </p>
+            <a href="#" class="ko-button">LANJUTKAN</a>
+        </div>
+    </div>
+
+    <!-- 10. GOOGLE DINO GAME IN FOOTER (EASTER EGG) -->
+    <footer class="section footer">
+        <div class="dino-game-wrapper scroll-reveal">
+            <canvas id="dinoCanvas"></canvas>
+
+            <!-- Overlay start -->
+            <div class="dino-start-overlay" id="dinoStartOverlay">
+                <h3 class="dino-start-title">👾 CHROME T-REX RUNNER</h3>
+                <p class="dino-start-desc">Lompati rintangan kaktus untuk mencetak skor tambahan! Tekan Spasi / klik
+                    tombol di bawah.</p>
+                <button class="btn-start-dino" id="btnStartDino">MULAI MAIN</button>
+            </div>
+        </div>
+
+        <h2 class="footer-logo">IMAJIKO CARD STORE</h2>
+        <p class="footer-credits">&copy; 2026 IMAJIKO STORE. </p>
+    </footer>
+
+    <!-- 11. PREMIUM CARD DETAILS MODAL -->
+    <div class="card-modal-overlay" id="cardModal">
+        <div class="card-modal-content" id="cardModalContent">
+            <!-- Dynamically populated by JS reparenting -->
+        </div>
+    </div>
+
+    <!-- 12. RETRO CASSETTE JUKEBOX PLAYER -->
+    <div class="retro-jukebox" id="retroJukebox">
+        <div class="jukebox-handle" id="jukeboxHandle" title="Sentuh/Arahkan kursor untuk membuka Jukebox">
+            <div class="mini-cassette-sticker">
+                <div class="mini-cassette-reel"></div>
+                <div class="mini-cassette-reel"></div>
+            </div>
+        </div>
+        <div class="jukebox-header">
+            <span>📻 IMAJIKO JUKEBOX</span>
+            <button class="jukebox-close" id="jukeboxCloseBtn">X</button>
+        </div>
+        <!-- Container for scaled cassette -->
+        <div class="retro-jukebox-cassette-wrapper">
+            <!-- Bodi Utama Kaset -->
+            <div class="cassette" id="cassette-tape">
+                <div class="cassette-brand">SUPER TAPE</div>
+
+                <div class="screw screw-tl"></div>
+                <div class="screw screw-tr"></div>
+                <div class="screw screw-bl"></div>
+                <div class="screw screw-br"></div>
+
+                <!-- Label Kaset / Sticker -->
+                <div class="sticker">
+                    <div class="sticker-top">
+                        <span>STEREO</span>
+                        <span class="side-indicator">A</span>
+                        <span>NR [ ]</span>
+                    </div>
+
+                    <div class="window-container">
+                        <!-- Pita Sisi Kiri (Berkurang saat dimainkan) -->
+                        <div class="tape-roll-wrapper left">
+                            <div class="tape-roll" id="left-roll"></div>
+                            <div class="reel">
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="center-hole"></div>
+                            </div>
+                        </div>
+
+                        <div class="markings">
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                            <div class="mark"></div>
+                        </div>
+
+                        <!-- Pita Sisi Kanan (Bertambah saat dimainkan) -->
+                        <div class="tape-roll-wrapper right">
+                            <div class="tape-roll" id="right-roll"></div>
+                            <div class="reel">
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="spoke"></div>
+                                <div class="center-hole"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sticker-middle">
+                        <div class="sticker-title" id="cassetteLabelTitle">SELECTING SONG...</div>
+                        <div class="cassette-sub-text" style="font-size: 7px; text-align: center; margin-top: 4px; color: #555; font-family: monospace; letter-spacing: 0.5px;">★ PREMIUM CHIPTUNE ★</div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+
+                <div class="bottom-part">
+                    <div class="cutout"></div>
+                    <div class="cutout"></div>
+                    <div class="cutout"></div>
+                    <div class="cutout"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar Slider -->
+        <div class="progress-container" title="Geser untuk memutar waktu pita"
+            style="margin-bottom: 12px; width: 100%;">
+            <input type="range" id="progress-bar" min="0" max="100" value="0" style="cursor: pointer;">
+        </div>
+        <div class="jukebox-display" id="jukeboxDisplay">
+            STATUS: MENUNGGU...
+        </div>
+        <div class="jukebox-controls">
+            <button class="jukebox-btn" id="btnJukeboxPlay">PLAY / PAUSE</button>
+            <button class="jukebox-btn" id="btnJukeboxNext">NEXT</button>
+            <button class="jukebox-btn" id="btnJukeboxShuffle" title="Acak Lagu (Shuffle)">🔀 SHUFFLE</button>
+        </div>
+        <!-- Playlist Queue -->
+        <div class="jukebox-queue-wrapper">
+            <div class="queue-header">
+                <span>📋 ANTRIAN LAGU</span>
+                <span class="queue-count" id="queueCount">0 / 0</span>
+            </div>
+            <div class="queue-list" id="jukeboxQueueList">
+                <!-- Dynamically loaded queue list -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/sound.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
