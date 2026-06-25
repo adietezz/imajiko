@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GRADUATE | Angelina's Prom Send Off & Graduation Invite</title>
+
+    <!-- Google Fonts for Editorial Luxury Serif, Playful Accent Script & Monospace -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400&family=Montserrat:wght@400;500;600;700&family=Playball&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-cream: #F5F1E9;
+            --bg-paper: #FAF8F5;
+            --burgundy: #6A1A24;
+            --burgundy-light: #8E2331;
+            --hot-pink: #E8557C;
+            --sky-blue: #A2D5F2;
+            --text-black: #111111;
+            --text-dark: #2A2A2A;
+            --muted-taupe: #8C8279;
+            --gold: #D4AF37;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-deep: 0 15px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-black);
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Paper Grain Texture */
+        .paper-grain {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 99;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- SCREEN FLASH EFFECT --- */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #FFF;
+            opacity: 0;
+            z-index: 10006;
+            pointer-events: none;
+            transition: opacity 0.08s ease-out;
+        }
+        #flash-overlay.flash {
+            opacity: 1;
+            transition: none;
+        }
+
+        /* --- CONFETTI CANVAS --- */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 10005;
+        }
+
+        /* --- IMMERSIVE WRAPPER --- */
+        .magazine-wrapper {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* FULL PAGE FRONT COVER */
+        .magazine-cover {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-cream);
+            position: absolute;
+            top: 0; left: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 5%;
+            transition: transform 1.3s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.3s, visibility 1.3s;
+            z-index: 50;
+        }
+
+        .magazine-cover.opened {
+            transform: translateX(-100%);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Magazine Header */
+        .cover-header {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin-top: 10px;
+        }
+
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.2rem, 8.5vw, 8.5rem);
+            font-weight: 900;
+            letter-spacing: 4px;
+            line-height: 0.85;
+            text-transform: uppercase;
+            color: var(--text-black);
+            margin-bottom: 8px;
+        }
+
+        .cover-subtitle {
+            font-size: clamp(0.75rem, 1.3vw, 1.2rem);
+            font-weight: 700;
+            letter-spacing: clamp(4px, 1.5vw, 12px);
+            text-transform: uppercase;
+            color: var(--hot-pink);
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Cover Visual Area & Overlaps */
+        .cover-visual-zone {
+            flex-grow: 1;
+            position: relative;
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .cover-main-photo {
+            width: 100%;
+            height: 90%;
+            max-width: 850px;
+            object-fit: cover;
+            object-position: center 15%;
+            position: absolute;
+            bottom: 0;
+            z-index: 2;
+            filter: contrast(1.02) brightness(0.98);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+        }
+
+        /* Overlapping Typography Grid */
+        .cover-meta-left {
+            position: absolute;
+            left: 2%;
+            top: 20%;
+            z-index: 10;
+            max-width: 25%;
+            pointer-events: none;
+        }
+
+        .journey-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 3.2vw, 3.2rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--text-black);
+            text-shadow: 1px 1px 0px var(--bg-cream);
+        }
+
+        .journey-text span.highlight {
+            color: var(--hot-pink);
+            display: block;
+        }
+
+        .class-badge {
+            margin-top: 40px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 1.8vw, 1.8rem);
+            line-height: 1.2;
+            color: var(--text-black);
+            border-left: 3px solid var(--text-black);
+            padding-left: 12px;
+        }
+
+        .cover-meta-right {
+            position: absolute;
+            right: 2%;
+            top: 15%;
+            z-index: 10;
+            max-width: 28%;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .adventure-block {
+            font-size: clamp(0.65rem, 1vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-black);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .adventure-pill {
+            display: inline-block;
+            background-color: var(--sky-blue);
+            color: var(--text-black);
+            font-family: 'Playball', cursive;
+            font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+            font-weight: normal;
+            padding: 4px 20px;
+            border-radius: 30px;
+            transform: rotate(-3deg);
+            margin-top: 6px;
+            text-transform: none;
+            letter-spacing: 0;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+        }
+
+        /* Inset circular photo */
+        .cover-inset-circle {
+            position: absolute;
+            right: 4%;
+            bottom: 22%;
+            width: clamp(100px, 14vw, 160px);
+            height: clamp(100px, 14vw, 160px);
+            border-radius: 50%;
+            border: 4px solid var(--bg-cream);
+            overflow: hidden;
+            box-shadow: var(--shadow-deep);
+            z-index: 12;
+            transition: transform 0.4s ease;
+        }
+        .cover-inset-circle:hover {
+            transform: scale(1.08) rotate(5deg);
+        }
+        .cover-inset-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Cover Bottom layout details */
+        .cover-bottom-area {
+            position: relative;
+            z-index: 15;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 10px;
+        }
+
+        .cover-guest-cta {
+            background-color: var(--text-black);
+            color: var(--bg-paper);
+            border: none;
+            padding: 12px 28px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover-guest-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+        }
+        .cover-guest-cta:hover::before {
+            left: 100%;
+        }
+        .cover-guest-cta:hover {
+            background-color: var(--burgundy);
+            transform: translateY(-2px);
+        }
+
+        .cover-headline-container {
+            position: absolute;
+            bottom: clamp(10px, 3.5vw, 40px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .script-name {
+            font-family: 'Playball', cursive;
+            font-size: clamp(3.2rem, 7.5vw, 7.5rem);
+            color: #FFF;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+            display: block;
+            margin-bottom: -20px;
+            position: relative;
+            z-index: 21;
+        }
+
+        .banner-black {
+            background-color: var(--text-black);
+            color: #FFF;
+            padding: 8px 30px;
+            font-size: clamp(0.8rem, 1.3vw, 1.3rem);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: inline-block;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Barcode */
+        .cover-barcode-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: rotate(-90deg) translate(30px, 30px);
+            transform-origin: right bottom;
+            position: absolute;
+            right: 4%;
+            bottom: 40px;
+            z-index: 10;
+        }
+
+        .barcode-svg {
+            width: 110px;
+            height: 30px;
+            color: var(--text-black);
+        }
+
+        .barcode-num {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.55rem;
+            color: var(--text-black);
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* --- IMMERSIVE DOUBLE PAGE SPREAD (INSIDE) --- */
+        .magazine-spread {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 10;
+            animation: fadeInSpread 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        .magazine-spread.visible {
+            display: flex;
+        }
+
+        .spread-page {
+            flex: 1;
+            height: 100vh;
+            background-color: var(--bg-paper);
+            padding: 50px 6%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .spread-page.page-left {
+            border-right: 1px solid #E5E0D8;
+            background-image: linear-gradient(to right, #F4EFE6 0%, var(--bg-paper) 6%);
+        }
+
+        .spread-page.page-right {
+            background-image: linear-gradient(to left, #F4EFE6 0%, var(--bg-paper) 6%);
+        }
+
+        /* Page Headers */
+        .page-header-meta {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--text-black);
+            padding-bottom: 12px;
+            margin-bottom: 30px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted-taupe);
+        }
+
+        .page-header-meta span.active-section {
+            color: var(--burgundy);
+        }
+
+        /* Left Page: Editorial */
+        .editorial-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3.2vw, 3.2rem);
+            font-weight: 900;
+            color: var(--burgundy);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .editorial-body {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            text-align: justify;
+            column-count: 2;
+            column-gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editorial-body::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8rem;
+            font-weight: 900;
+            float: left;
+            margin-right: 10px;
+            line-height: 0.8;
+            color: var(--burgundy);
+        }
+
+        /* Milestones Timeline */
+        .timeline-widget {
+            border-top: 1.5px dashed var(--muted-taupe);
+            padding-top: 25px;
+            margin-top: auto;
+        }
+
+        .timeline-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-black);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timeline-tabs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .time-tab-btn {
+            background-color: #EEEAE2;
+            border: none;
+            color: var(--muted-taupe);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.25s ease;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .time-tab-btn.active {
+            background-color: var(--burgundy);
+            color: #FFF;
+        }
+
+        .timeline-display-box {
+            background-color: #FAF8F5;
+            border: 1px solid #E2DCD3;
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            min-height: 120px;
+            animation: fadeIn 0.4s ease;
+            box-shadow: inset 0px 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .timeline-polaroid {
+            width: 85px;
+            height: 85px;
+            background-color: #FFF;
+            border: 1.5px solid #DDD;
+            padding: 4px;
+            box-shadow: var(--shadow-soft);
+            transform: rotate(-3deg);
+            flex-shrink: 0;
+        }
+
+        .timeline-polaroid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .timeline-text-content {
+            flex-grow: 1;
+        }
+
+        .timeline-year {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--burgundy);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: var(--text-dark);
+        }
+
+        /* Right Page: Details & Actions */
+        .event-card {
+            background-color: #FAF5ED;
+            border-left: 5px solid var(--burgundy);
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .event-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-black);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            row-gap: 10px;
+            column-gap: 15px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .event-label {
+            font-weight: 700;
+            color: var(--burgundy);
+            text-transform: uppercase;
+        }
+
+        .event-val {
+            color: var(--text-dark);
+        }
+
+        .event-val strong {
+            color: var(--text-black);
+        }
+
+        .event-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-action-small {
+            background-color: transparent;
+            color: var(--text-black);
+            border: 1px solid var(--text-black);
+            padding: 8px 18px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-action-small:hover {
+            background-color: var(--text-black);
+            color: #FFF;
+        }
+
+        /* RSVP Guestbook */
+        .rsvp-section {
+            border-top: 1.5px dashed var(--muted-taupe);
+            padding-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .rsvp-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-black);
+            margin-bottom: 12px;
+        }
+
+        .guest-wishes-box {
+            height: 130px;
+            overflow-y: auto;
+            background-color: #FAF8F5;
+            border: 1px solid #E2DCD3;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: inset 0px 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .wish-item {
+            font-size: 0.76rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            padding-bottom: 8px;
+            border-bottom: 1px solid #EEEAE2;
+        }
+
+        .wish-item strong {
+            color: var(--burgundy);
+            display: block;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        .rsvp-form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .rsvp-input {
+            padding: 10px 15px;
+            border: 1px solid #CFC7BC;
+            background-color: #FFF;
+            font-size: 0.78rem;
+            outline: none;
+            border-radius: 4px;
+        }
+        .rsvp-input:focus {
+            border-color: var(--burgundy);
+        }
+
+        .rsvp-name-input {
+            flex-grow: 1;
+        }
+
+        .rsvp-wish-input {
+            flex-grow: 2.5;
+        }
+
+        .btn-rsvp-submit {
+            background-color: var(--burgundy);
+            color: #FFF;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .btn-rsvp-submit:hover {
+            background-color: var(--burgundy-light);
+        }
+
+        /* Registry */
+        .registry-section {
+            border-top: 1.5px dashed var(--muted-taupe);
+            padding-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .registry-info {
+            flex-grow: 1;
+        }
+
+        .registry-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-black);
+            margin-bottom: 6px;
+        }
+
+        .registry-desc {
+            font-size: 0.74rem;
+            color: var(--muted-taupe);
+            line-height: 1.45;
+        }
+
+        /* Flat Gift Box Illustration */
+        .gift-box-widget {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gift-box-widget:hover {
+            transform: scale(1.08) rotate(3deg);
+        }
+
+        .gift-lid {
+            width: 66px;
+            height: 18px;
+            background-color: var(--hot-pink);
+            border: 2px solid var(--text-black);
+            border-radius: 4px;
+            position: absolute;
+            top: 15px;
+            left: 7px;
+            z-index: 5;
+            box-shadow: inset 1px 1px 3px rgba(255,255,255,0.4);
+            transform-origin: bottom center;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        }
+
+        .gift-body {
+            width: 60px;
+            height: 40px;
+            background-color: var(--burgundy);
+            border: 2px solid var(--text-black);
+            border-radius: 0 0 4px 4px;
+            position: absolute;
+            top: 31px;
+            left: 10px;
+            z-index: 3;
+            box-shadow: inset 1px 1px 4px rgba(255,255,255,0.2), 2px 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .gift-ribbon-v {
+            width: 12px;
+            height: 100%;
+            background-color: var(--gold);
+            border-left: 2px solid var(--text-black);
+            border-right: 2px solid var(--text-black);
+            position: absolute;
+            left: 22px;
+            top: 0;
+        }
+
+        .gift-bow {
+            position: absolute;
+            top: 0px;
+            left: 40px;
+            width: 0; height: 0;
+            z-index: 6;
+            transition: transform 0.5s;
+            pointer-events: none;
+        }
+
+        .gift-bow-loop-l, .gift-bow-loop-r {
+            width: 20px;
+            height: 20px;
+            background-color: var(--gold);
+            border: 2px solid var(--text-black);
+            border-radius: 50% 50% 0 50%;
+            position: absolute;
+            top: 0;
+        }
+        .gift-bow-loop-l {
+            transform: rotate(-45deg);
+            left: -21px;
+        }
+        .gift-bow-loop-r {
+            transform: rotate(135deg);
+            right: -21px;
+        }
+
+        /* Opened Gift Box */
+        .gift-box-widget.opened .gift-lid {
+            transform: translateY(-26px) rotate(-18deg) scale(0.9);
+            opacity: 0.9;
+        }
+        .gift-box-widget.opened .gift-bow {
+            transform: translateY(-28px) rotate(-18deg);
+        }
+
+        /* Registry Popup Modal */
+        .registry-popup {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 340px;
+            background-color: var(--bg-paper);
+            border: 2px solid var(--text-black);
+            box-shadow: var(--shadow-deep);
+            z-index: 2000;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .registry-popup.active {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .registry-popup-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1999;
+        }
+
+        .registry-popup-backdrop.active {
+            display: block;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 12px; right: 14px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: var(--muted-taupe);
+            border: none;
+            background: none;
+        }
+        .popup-close:hover {
+            color: var(--text-black);
+        }
+
+        .registry-bank {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--burgundy);
+            text-transform: uppercase;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .registry-number-box {
+            background-color: var(--bg-cream);
+            border: 1px dashed var(--muted-taupe);
+            padding: 10px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .registry-holder {
+            font-size: 0.76rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .btn-copy {
+            background-color: var(--text-black);
+            color: #FFF;
+            border: none;
+            padding: 10px 22px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-copy:hover {
+            background-color: var(--burgundy);
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-black);
+            color: #FFF;
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .copy-tooltip.show {
+            opacity: 1;
+        }
+
+        /* --- AUDIO WIDGET --- */
+        .audio-dock {
+            position: fixed;
+            bottom: 24px; left: 24px;
+            background-color: var(--bg-paper);
+            border: 1.5px solid #CFC7BC;
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .audio-dock:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .vinyl-record {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #444 20%, #111 25%, #111 60%, #444 65%, #111 70%);
+            border: 1.5px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vinyl-record::after {
+            content: '';
+            width: 6px; height: 6px;
+            background-color: var(--bg-paper);
+            border-radius: 50%;
+        }
+
+        .vinyl-record.spinning {
+            animation: spinVinyl 3s linear infinite;
+        }
+
+        .audio-text {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-black);
+        }
+
+        /* --- EDIT DRAWER PANEL --- */
+        .proofreader-drawer {
+            position: fixed;
+            top: 0; right: -320px;
+            width: 300px; height: 100vh;
+            background-color: var(--bg-paper);
+            border-left: 2px solid #CFC7BC;
+            box-shadow: -10px 0px 40px rgba(0,0,0,0.15);
+            z-index: 10001;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .proofreader-drawer.active {
+            right: 0;
+        }
+
+        .p-header {
+            padding: 16px;
+            background-color: var(--text-black);
+            color: #FFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .p-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .p-close {
+            background: none;
+            border: none;
+            color: #FFF;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .p-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .p-group {
+            margin-bottom: 14px;
+        }
+
+        .p-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--muted-taupe);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .p-group input[type="text"], .p-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #CFC7BC;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.76rem;
+            outline: none;
+            background-color: #FFF;
+        }
+
+        .p-group input[type="text"]:focus, .p-group textarea:focus {
+            border-color: var(--burgundy);
+        }
+
+        /* Floating Settings Toggle */
+        .btn-panel-toggle {
+            position: fixed;
+            top: 24px; right: 24px;
+            background-color: var(--bg-paper);
+            border: 1.5px solid #CFC7BC;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            z-index: 1002;
+            box-shadow: var(--shadow-soft);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-panel-toggle:hover {
+            background-color: var(--text-black);
+            color: #FFF;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Cover Toggle Back */
+        .back-to-cover-btn {
+            background: none;
+            border: none;
+            color: var(--muted-taupe);
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .back-to-cover-btn:hover {
+            color: var(--burgundy);
+        }
+
+        /* Mobile Stack Back Button overlay */
+        .btn-close-spread-mobile {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: var(--bg-paper);
+            border: 1.5px solid #CFC7BC;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        @keyframes fadeInSpread {
+            0% { opacity: 0; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- RESPONSIVE MECHANICS --- */
+        @media (max-width: 860px) {
+            .magazine-wrapper {
+                height: auto;
+                overflow-y: visible;
+            }
+
+            .magazine-cover {
+                padding: 30px 24px;
+            }
+
+            .cover-main-photo {
+                height: 75%;
+                width: 100%;
+            }
+
+            .cover-meta-left {
+                top: 22%;
+                left: 4%;
+                max-width: 45%;
+            }
+
+            .cover-meta-right {
+                top: 18%;
+                right: 4%;
+                max-width: 45%;
+            }
+
+            .cover-barcode-area {
+                transform: rotate(0) translate(0, 0);
+                right: auto;
+                left: 24px;
+                bottom: 120px;
+                align-items: flex-start;
+            }
+            
+            .barcode-svg {
+                width: 90px;
+                height: 22px;
+            }
+
+            .cover-inset-circle {
+                right: 24px;
+                bottom: 120px;
+                width: 95px;
+                height: 95px;
+            }
+
+            .cover-bottom-area {
+                justify-content: center;
+                padding-bottom: 20px;
+            }
+
+            .cover-guest-cta {
+                width: 100%;
+                text-align: center;
+            }
+
+            .magazine-spread {
+                position: relative;
+                flex-direction: column;
+                height: auto;
+                display: none;
+            }
+            .magazine-spread.visible {
+                display: flex;
+            }
+
+            .spread-page {
+                height: auto;
+                min-height: 100vh;
+                padding: 40px 20px;
+            }
+
+            .spread-page.page-left {
+                border-right: none;
+                background-image: none;
+            }
+
+            .spread-page.page-right {
+                background-image: none;
+            }
+
+            .btn-close-spread-mobile {
+                display: block;
+            }
+
+            .page-header-meta {
+                margin-top: 30px; /* offset back button */
+            }
+
+            .editorial-body {
+                column-count: 1;
+            }
+
+            .audio-dock {
+                bottom: 20px; left: 20px;
+                padding: 6px 14px;
+            }
+
+            .btn-panel-toggle {
+                top: 20px; right: 20px;
+                padding: 6px 12px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN FLASH LAYER -->
+    <div id="flash-overlay"></div>
+
+    <!-- CONFETTI CANVAS -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- AUDIO PLAYER ELEMENT -->
+    <audio id="bg-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- MOBILE CLOSE SPREAD HEADER -->
+    <button class="btn-close-spread-mobile" id="btn-mobile-close" onclick="closeMagazine()">
+        ← Cover
+    </button>
+
+    <!-- FLOATING EDIT DRAWER TRIGGER -->
+    <button class="btn-panel-toggle" onclick="toggleProofreaderDrawer()">
+        <span>✍️</span> Edit Panel
+    </button>
+
+    <!-- PROOFREADER PANEL DRAWER -->
+    <div class="proofreader-drawer" id="proofreader-drawer">
+        <div class="p-header">
+            <h3>Editorial Proofreader ✍️</h3>
+            <button class="p-close" onclick="toggleProofreaderDrawer()">×</button>
+        </div>
+        <div class="p-body">
+            <div class="p-group">
+                <label>Nama Wisudawan</label>
+                <input type="text" id="input-starring" value="Angelina" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Judul Cover</label>
+                <input type="text" id="input-headline" value="GRADUATE" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Sub-judul Cover</label>
+                <input type="text" id="input-subtitle" value="We are proud of you" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Angkatan (Class of)</label>
+                <input type="text" id="input-class-year" value="2026" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Grup Acara / Banner</label>
+                <input type="text" id="input-banner-title" value="PROM SEND OFF" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Headline Kanan (Adventure)</label>
+                <input type="text" id="input-right-line" value="ONWARD TO THE NEXT" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Pill Text (Adventure)</label>
+                <input type="text" id="input-right-pill" value="Adventure!" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Barcode ID</label>
+                <input type="text" id="input-barcode-id" value="No: 123456789000000000000" oninput="liveUpdateEditorial()">
+            </div>
+            <hr style="border: 0; border-top: 1px solid #DDD; margin: 15px 0;">
+            <div class="p-group">
+                <label>Judul Artikel (Page 2)</label>
+                <input type="text" id="input-editorial-title" value="The Journey Begins Here" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Isi Artikel (Paragraf)</label>
+                <textarea id="input-editorial-body" rows="4" oninput="liveUpdateEditorial()">Setelah empat tahun menempuh perjuangan akademik, tawa, air mata, dan secangkir kopi malam, hari kelulusan ini menandai akhir dari satu babak luar biasa dan awal dari petualangan tak terhingga di dunia nyata. Semua mimpi besar bermula dari sini.</textarea>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid #DDD; margin: 15px 0;">
+            <div class="p-group">
+                <label>Tanggal Acara</label>
+                <input type="text" id="input-event-date" value="Saturday, August 15, 2026" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Waktu Acara</label>
+                <input type="text" id="input-event-time" value="04:00 PM – 09:00 PM (GMT+7)" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Nama Venue</label>
+                <input type="text" id="input-event-venue" value="Grand Astoria Ballroom" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Alamat Venue</label>
+                <textarea id="input-event-address" rows="2" oninput="liveUpdateEditorial()">Skyline Tower 12th Floor, Kav. 22 Sudirman, Jakarta</textarea>
+            </div>
+            <div class="p-group">
+                <label>Link Google Maps</label>
+                <input type="text" id="input-event-maps" value="https://maps.google.com" oninput="liveUpdateEditorial()">
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #DDD; margin: 15px 0;">
+            <div class="p-group">
+                <label>Registry: Nama Bank</label>
+                <input type="text" id="input-reg-bank" value="Bank BCA" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Registry: Nomor Rekening</label>
+                <input type="text" id="input-reg-number" value="8930281930" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Registry: Nama Penerima</label>
+                <input type="text" id="input-reg-holder" value="a/n Angelina Amanda" oninput="liveUpdateEditorial()">
+            </div>
+            <hr style="border: 0; border-top: 1px solid #DDD; margin: 15px 0;">
+            <div class="p-group">
+                <label>Milestone: Freshman</label>
+                <textarea id="input-ms-fresh" rows="2" oninput="liveUpdateEditorial()">Memasuki gerbang universitas dengan rasa ingin tahu tinggi, berkenalan dengan teman baru di asrama, dan beradaptasi dengan materi kuliah awal.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Milestone: Sophomore</label>
+                <textarea id="input-ms-soph" rows="2" oninput="liveUpdateEditorial()">Menentukan penjurusan riset ilmiah, aktif di kepengurusan organisasi mahasiswa tingkat fakultas, dan memulai proyek lab perdana.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Milestone: Junior</label>
+                <textarea id="input-ms-jun" rows="2" oninput="liveUpdateEditorial()">Menempuh program magang industri kreatif selama 6 bulan dan memenangkan kompetisi perancangan aplikasi startup inovatif.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Milestone: Senior</label>
+                <textarea id="input-ms-sen" rows="2" oninput="liveUpdateEditorial()">Menyelesaikan draf tugas akhir / skripsi bertema riset terapan, bersiap menghadapi sidang, dan menyambut momen wisuda keemasan.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN MAGAZINE BOOK WRAPPER -->
+    <div class="magazine-wrapper">
+        <!-- FRONT COVER PAGE -->
+        <div class="magazine-cover" id="cover-page">
+            <div class="paper-grain"></div>
+
+            <!-- Header Brand -->
+            <div class="cover-header">
+                <h1 class="cover-title" id="lbl-headline">GRADUATE</h1>
+                <span class="cover-subtitle" id="lbl-subtitle">We are proud of you</span>
+            </div>
+
+            <!-- Visual Background Area -->
+            <div class="cover-visual-zone">
+                <img class="cover-main-photo" src="angelina_cover.png" alt="Graduate Cover Portrait" id="cover-photo-main">
+
+                <!-- Overlay Headlines Left -->
+                <div class="cover-meta-left">
+                    <h2 class="journey-text">
+                        THE <span class="highlight">JOURNEY</span> BEGINS HERE
+                    </h2>
+                    <div class="class-badge">
+                        <span id="lbl-class-year-1">2026</span><br>
+                        <strong>Class of</strong>
+                    </div>
+                </div>
+
+                <!-- Overlay Headlines Right -->
+                <div class="cover-meta-right">
+                    <div class="adventure-block">
+                        WE ARE PROUD OF YOU<br>
+                        <span id="lbl-right-line">ONWARD TO THE NEXT</span><br>
+                        <span class="adventure-pill" id="lbl-right-pill">Adventure!</span>
+                    </div>
+                </div>
+
+                <!-- Circular Inset Overlapping Thumb -->
+                <div class="cover-inset-circle">
+                    <img src="angelina_inset.png" alt="Graduate Small Portrait" id="cover-photo-inset">
+                </div>
+
+                <!-- Central Dynamic Typography Overlap -->
+                <div class="cover-headline-container">
+                    <span class="script-name" id="lbl-starring-1">Angelina</span>
+                    <div class="banner-black" id="lbl-banner-title">PROM SEND OFF</div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar layout details -->
+            <div class="cover-bottom-area">
+                <button class="cover-guest-cta" onclick="openMagazine()">
+                    Open Invitation
+                </button>
+
+                <!-- Barcode element -->
+                <div class="cover-barcode-area" title="Graduation Issue Code">
+                    <svg class="barcode-svg" viewBox="0 0 100 30" preserveAspectRatio="none">
+                        <g fill="currentColor">
+                            <rect x="0" width="3" height="30"/>
+                            <rect x="5" width="1" height="30"/>
+                            <rect x="8" width="2" height="30"/>
+                            <rect x="12" width="4" height="30"/>
+                            <rect x="18" width="1" height="30"/>
+                            <rect x="21" width="3" height="30"/>
+                            <rect x="26" width="2" height="30"/>
+                            <rect x="30" width="1" height="30"/>
+                            <rect x="33" width="4" height="30"/>
+                            <rect x="39" width="2" height="30"/>
+                            <rect x="43" width="1" height="30"/>
+                            <rect x="46" width="3" height="30"/>
+                            <rect x="51" width="4" height="30"/>
+                            <rect x="57" width="1" height="30"/>
+                            <rect x="60" width="2" height="30"/>
+                            <rect x="64" width="3" height="30"/>
+                            <rect x="69" width="1" height="30"/>
+                            <rect x="72" width="4" height="30"/>
+                            <rect x="78" width="2" height="30"/>
+                            <rect x="82" width="1" height="30"/>
+                            <rect x="85" width="3" height="30"/>
+                            <rect x="90" width="4" height="30"/>
+                            <rect x="96" width="4" height="30"/>
+                        </g>
+                    </svg>
+                    <span class="barcode-num" id="lbl-barcode-id">No: 123456789000000000000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOUBLE PAGE SPREAD (INSIDE DETAILS) -->
+        <div class="magazine-spread" id="magazine-spread">
+            
+            <!-- LEFT PAGE: Editorial Journey -->
+            <div class="spread-page page-left">
+                <div class="paper-grain"></div>
+                
+                <div class="page-header-meta">
+                    <button class="back-to-cover-btn" onclick="closeMagazine()">
+                        <span>←</span> Back To Cover
+                    </button>
+                    <span>Volume 26 / Issue I</span>
+                    <span class="active-section">Editorial Column</span>
+                </div>
+
+                <div>
+                    <h2 class="editorial-title" id="lbl-editorial-title">The Journey Begins Here</h2>
+                    <div class="editorial-body" id="lbl-editorial-body">
+                        Setelah empat tahun menempuh perjuangan akademik, tawa, air mata, dan secangkir kopi malam, hari kelulusan ini menandai akhir dari satu babak luar biasa dan awal dari petualangan tak terhingga di dunia nyata. Semua mimpi besar bermula dari sini.
+                    </div>
+                </div>
+
+                <!-- Interactive Milestones Timeline -->
+                <div class="timeline-widget">
+                    <div class="timeline-header">
+                        <span>Interactive Log</span>
+                        <span style="font-size: 0.65rem; color: var(--muted-taupe);">Select Academic Year</span>
+                    </div>
+                    <div class="timeline-tabs">
+                        <button class="time-tab-btn active" onclick="switchMilestone('freshman', this)">Freshman</button>
+                        <button class="time-tab-btn" onclick="switchMilestone('sophomore', this)">Sophomore</button>
+                        <button class="time-tab-btn" onclick="switchMilestone('junior', this)">Junior</button>
+                        <button class="time-tab-btn" onclick="switchMilestone('senior', this)">Senior</button>
+                    </div>
+                    <div class="timeline-display-box">
+                        <div class="timeline-polaroid">
+                            <img src="angelina_inset.png" alt="Milestone Year Snapshot" id="img-milestone">
+                        </div>
+                        <div class="timeline-text-content">
+                            <div class="timeline-year" id="lbl-milestone-year">Freshman Year</div>
+                            <div class="timeline-desc" id="lbl-milestone-desc">
+                                Memasuki gerbang universitas dengan rasa ingin tahu tinggi, berkenalan dengan teman baru di asrama, dan beradaptasi dengan materi kuliah awal.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PAGE: Celebration, Guestbook, Registry -->
+            <div class="spread-page page-right">
+                <div class="paper-grain"></div>
+                
+                <div class="page-header-meta">
+                    <span class="active-section">Invitation Details</span>
+                    <span>Official Bulletin</span>
+                    <span id="lbl-class-year-2">Class of 2026</span>
+                </div>
+
+                <!-- Celebration Card Details -->
+                <div class="event-card">
+                    <h3 class="event-title">Graduation Party & Send-Off</h3>
+                    <div class="event-grid">
+                        <span class="event-label">Date</span>
+                        <span class="event-val" id="lbl-event-date">Saturday, August 15, 2026</span>
+
+                        <span class="event-label">Time</span>
+                        <span class="event-val" id="lbl-event-time">04:00 PM – 09:00 PM (GMT+7)</span>
+
+                        <span class="event-label">Venue</span>
+                        <span class="event-val">
+                            <strong id="lbl-event-venue-name">Grand Astoria Ballroom</strong><br>
+                            <span id="lbl-event-address">Skyline Tower 12th Floor, Kav. 22 Sudirman, Jakarta</span>
+                        </span>
+                    </div>
+                    <div class="event-actions">
+                        <a class="btn-action-small" href="https://maps.google.com" target="_blank" id="btn-maps-link">
+                            📍 Open Maps
+                        </a>
+                        <button class="btn-action-small" onclick="addToCalendar()">
+                            📅 Add Calendar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RSVP Wish Guestbook -->
+                <div class="rsvp-section">
+                    <h3 class="rsvp-section-title">Wishes Guestbook</h3>
+                    
+                    <!-- Guest wishes feed -->
+                    <div class="guest-wishes-box" id="guest-wishes-box">
+                        <!-- Populated by JavaScript -->
+                        <div class="wish-item">
+                            Selamat atas kelulusannya, Angelina! Semoga sukses di dunia profesional.
+                            <strong>— Budi & Keluarga</strong>
+                        </div>
+                        <div class="wish-item">
+                            Proud of you! Happy graduation, onward to your next big adventure!
+                            <strong>— Clara (Bestie)</strong>
+                        </div>
+                    </div>
+
+                    <!-- RSVP Form inputs -->
+                    <div class="rsvp-form-row">
+                        <input type="text" class="rsvp-input rsvp-name-input" id="rsvp-name" placeholder="Nama Anda" required>
+                        <input type="text" class="rsvp-input rsvp-wish-input" id="rsvp-wish" placeholder="Ketik Ucapan Selamat..." required>
+                        <button class="btn-rsvp-submit" onclick="submitRSVP()">Kirim</button>
+                    </div>
+                </div>
+
+                <!-- Gift Registry -->
+                <div class="registry-section">
+                    <div class="registry-info">
+                        <h3 class="registry-title">Digital Gift Box</h3>
+                        <p class="registry-desc">Kehadiran & restu Anda adalah kado terindah. Namun jika ingin mengirimkan tanda kasih digital, klik kotak kado di samping.</p>
+                    </div>
+                    <!-- Interactive puffy gift illustration -->
+                    <div class="gift-box-widget" id="gift-box" onclick="toggleRegistryPopup()">
+                        <div class="gift-bow">
+                            <div class="gift-bow-loop-l"></div>
+                            <div class="gift-bow-loop-r"></div>
+                        </div>
+                        <div class="gift-lid"></div>
+                        <div class="gift-body">
+                            <div class="gift-ribbon-v"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- REGISTRY POPUP DIALOG -->
+    <div class="registry-popup-backdrop" id="registry-backdrop" onclick="toggleRegistryPopup()"></div>
+    <div class="registry-popup" id="registry-popup">
+        <button class="popup-close" onclick="toggleRegistryPopup()">×</button>
+        <h3 style="font-family:'Playfair Display', serif; font-size:1.2rem; text-transform:uppercase;">Tanda Kasih Digital 🎁</h3>
+        <p style="font-size:0.72rem; color:var(--muted-taupe); margin-top:5px;">Klik pada kotak nomor rekening untuk menyalin secara otomatis</p>
+        
+        <div class="registry-bank" id="lbl-popup-bank">Bank BCA</div>
+        <div class="registry-number-box" onclick="copyRegistryAccount()">
+            <span id="lbl-popup-number">8930281930</span>
+            <div class="copy-tooltip" id="copy-tooltip">Copied!</div>
+        </div>
+        <div class="registry-holder" id="lbl-popup-holder">a/n Angelina Amanda</div>
+        
+        <button class="btn-copy" onclick="copyRegistryAccount()">Salin Nomor Rekening</button>
+    </div>
+
+    <!-- AUDIO TOGGLE WIDGET -->
+    <div class="audio-dock" onclick="toggleAudio()">
+        <div class="vinyl-record" id="vinyl"></div>
+        <span class="audio-text" id="audio-lbl">Music: OFF</span>
+    </div>
+
+    <!-- MAIN APP CONTROLLER JAVASCRIPT -->
+    <script>
+        // Storage of milestones data
+        let milestoneData = {
+            freshman: {
+                year: "Freshman Year",
+                desc: "Memasuki gerbang universitas dengan rasa ingin tahu tinggi, berkenalan dengan teman baru di asrama, dan beradaptasi dengan materi kuliah awal."
+            },
+            sophomore: {
+                year: "Sophomore Year",
+                desc: "Menentukan penjurusan riset ilmiah, aktif di kepengurusan organisasi mahasiswa tingkat fakultas, dan memulai proyek lab perdana."
+            },
+            junior: {
+                year: "Junior Year",
+                desc: "Menempuh program magang industri kreatif selama 6 bulan dan memenangkan kompetisi perancangan aplikasi startup inovatif."
+            },
+            senior: {
+                year: "Senior Year",
+                desc: "Menyelesaikan draf tugas akhir / skripsi bertema riset terapan, bersiap menghadapi sidang, dan menyambut momen wisuda keemasan."
+            }
+        };
+
+        // Initialize Guestbook database in localStorage
+        const STORAGE_KEY = "grad4_guestbook_wishes";
+        let defaultWishes = [
+            { name: "Budi & Keluarga", message: "Selamat atas kelulusannya, Angelina! Semoga sukses di dunia profesional." },
+            { name: "Clara (Bestie)", message: "Proud of you! Happy graduation, onward to your next big adventure!" }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(!localStorage.getItem(STORAGE_KEY)) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultWishes));
+            }
+            renderWishes();
+            initConfetti();
+        });
+
+        // 1. Live Editorial Panel Updates
+        function liveUpdateEditorial() {
+            const starring = document.getElementById('input-starring').value;
+            const headline = document.getElementById('input-headline').value;
+            const subtitle = document.getElementById('input-subtitle').value;
+            const classYear = document.getElementById('input-class-year').value;
+            const bannerTitle = document.getElementById('input-banner-title').value;
+            const rightLine = document.getElementById('input-right-line').value;
+            const rightPill = document.getElementById('input-right-pill').value;
+            const barcodeId = document.getElementById('input-barcode-id').value;
+
+            const editTitle = document.getElementById('input-editorial-title').value;
+            const editBody = document.getElementById('input-editorial-body').value;
+            
+            const eventDate = document.getElementById('input-event-date').value;
+            const eventTime = document.getElementById('input-event-time').value;
+            const eventVenue = document.getElementById('input-event-venue').value;
+            const eventAddress = document.getElementById('input-event-address').value;
+            const eventMaps = document.getElementById('input-event-maps').value;
+
+            const regBank = document.getElementById('input-reg-bank').value;
+            const regNum = document.getElementById('input-reg-number').value;
+            const regHolder = document.getElementById('input-reg-holder').value;
+
+            // Cover elements
+            document.getElementById('lbl-starring-1').innerText = starring;
+            document.getElementById('lbl-headline').innerText = headline;
+            document.getElementById('lbl-subtitle').innerText = subtitle;
+            document.getElementById('lbl-class-year-1').innerText = classYear;
+            document.getElementById('lbl-class-year-2').innerText = 'Class of ' + classYear;
+            document.getElementById('lbl-banner-title').innerText = bannerTitle;
+            document.getElementById('lbl-right-line').innerText = rightLine;
+            document.getElementById('lbl-right-pill').innerText = rightPill;
+            document.getElementById('lbl-barcode-id').innerText = barcodeId;
+
+            // Spread elements
+            document.getElementById('lbl-editorial-title').innerText = editTitle;
+            document.getElementById('lbl-editorial-body').innerText = editBody;
+            
+            // Event Details elements
+            document.getElementById('lbl-event-date').innerText = eventDate;
+            document.getElementById('lbl-event-time').innerText = eventTime;
+            document.getElementById('lbl-event-venue-name').innerText = eventVenue;
+            document.getElementById('lbl-event-address').innerText = eventAddress;
+            document.getElementById('btn-maps-link').href = eventMaps;
+
+            // Registry Popup elements
+            document.getElementById('lbl-popup-bank').innerText = regBank;
+            document.getElementById('lbl-popup-number').innerText = regNum;
+            document.getElementById('lbl-popup-holder').innerText = regHolder;
+
+            // Update local milestone memory on the fly
+            milestoneData.freshman.desc = document.getElementById('input-ms-fresh').value;
+            milestoneData.sophomore.desc = document.getElementById('input-ms-soph').value;
+            milestoneData.junior.desc = document.getElementById('input-ms-jun').value;
+            milestoneData.senior.desc = document.getElementById('input-ms-sen').value;
+
+            // Re-render currently active milestone log
+            const activeTabBtn = document.querySelector('.time-tab-btn.active');
+            if(activeTabBtn) {
+                const step = activeTabBtn.innerText.toLowerCase();
+                document.getElementById('lbl-milestone-desc').innerText = milestoneData[step].desc;
+            }
+        }
+
+        // Toggle Proofreader settings drawer
+        function toggleProofreaderDrawer() {
+            document.getElementById('proofreader-drawer').classList.toggle('active');
+        }
+
+        // 2. Open Magazine Slide-away Animation
+        function openMagazine() {
+            // Flash effect
+            const flash = document.getElementById('flash-overlay');
+            flash.classList.add('flash');
+            setTimeout(() => {
+                flash.classList.remove('flash');
+            }, 60);
+
+            // Slide Cover Open to Left
+            document.getElementById('cover-page').classList.add('opened');
+            
+            // Show Spreads
+            setTimeout(() => {
+                document.getElementById('magazine-spread').classList.add('visible');
+                // Scroll down slightly on mobile to show editorial spread
+                if (window.innerWidth <= 860) {
+                    document.getElementById('magazine-spread').scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+
+            // Play background music if not already playing
+            const audio = document.getElementById('bg-audio');
+            if(audio.paused) {
+                audio.play().then(() => {
+                    document.getElementById('vinyl').classList.add('spinning');
+                    document.getElementById('audio-lbl').innerText = "Music: ON";
+                }).catch(e => console.log("Autoplay blocked by browser policy"));
+            }
+        }
+
+        // Close/Go back to cover
+        function closeMagazine() {
+            document.getElementById('cover-page').classList.remove('opened');
+            document.getElementById('magazine-spread').classList.remove('visible');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 3. Audio Dock Controls
+        function toggleAudio() {
+            const audio = document.getElementById('bg-audio');
+            const vinyl = document.getElementById('vinyl');
+            const lbl = document.getElementById('audio-lbl');
+            
+            if(audio.paused) {
+                audio.play();
+                vinyl.classList.add('spinning');
+                lbl.innerText = "Music: ON";
+            } else {
+                audio.pause();
+                vinyl.classList.remove('spinning');
+                lbl.innerText = "Music: OFF";
+            }
+        }
+
+        // 4. Milestone Year Switcher
+        function switchMilestone(step, btn) {
+            // Update tab button classes
+            document.querySelectorAll('.time-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Apply fade transition to display box
+            const displayBox = document.querySelector('.timeline-display-box');
+            displayBox.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Change texts
+                document.getElementById('lbl-milestone-year').innerText = milestoneData[step].year;
+                document.getElementById('lbl-milestone-desc').innerText = milestoneData[step].desc;
+                displayBox.style.opacity = '1';
+            }, 250);
+        }
+
+        // 5. Registry digital account copy popups
+        function toggleRegistryPopup() {
+            const giftBox = document.getElementById('gift-box');
+            const popup = document.getElementById('registry-popup');
+            const backdrop = document.getElementById('registry-backdrop');
+
+            if(giftBox.classList.contains('opened')) {
+                giftBox.classList.remove('opened');
+                popup.classList.remove('active');
+                backdrop.classList.remove('active');
+            } else {
+                giftBox.classList.add('opened');
+                popup.classList.add('active');
+                backdrop.classList.add('active');
+            }
+        }
+
+        function copyRegistryAccount() {
+            const textToCopy = document.getElementById('lbl-popup-number').innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const tooltip = document.getElementById('copy-tooltip');
+                tooltip.classList.add('show');
+                
+                // Animate copied button text
+                const btn = document.querySelector('.btn-copy');
+                const origText = btn.innerText;
+                btn.innerText = "Copied! ✓";
+                btn.style.backgroundColor = "var(--burgundy)";
+                
+                setTimeout(() => {
+                    tooltip.classList.remove('show');
+                    btn.innerText = origText;
+                    btn.style.backgroundColor = "var(--text-black)";
+                }, 2000);
+            }).catch(err => {
+                alert("Gagal menyalin nomor rekening: " + err);
+            });
+        }
+
+        // 6. Guestbook Submissions
+        function renderWishes() {
+            const box = document.getElementById('guest-wishes-box');
+            const list = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            box.innerHTML = '';
+            
+            list.forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'wish-item';
+                div.innerHTML = `${escapeHTML(w.message)} <strong>— ${escapeHTML(w.name)}</strong>`;
+                box.appendChild(div);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function submitRSVP() {
+            const nameInput = document.getElementById('rsvp-name');
+            const wishInput = document.getElementById('rsvp-wish');
+            
+            const name = nameInput.value.trim();
+            const message = wishInput.value.trim();
+
+            if(!name || !message) {
+                alert("Harap masukkan nama dan ucapan selamat Anda!");
+                return;
+            }
+
+            let list = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            list.push({ name, message });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+
+            // Clear inputs
+            nameInput.value = '';
+            wishInput.value = '';
+
+            // Re-render
+            renderWishes();
+
+            // Fire confetti burst!
+            fireConfetti();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Add to calendar event
+        function addToCalendar() {
+            const title = encodeURIComponent("Angelina's Prom Send-Off & Graduation");
+            const details = encodeURIComponent("Merayakan kelulusan Angelina. Silakan datang tepat waktu!");
+            const location = encodeURIComponent("Grand Astoria Ballroom, Skyline Tower 12th Floor, Kav. 22 Sudirman, Jakarta");
+            const startDate = "20260815T160000";
+            const endDate = "20260815T210000";
+            
+            const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+            window.open(googleCalUrl, '_blank');
+        }
+
+        // 7. Confetti Effect Animation script
+        let confetti = [];
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function initConfetti() {
+            resizeConfettiCanvas();
+            window.addEventListener('resize', resizeConfettiCanvas);
+        }
+
+        function resizeConfettiCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class ConfettiParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.color = ['#E8557C', '#A2D5F2', '#D4AF37', '#6A1A24', '#FFF'][Math.floor(Math.random() * 5)];
+                this.speedX = Math.random() * 10 - 5;
+                this.speedY = Math.random() * -12 - 5;
+                this.gravity = 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+                this.opacity = 1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += this.gravity;
+                this.rotation += this.rotationSpeed;
+                if(this.y > canvas.height) {
+                    this.opacity = 0;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function fireConfetti() {
+            const startX = window.innerWidth / 2;
+            const startY = window.innerHeight / 1.2;
+            
+            for(let i=0; i<80; i++) {
+                confetti.push(new ConfettiParticle(startX, startY));
+            }
+
+            if(confetti.length === 80) {
+                animateConfetti();
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            confetti.forEach((p, idx) => {
+                p.update();
+                p.draw();
+                if(p.opacity <= 0) {
+                    confetti.splice(idx, 1);
+                }
+            });
+
+            if(confetti.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            }
+        }
+    </script>
+</body>
+</html>

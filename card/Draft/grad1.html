@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Congrats Wisuda | Happy Graduation! 🎓✨</title>
+
+    <!-- Google Fonts for Cute Rounded Styling & Handwritten Notes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;700&family=Caveat:wght@600;700&family=Itim&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-cream: #FAF6EE;
+            --text-dark: #2B2B2B;
+            --border-dark: #2B2B2B;
+            
+            --clay-pink: #FFD2DF;
+            --clay-purple: #E6E1F9;
+            --clay-teal: #D2EBF7;
+            --clay-yellow: #FFF2CC;
+            --clay-white: #FFFFFF;
+            
+            /* Sage Green for Graduation theme */
+            --clay-sage: #E2F0D9;
+            --clay-sage-dark: #A2C891;
+            
+            /* Degree status colors */
+            --s1-color: #1E88E5; /* Blue */
+            --s2-color: #8E24AA; /* Purple */
+            --s3-color: #E53935; /* Red */
+            --degree-color: var(--s1-color);
+
+            --clay-shadow: 6px 6px 0px var(--border-dark);
+            --clay-shadow-hover: 8px 8px 0px var(--border-dark);
+            --clay-shadow-active: 3px 3px 0px var(--border-dark);
+            --clay-inset: inset 3px 3px 8px rgba(255, 255, 255, 0.8), inset -3px -3px 8px rgba(43, 43, 43, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            background-image: radial-gradient(rgba(43, 43, 43, 0.05) 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+            padding-bottom: 120px;
+        }
+
+        /* --- UTILITIES & LAYOUT --- */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .clay-btn {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background-color: var(--clay-white);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: var(--clay-inset), var(--clay-shadow);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+        }
+        .clay-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--clay-inset), var(--clay-shadow-hover);
+        }
+        .clay-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: var(--clay-inset), var(--clay-shadow-active);
+        }
+
+        .clay-card {
+            background-color: var(--clay-white);
+            border: 3px solid var(--border-dark);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: var(--clay-inset), var(--clay-shadow);
+            margin-bottom: 28px;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .clay-card:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: var(--clay-inset), var(--clay-shadow-hover);
+        }
+
+        .badge {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border: 2px solid var(--border-dark);
+            border-radius: 20px;
+            background-color: var(--clay-yellow);
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* --- 1. WELCOME OVERLAY (Map Wisuda) --- */
+        #welcome-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--clay-sage);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.6s cubic-bezier(0.77, 0, 0.175, 1), visibility 0.6s;
+            background-image: 
+                radial-gradient(at 10% 20%, var(--clay-teal) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, var(--clay-purple) 0px, transparent 50%);
+            background-size: 100% 100%;
+        }
+        #welcome-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .overlay-folder-container {
+            position: relative;
+            width: 240px;
+            height: 180px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        /* Virtual Certificate Folder */
+        .grad-folder-back {
+            width: 220px;
+            height: 160px;
+            background-color: #2b4c2b; /* Dark velvet green */
+            border: 3.5px solid var(--border-dark);
+            border-radius: 16px;
+            position: absolute;
+            top: 10px; left: 10px;
+            z-index: 1;
+            box-shadow: 6px 8px 0px rgba(0,0,0,0.15);
+        }
+        .grad-folder-front {
+            width: 220px;
+            height: 160px;
+            background-color: #386638; /* Velvet green front */
+            border: 3.5px solid var(--border-dark);
+            border-radius: 16px;
+            position: absolute;
+            top: 10px; left: 10px;
+            z-index: 3;
+            box-shadow: var(--clay-inset);
+            transform-origin: left center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .folder-emblem {
+            width: 50px; height: 50px;
+            background-color: var(--clay-yellow);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 50%;
+            box-shadow: var(--clay-inset);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        .folder-ribbon {
+            width: 20px;
+            height: 100%;
+            background-color: var(--clay-yellow);
+            border-left: 2.5px solid var(--border-dark);
+            border-right: 2.5px solid var(--border-dark);
+            position: absolute;
+            left: 30px; top: 0;
+            z-index: -1;
+        }
+
+        .overlay-folder-container:hover .grad-folder-front {
+            transform: rotateY(-30deg);
+        }
+        .overlay-folder-container.opened .grad-folder-front {
+            transform: rotateY(-110deg);
+            opacity: 0.9;
+        }
+
+        .overlay-text {
+            text-align: center;
+            max-width: 320px;
+        }
+        .overlay-text h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+        }
+        .overlay-text p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(43,43,43,0.85);
+            margin-bottom: 24px;
+        }
+
+        /* --- 2. HEADER SECTION --- */
+        header {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .header-title-container {
+            background-color: var(--clay-sage);
+            border: 3px solid var(--border-dark);
+            border-radius: 24px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: var(--clay-inset), var(--clay-shadow);
+            position: relative;
+            transform: rotate(-1.5deg);
+        }
+        .header-title-container h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            color: var(--text-dark);
+        }
+        .header-title-container .subtitle {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            opacity: 0.75;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .decor-cloud {
+            position: absolute;
+            background: var(--clay-white);
+            border: 2px solid var(--border-dark);
+            border-radius: 20px;
+            height: 25px;
+            box-shadow: var(--clay-inset), 2px 2px 0px var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            padding: 0 10px;
+            z-index: -1;
+            animation: floatCloud 6s ease-in-out infinite alternate;
+        }
+        .decor-cloud.c1 {
+            top: -20px; left: -10px;
+            width: 70px;
+            animation-delay: 0s;
+        }
+        .decor-cloud.c2 {
+            bottom: -15px; right: -20px;
+            width: 80px;
+            animation-delay: -3s;
+        }
+
+        /* --- 3. DEGREE LEVEL SWITCHER --- */
+        .degree-switcher {
+            display: flex;
+            background-color: var(--bg-cream);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 5px;
+            gap: 4px;
+            margin-bottom: 20px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.08);
+        }
+        .degree-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 8px 5px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: rgba(43,43,43,0.6);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .degree-btn.active {
+            color: var(--text-dark);
+            border: 2px solid var(--border-dark);
+            box-shadow: var(--clay-inset), 2px 2px 0px var(--border-dark);
+        }
+        .degree-btn.active[data-deg="s1"] { background-color: var(--s1-color); color: white; }
+        .degree-btn.active[data-deg="s2"] { background-color: var(--s2-color); color: white; }
+        .degree-btn.active[data-deg="s3"] { background-color: var(--s3-color); color: white; }
+
+        /* --- 4. DIGITAL ILLUSTRATION CARD --- */
+        .illustration-card {
+            background-color: var(--clay-white);
+            text-align: center;
+        }
+        
+        .photo-frame {
+            border: 3.5px solid var(--border-dark);
+            border-radius: 20px;
+            padding: 12px;
+            background-color: var(--clay-white);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+            margin: 15px 0 20px 0;
+            overflow: hidden;
+            position: relative;
+            height: 310px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: filter 0.4s ease;
+        }
+        
+        /* Photo Filter Classes */
+        .filter-line-art {
+            filter: grayscale(1) contrast(3.5) brightness(1.05);
+        }
+        .filter-monochrome {
+            filter: grayscale(1) contrast(1.2) brightness(0.98);
+        }
+        .filter-soft-color {
+            filter: sepia(0.2) saturate(1.4) hue-rotate(-12deg) contrast(0.95);
+        }
+
+        .default-illustration-svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .user-uploaded-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            display: none;
+        }
+
+        /* Filter Switcher Controls */
+        .filter-controls {
+            display: flex;
+            background-color: var(--bg-cream);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 5px;
+            gap: 4px;
+            margin-bottom: 20px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.08);
+        }
+        .filter-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 8px 5px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: rgba(43,43,43,0.6);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .filter-btn.active {
+            background-color: var(--clay-pink);
+            color: var(--text-dark);
+            border: 2px solid var(--border-dark);
+            box-shadow: var(--clay-inset), 2px 2px 0px var(--border-dark);
+        }
+
+        /* Gown Cap Flying Area */
+        .toga-cap-container {
+            width: 80px; height: 50px;
+            position: absolute;
+            top: 15px; left: 110px;
+            z-index: 6;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .toga-cap-container.flying {
+            z-index: 99;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Snapped Sunglasses sticker overlay */
+        .glasses-overlay-sticker {
+            width: 110px;
+            height: 45px;
+            position: absolute;
+            top: 92px; left: 95px;
+            z-index: 7;
+            display: none;
+            transform: rotate(-2deg);
+            pointer-events: none;
+            animation: zoomPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .upload-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .hidden-file-input {
+            display: none;
+        }
+
+        /* --- 5. INTERACTIVE ACTION TRIGGERS CARD --- */
+        .action-card-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        /* --- 6. MAP IJAZAH SWIPE CARD --- */
+        .gift-container {
+            overflow: hidden;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Closed State: swipe bar */
+        .gift-closed-panel {
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+        .gift-closed-panel.hidden {
+            display: none;
+        }
+
+        .gift-illustration-graphic {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px auto;
+            animation: bounceMild 2s ease-in-out infinite;
+        }
+
+        /* The Swipe Track */
+        .swipe-track {
+            height: 60px;
+            background-color: var(--bg-cream);
+            border: 3.5px solid var(--border-dark);
+            border-radius: 30px;
+            position: relative;
+            margin-top: 20px;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            user-select: none;
+            overflow: hidden;
+        }
+        .swipe-hint {
+            position: absolute;
+            left: 0; width: 100%;
+            text-align: center;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(43,43,43,0.55);
+            pointer-events: none;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulseText 1.5s infinite;
+        }
+        .swipe-handle {
+            width: 48px;
+            height: 48px;
+            background-color: var(--clay-pink);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 50%;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--clay-inset), 0px 3px 0px var(--border-dark);
+            position: absolute;
+            left: 6px;
+            z-index: 2;
+            transition: left 0.1s ease;
+        }
+        .swipe-handle:active {
+            cursor: grabbing;
+            background-color: var(--clay-teal);
+        }
+        .swipe-handle svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--text-dark);
+        }
+
+        /* Opened State: Scroll reveal */
+        .gift-opened-panel {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: zoomPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .gift-opened-panel.active {
+            display: block;
+        }
+
+        .scroll-container {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .scroll-container:hover {
+            transform: scale(1.08) rotate(3deg);
+        }
+
+        .scroll-interactive-msg {
+            background-color: var(--clay-yellow);
+            border: 2.5px solid var(--border-dark);
+            border-radius: 18px;
+            padding: 12px 18px;
+            box-shadow: var(--clay-inset);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 15px;
+            display: inline-block;
+            animation: pulseScale 2s infinite;
+        }
+
+        /* Modal Scroll Diary Paper */
+        .scroll-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(43,43,43,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s forwards;
+        }
+        .scroll-modal.active {
+            display: flex;
+        }
+
+        .scroll-paper-body {
+            width: 100%;
+            max-width: 450px;
+            background-color: #FAF2DF;
+            border: 3.5px solid var(--border-dark);
+            border-radius: 12px;
+            box-shadow: var(--clay-shadow-hover);
+            padding: 30px 24px;
+            background-image: 
+                radial-gradient(var(--border-dark) 0.5px, transparent 0.5px),
+                linear-gradient(#f0e6cf 1.5px, transparent 1.5px);
+            background-size: 20px 20px, 100% 24px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        }
+        .scroll-modal.active .scroll-paper-body {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .scroll-close-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            width: 32px; height: 32px;
+            border: 2px solid var(--border-dark);
+            border-radius: 50%;
+            background-color: var(--clay-pink);
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 1px 2px 0 var(--border-dark);
+        }
+        .scroll-close-btn:active {
+            transform: translateY(1px);
+        }
+
+        .scroll-text-content {
+            font-family: 'Itim', 'Caveat', cursive;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #3e3223;
+            text-align: left;
+            margin-top: 15px;
+            white-space: pre-wrap;
+        }
+
+        /* --- 7. INSTAX MEMORY WALL --- */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 15px;
+        }
+        
+        .polaroid-card {
+            perspective: 1000px;
+            height: 240px;
+            cursor: pointer;
+        }
+
+        .polaroid-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .polaroid-card.flipped .polaroid-inner {
+            transform: rotateY(180deg);
+        }
+
+        .polaroid-front, .polaroid-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border: 2.5px solid var(--border-dark);
+            border-radius: 12px;
+            box-shadow: var(--clay-inset), 3px 4px 0px var(--border-dark);
+            padding: 10px;
+            background-color: var(--clay-white);
+            display: flex;
+            flex-direction: column;
+        }
+        .polaroid-front {
+            z-index: 2;
+        }
+        .polaroid-back {
+            background-color: var(--clay-purple);
+            transform: rotateY(180deg);
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            padding: 15px;
+        }
+
+        .polaroid-img-holder {
+            width: 100%;
+            height: 155px;
+            border: 2px solid var(--border-dark);
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #EEE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .polaroid-img-holder svg, .polaroid-img-holder img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        
+        .polaroid-caption {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Itim', cursive;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            padding-top: 8px;
+        }
+        .polaroid-back-text {
+            font-family: 'Itim', cursive;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-dark);
+        }
+        
+        .tape-effect {
+            position: absolute;
+            top: -12px; left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 55px; height: 16px;
+            background-color: rgba(255,242,204,0.7);
+            border-left: 2px dashed rgba(43,43,43,0.3);
+            border-right: 2px dashed rgba(43,43,43,0.3);
+            z-index: 5;
+        }
+
+        /* --- 8. CASSETTE AUDIO PLAYER --- */
+        .audio-player-fixed {
+            position: fixed;
+            bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 560px;
+            background-color: var(--clay-purple);
+            border: 3px solid var(--border-dark);
+            border-radius: 24px;
+            padding: 12px 20px;
+            box-shadow: var(--clay-inset), var(--clay-shadow-hover);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .tape-deck-visual {
+            width: 65px; height: 42px;
+            background-color: var(--text-dark);
+            border-radius: 8px;
+            border: 2px solid var(--border-dark);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 8px;
+            overflow: hidden;
+        }
+        .tape-window {
+            width: 40px; height: 20px;
+            background-color: #4a4a4a;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .tape-wheel {
+            width: 12px; height: 12px;
+            background-color: var(--clay-white);
+            border-radius: 50%;
+            border: 2.5px dotted var(--text-dark);
+            box-sizing: border-box;
+        }
+        .tape-wheel.spinning {
+            animation: spin 3s linear infinite;
+        }
+
+        .player-info {
+            flex-grow: 1;
+        }
+        .track-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(43,43,43,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--clay-pink);
+            border-radius: 4px;
+            width: 0%;
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .player-btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-play-pause {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            padding: 0;
+        }
+        .btn-play-pause svg {
+            width: 16px; height: 16px;
+            fill: var(--text-dark);
+        }
+
+        /* --- 9. INTERACTIVE CATS --- */
+        .interactive-cat {
+            position: fixed;
+            z-index: 998;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .interactive-cat:hover {
+            transform: scale(1.1);
+        }
+        #cat-milo {
+            bottom: 105px; left: -10px;
+            width: 60px; height: 60px;
+            transform: rotate(20deg);
+        }
+        #cat-milo:hover {
+            transform: rotate(5deg) translateY(-5px) scale(1.1);
+        }
+
+        .cat-kuro-inline {
+            position: absolute;
+            top: -38px; right: 25px;
+            width: 45px; height: 45px;
+            cursor: pointer;
+            z-index: 5;
+            transition: transform 0.2s;
+        }
+        .cat-kuro-inline:hover {
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        .cat-speech-bubble {
+            position: fixed;
+            background: var(--clay-white);
+            border: 2px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 2px 2px 0 var(--border-dark);
+            z-index: 1001;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.3s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 150px;
+        }
+        .cat-speech-bubble.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .cat-speech-bubble::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            display: block;
+            width: 0;
+        }
+
+        /* --- 10. CUSTOMIZER DRAWER --- */
+        .customizer-drawer {
+            position: fixed;
+            top: 0; right: -320px;
+            width: 300px; height: 100vh;
+            background-color: var(--clay-white);
+            border-left: 3.5px solid var(--border-dark);
+            box-shadow: -8px 0px 0px rgba(43,43,43,0.15);
+            z-index: 10001;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .customizer-drawer.active {
+            right: 0;
+        }
+        .drawer-header {
+            padding: 18px;
+            border-bottom: 2.5px solid var(--border-dark);
+            background-color: var(--clay-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .drawer-header h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+        }
+        .btn-close-drawer {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .drawer-content {
+            padding: 18px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input[type="text"], 
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05);
+            outline: none;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            border-color: var(--clay-pink);
+        }
+
+        .btn-customizer-trigger {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 997;
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            padding: 0;
+        }
+        .btn-customizer-trigger svg {
+            width: 22px; height: 22px;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes floatCloud {
+            0% { transform: translateY(0) rotate(-1.5deg); }
+            100% { transform: translateY(-8px) rotate(1deg); }
+        }
+        @keyframes bounceMild {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.45; }
+            50% { opacity: 0.85; }
+        }
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes zoomPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .header-title-container h1 {
+                font-size: 1.7rem;
+            }
+            .photo-frame {
+                height: 250px;
+            }
+            .toga-cap-container {
+                top: 10px; left: 88px;
+                width: 60px; height: 40px;
+            }
+            .glasses-overlay-sticker {
+                width: 80px; height: 32px;
+                top: 72px; left: 78px;
+            }
+            .audio-player-fixed {
+                padding: 10px 14px;
+            }
+            .track-title {
+                max-width: 120px;
+            }
+            .clay-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. WELCOME OVERLAY (Map Wisuda) -->
+    <div id="welcome-overlay">
+        <div class="overlay-folder-container" id="welcome-folder" onclick="openWelcomeFolder()">
+            <!-- Folder Back -->
+            <div class="grad-folder-back"></div>
+            <!-- Folder Front -->
+            <div class="grad-folder-front">
+                <div class="folder-emblem">🎓</div>
+                <div class="folder-ribbon"></div>
+            </div>
+        </div>
+        
+        <div class="overlay-text">
+            <h1 id="overlay-heading">Congrats, Alya! 🎓</h1>
+            <p id="overlay-subheading">Map kelulusan spesial dikirimkan khusus untukmu. Tekan/Klik map di atas untuk membukanya!</p>
+            <button class="clay-btn" onclick="openWelcomeFolder()" style="background-color: var(--clay-yellow);">
+                Buka Map Wisuda ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING EDIT CONTROLLER TRIGGER -->
+    <button class="clay-btn btn-customizer-trigger" onclick="toggleCustomizer()" title="Edit Konten">
+        <!-- Kuro cat sitting on edit button -->
+        <div class="cat-kuro-inline" id="cat-kuro" onclick="clickKuroCat(event)">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <path d="M70,80 C80,80 85,60 85,50 C85,45 80,45 78,50 C76,55 74,74 68,74" fill="none" stroke="#2B2B2B" stroke-width="6" stroke-linecap="round"/>
+                <ellipse cx="50" cy="70" rx="22" ry="18" fill="#2B2B2B"/>
+                <circle cx="50" cy="46" r="18" fill="#2B2B2B"/>
+                <polygon points="35,36 32,15 47,30" fill="#2B2B2B"/>
+                <polygon points="65,36 68,15 53,30" fill="#2B2B2B"/>
+                <polygon points="37,34 35,20 45,29" fill="#FFD2DF"/>
+                <polygon points="63,34 65,20 55,29" fill="#FFD2DF"/>
+                <circle cx="44" cy="45" r="3" fill="#D2EBF7"/>
+                <circle cx="56" cy="45" r="3" fill="#D2EBF7"/>
+                <circle cx="44" cy="45" r="1" fill="#2B2B2B"/>
+                <circle cx="56" cy="45" r="1" fill="#2B2B2B"/>
+                <polygon points="50,49 48,47 52,47" fill="#FFD2DF"/>
+                <path d="M47,52 Q50,54 53,52" fill="none" stroke="#FFD2DF" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="28" y1="46" x2="15" y2="44" stroke="#FAF6EE" stroke-width="1.5"/>
+                <line x1="28" y1="50" x2="14" y2="52" stroke="#FAF6EE" stroke-width="1.5"/>
+                <line x1="72" y1="46" x2="85" y2="44" stroke="#FAF6EE" stroke-width="1.5"/>
+                <line x1="72" y1="50" x2="86" y2="52" stroke="#FAF6EE" stroke-width="1.5"/>
+            </svg>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+    </button>
+
+    <!-- LIVE CUSTOMIZER DRAWER -->
+    <div class="customizer-drawer" id="customizer-drawer">
+        <div class="drawer-header">
+            <h2>Ubah Isi Kartu ⚙️</h2>
+            <button class="btn-close-drawer" onclick="toggleCustomizer()">×</button>
+        </div>
+        <div class="drawer-content">
+            <div class="form-group">
+                <label>Nama Wisudawan</label>
+                <input type="text" id="input-penerima" value="Alya" oninput="updateLiveContent()">
+            </div>
+            <div class="form-group">
+                <label>Nama Pengirim</label>
+                <input type="text" id="input-pengirim" value="Sahabat-sahabatmu" oninput="updateLiveContent()">
+            </div>
+            <div class="form-group">
+                <label>Isi Surat Ijazah</label>
+                <textarea id="input-surat" rows="8" oninput="updateLiveContent()">Dear Alya,
+
+CONGRATULATIONS! Perjalanan panjang melelahkan di bangku kuliah akhirnya terbayar tuntas!
+
+Semua malam lembur tugas kelompok, ujian akhir yang bikin pusing, dan tumpukan revisi kini berbuah ijazah dan gelar wisuda. Kami sangat bangga melihatmu berdiri di sini dengan senyum wisuda terbaikmu!
+
+Selamat melangkah ke babak baru kehidupan, baik di dunia kerja profesional maupun jenjang riset selanjutnya. Teruslah menjadi anak muda yang keren, berani, dan selalu bersinar!
+
+Dengan penuh rasa bangga,
+Sahabat-sahabatmu ❤️🎓</textarea>
+            </div>
+            <div class="form-group">
+                <label>Foto Polaroid 1 (URL opsional)</label>
+                <input type="text" id="input-pol1" placeholder="Kosongkan untuk bawaan" oninput="updateLiveContent()">
+            </div>
+            <div class="form-group">
+                <label>Pesan Polaroid 1</label>
+                <input type="text" id="input-pol1-text" value="Sidang akhir perjuangan gelar. Momen menegangkan sekaligus melegakan! 📜" oninput="updateLiveContent()">
+            </div>
+            <div class="form-group">
+                <label>Foto Polaroid 2 (URL opsional)</label>
+                <input type="text" id="input-pol2" placeholder="Kosongkan untuk bawaan" oninput="updateLiveContent()">
+            </div>
+            <div class="form-group">
+                <label>Pesan Polaroid 2</label>
+                <input type="text" id="input-pol2-text" value="Foto studio kelulusan. Akhirnya bisa senyum lebar pakai toga! 🎓" oninput="updateLiveContent()">
+            </div>
+            <div style="font-size: 0.7rem; color: #888; text-align: center; margin-top: 15px;">
+                Klik tombol silang di pojok kanan atas setelah selesai mengedit!
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="decor-cloud c1">Congrats</div>
+            <div class="decor-cloud c2">축하해요</div>
+            <div class="header-title-container">
+                <h1 id="label-header-title">Graduation Day!</h1>
+                <div class="subtitle">
+                    <span id="label-degree-tag">S1 Graduate Clear!</span> • 
+                    <span id="label-penerima-nama" style="color: var(--text-dark); background-color: var(--clay-white); padding: 1px 8px; border-radius: 12px; border: 1.5px solid var(--border-dark);">Alya, S.Kom.</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- DEGREE SWITCHER PANEL -->
+        <div class="degree-switcher">
+            <button class="degree-btn active" data-deg="s1" onclick="changeDegree('s1')">S1 Sarjana</button>
+            <button class="degree-btn" data-deg="s2" onclick="changeDegree('s2')">S2 Magister</button>
+            <button class="degree-btn" data-deg="s3" onclick="changeDegree('s3')">S3 Doktor</button>
+        </div>
+
+        <!-- CARD 1: DIGITAL ILLUSTRATION wisuda -->
+        <div class="clay-card illustration-card">
+            <div class="badge" style="background-color: var(--clay-sage-dark); color: white;">Graduation Portrait</div>
+            <h2 style="font-family: 'Fredoka', sans-serif; font-size: 1.25rem;">Bingkai Foto Kelulusan</h2>
+            <p style="font-size: 0.8rem; color: rgba(43,43,43,0.7); margin-top: 4px;">Pilih filter untuk mencocokkan seleramu</p>
+            
+            <div class="photo-frame filter-soft-color" id="illustration-frame">
+                <!-- Toga Cap (Floating element inside frame) -->
+                <div class="toga-cap-container" id="toga-cap-elem" onclick="throwTogaCap()">
+                    <svg viewBox="0 0 75 50" width="100%" height="100%">
+                        <polygon points="37.5,5 70,18 37.5,30 5,18" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                        <path d="M22,25 C22,35 53,35 53,25" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                        <path d="M37.5,18 Q48,22 56,36" fill="none" stroke="var(--clay-yellow)" stroke-width="2.5" stroke-linecap="round" />
+                        <circle cx="56" cy="36" r="3" fill="var(--clay-yellow)" />
+                    </svg>
+                </div>
+
+                <!-- Snapped Sunglasses overlay -->
+                <div class="glasses-overlay-sticker" id="glasses-overlay">
+                    <svg viewBox="0 0 100 40" width="100%" height="100%">
+                        <path d="M5,10 C15,10 25,5 50,5 C75,5 85,10 95,10 C100,18 95,35 85,35 C70,35 60,25 50,25 C40,25 30,35 15,35 C5,35 0,18 5,10 Z" fill="var(--clay-white)" stroke="#2B2B2B" stroke-width="2" />
+                        <path d="M10,13 C18,13 25,8 50,8 C75,8 82,13 90,13 C95,20 90,30 82,30 C70,30 62,21 50,21 C38,21 30,30 18,30 C10,30 5,20 10,13 Z" fill="#2B2B2B" />
+                        <text x="26" y="24" font-family="'Fredoka', sans-serif" font-weight="bold" font-size="7.5" fill="var(--clay-yellow)" text-anchor="middle">COOL</text>
+                        <text x="74" y="24" font-family="'Fredoka', sans-serif" font-weight="bold" font-size="7.5" fill="var(--clay-yellow)" text-anchor="middle">GRAD!</text>
+                    </svg>
+                </div>
+
+                <!-- Default SVG cozy graduation illustration -->
+                <svg class="default-illustration-svg" id="default-svg" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="320" height="300" rx="12" fill="#E2F0D9" opacity="0.4"/>
+                    <circle cx="160" cy="120" r="85" fill="#FFE893" opacity="0.4"/>
+
+                    <!-- Background details: sparkles & stars -->
+                    <g fill="var(--clay-pink)" stroke="#2B2B2B" stroke-width="1">
+                        <path d="M260,60 Q257,55 260,52 Q263,55 260,60 Z" />
+                        <path d="M60,180 Q57,175 60,172 Q63,175 60,180 Z" />
+                    </g>
+
+                    <!-- GRADUATE CHARACTER -->
+                    <!-- Toga Gown Body -->
+                    <path d="M100,300 C100,225 125,185 160,185 C170,220 190,220 200,185 C225,190 235,230 235,300 Z" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round"/>
+                    
+                    <!-- Kerah Toga / Hood (Swaps color based on degree) -->
+                    <path id="hood-fill-left" d="M125,200 C128,193 150,195 160,210 C160,210 142,230 128,245" fill="var(--degree-color)" stroke="#2B2B2B" stroke-width="2.5"/>
+                    <path id="hood-fill-right" d="M195,200 C192,193 170,195 160,210 C160,210 178,230 192,245" fill="var(--degree-color)" stroke="#2B2B2B" stroke-width="2.5"/>
+                    <rect x="154" y="205" width="12" height="40" fill="var(--clay-yellow)" stroke="#2B2B2B" stroke-width="2" rx="2" />
+
+                    <!-- Neck -->
+                    <rect x="152" y="165" width="16" height="28" rx="4" fill="#FAF2DF" stroke="#2B2B2B" stroke-width="3"/>
+                    <!-- Head -->
+                    <ellipse cx="160" cy="135" rx="26" ry="30" fill="#FAF2DF" stroke="#2B2B2B" stroke-width="3"/>
+                    <!-- Hair -->
+                    <path d="M132,135 C132,105 188,105 188,135" fill="#2B2B2B" />
+                    <path d="M134,130 C140,115 180,115 186,130" stroke="#2B2B2B" stroke-width="3" fill="none"/>
+                    
+                    <!-- Smiling Eyes -->
+                    <path d="M147,137 Q150,134 153,137" fill="none" stroke="#2B2B2B" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M167,137 Q170,134 173,137" fill="none" stroke="#2B2B2B" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Blush -->
+                    <circle cx="143" cy="144" r="4.5" fill="#FFD2DF" />
+                    <circle cx="177" cy="144" r="4.5" fill="#FFD2DF" />
+                    <path d="M156,146 Q160,149 164,146" fill="none" stroke="#2B2B2B" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <!-- S3 Bonnet Hat (toggled dynamically via JS) -->
+                    <path id="toga-bonnet" d="M128,108 C128,92 192,92 192,108 C192,118 128,118 128,108 Z" fill="#222" stroke="#2B2B2B" stroke-width="3" style="display: none;"/>
+                    
+                    <!-- Tuxedo Cat on Graduate shoulder -->
+                    <g transform="translate(68, 172) rotate(-8)">
+                        <polygon points="10,12 5,0 20,8" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2"/>
+                        <polygon points="30,12 35,0 20,8" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2"/>
+                        <ellipse cx="20" cy="18" rx="14" ry="11" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2"/>
+                        <!-- White face detail -->
+                        <path d="M14,24 Q20,29 26,24 C28,19 12,19 14,24 Z" fill="#FAF6EE" />
+                        <circle cx="12" cy="28" r="5" fill="#FAF6EE" stroke="#2B2B2B" stroke-width="2"/>
+                        <circle cx="28" cy="28" r="5" fill="#FAF6EE" stroke="#2B2B2B" stroke-width="2"/>
+                        <circle cx="15" cy="17" r="1.5" fill="#2B2B2B"/>
+                        <circle cx="25" cy="17" r="1.5" fill="#2B2B2B"/>
+                    </g>
+                </svg>
+                <!-- Custom image element -->
+                <img id="user-img-preview" class="user-uploaded-img" src="" alt="Custom wisudawan photo">
+            </div>
+
+            <!-- Filter Switcher buttons -->
+            <div class="filter-controls">
+                <button class="filter-btn" id="btn-filt-line" onclick="setPhotoFilter('line-art')">Line Art</button>
+                <button class="filter-btn" id="btn-filt-mono" onclick="setPhotoFilter('monochrome')">Monochrome</button>
+                <button class="filter-btn active" id="btn-filt-soft" onclick="setPhotoFilter('soft-color')">Soft Color</button>
+            </div>
+
+            <div class="upload-row">
+                <label for="upload-photo" class="clay-btn" style="padding: 8px 16px; font-size: 0.8rem; background-color: var(--clay-purple);">
+                    📷 Ganti Foto Sendiri
+                </label>
+                <input type="file" id="upload-photo" class="hidden-file-input" accept="image/*" onchange="handleUserPhotoUpload(event)">
+                <button id="btn-reset-photo" class="clay-btn" style="padding: 8px 16px; font-size: 0.8rem; display: none;" onclick="resetToDefaultIllustration()">
+                    Reset ❌
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 2: INTERACTIVE ACTION CONTROLS -->
+        <div class="clay-card" style="background-color: var(--clay-yellow);">
+            <div class="badge" style="background-color: var(--clay-white);">Interactive Action</div>
+            <h2 style="font-family: 'Fredoka', sans-serif; font-size: 1.25rem;">Rayakan Wisudamu!</h2>
+            <p style="font-size: 0.85rem; color: rgba(43,43,43,0.7); margin-top: 4px;">Tekan tombol di bawah untuk interaksi seru</p>
+            
+            <div class="action-card-controls">
+                <button class="clay-btn" onclick="throwTogaCap()" style="background-color: var(--clay-purple); color: var(--text-dark);">
+                    🎓 Lempar Toga
+                </button>
+                <button class="clay-btn" id="btn-sunglasses" onclick="toggleSunglasses()" style="background-color: var(--clay-teal); color: var(--text-dark);">
+                    😎 Pakai Kacamata
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 3: MAP IJAZAH SWIPE UNLOCK -->
+        <div class="clay-card">
+            <div class="badge" style="background-color: var(--clay-teal);">Special Moment / Ijazah</div>
+            <h2 style="font-family: 'Fredoka', sans-serif; font-size: 1.25rem;">Virtual Certificate Folder</h2>
+            
+            <div class="gift-container">
+                <!-- Closed state: Drag to open -->
+                <div class="gift-closed-panel" id="gift-closed">
+                    <p style="font-size: 0.85rem; color: rgba(43,43,43,0.7); margin-bottom: 15px;" id="label-kado-desc">Ijazah kelulusan spesial dikirimkan khusus untukmu!</p>
+                    
+                    <div class="gift-illustration-graphic">
+                        <svg viewBox="0 0 100 100" width="100%" height="100%">
+                            <!-- Diploma Mailbox closed icon -->
+                            <rect x="15" y="30" width="70" height="50" rx="8" fill="#386638" stroke="#2B2B2B" stroke-width="3" />
+                            <circle cx="50" cy="55" r="12" fill="var(--clay-yellow)" stroke="#2B2B2B" stroke-width="2.5" />
+                            <line x1="30" y1="30" x2="30" y2="80" stroke="#2B2B2B" stroke-width="2.5" />
+                            <polygon points="50,55 46,47 54,47" fill="#2B2B2B" />
+                        </svg>
+                    </div>
+
+                    <!-- Swipe slider -->
+                    <div class="swipe-track" id="swipe-track-elem">
+                        <div class="swipe-hint" id="swipe-hint-text">Geser untuk Buka Map ➜</div>
+                        <div class="swipe-handle" id="swipe-handle-elem" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M8.59,16.59L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.59Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opened state: Rolled Scroll -->
+                <div class="gift-opened-panel" id="gift-opened">
+                    <p style="font-size: 0.85rem; color: rgba(43,43,43,0.7); margin-bottom: 10px;">Map Ijazah Terbuka! 📜</p>
+                    
+                    <div class="scroll-container" onclick="openCertificateLetter()">
+                        <!-- Scroll Certificate SVG -->
+                        <svg viewBox="0 0 100 100" width="100%" height="100%">
+                            <ellipse cx="50" cy="85" rx="30" ry="6" fill="rgba(43,43,43,0.12)" />
+                            <!-- Scroll roll cylinder -->
+                            <rect x="35" y="20" width="30" height="60" rx="6" fill="var(--clay-white)" stroke="#2B2B2B" stroke-width="3" />
+                            <!-- Red ribbon tie -->
+                            <rect x="33" y="44" width="34" height="12" fill="#E53935" stroke="#2B2B2B" stroke-width="2.5" />
+                            <!-- Gold seal -->
+                            <polygon points="50,48 46,55 54,55" fill="var(--clay-yellow)" stroke="#2B2B2B" stroke-width="1.5" />
+                        </svg>
+                    </div>
+
+                    <div class="scroll-interactive-msg" onclick="openCertificateLetter()">
+                        📜 Klik Ijazah untuk Membaca Surat!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 4: INSTAX MEMORY WALL -->
+        <div class="clay-card" style="background-color: var(--clay-pink);">
+            <div class="badge" style="background-color: var(--clay-white);">Printout Add On / Galeri</div>
+            <h2 style="font-family: 'Fredoka', sans-serif; font-size: 1.25rem;">Dinding Kenangan Wisuda</h2>
+            <p style="font-size: 0.85rem; color: rgba(43,43,43,0.7); margin-top: 4px;">Klik foto polaroid untuk membaliknya!</p>
+
+            <div class="memory-grid">
+                <!-- Polaroid 1 -->
+                <div class="polaroid-card" onclick="flipPolaroid(this)">
+                    <div class="tape-effect"></div>
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <div class="polaroid-img-holder">
+                                <!-- Default SVG for Sidang Akhir Perjuangan -->
+                                <svg viewBox="0 0 100 100" style="background-color: var(--clay-teal);">
+                                    <!-- Certificate scroll outline -->
+                                    <rect x="25" y="30" width="50" height="40" rx="3" fill="var(--clay-white)" stroke="#2B2B2B" stroke-width="2"/>
+                                    <line x1="35" y1="42" x2="65" y2="42" stroke="#2B2B2B" stroke-width="1.5" />
+                                    <line x1="35" y1="50" x2="65" y2="50" stroke="#2B2B2B" stroke-width="1.5" />
+                                    <line x1="35" y1="58" x2="55" y2="58" stroke="#2B2B2B" stroke-width="1.5" />
+                                    <!-- Sparkles -->
+                                    <polygon points="18,22 21,26 18,30 15,26" fill="var(--clay-yellow)" />
+                                    <polygon points="80,68 83,72 80,76 77,72" fill="var(--clay-yellow)" />
+                                </svg>
+                            </div>
+                            <div class="polaroid-caption">Sidang Akhir 📜</div>
+                        </div>
+                        <div class="polaroid-back">
+                            <p class="polaroid-back-text" id="label-pol1-desc">Sidang akhir perjuangan gelar. Momen menegangkan sekaligus melegakan! 📜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Polaroid 2 -->
+                <div class="polaroid-card" onclick="flipPolaroid(this)">
+                    <div class="tape-effect" style="transform: translateX(-50%) rotate(4deg); background-color: rgba(230,225,249,0.7);"></div>
+                    <div class="polaroid-inner">
+                        <div class="polaroid-front">
+                            <div class="polaroid-img-holder">
+                                <!-- Default SVG for Foto Studio Kelulusan -->
+                                <svg viewBox="0 0 100 100" style="background-color: var(--clay-purple);">
+                                    <!-- Cute graduate cap drawing -->
+                                    <polygon points="50,25 80,35 50,45 20,35" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                                    <path d="M35,40 C35,48 65,48 65,40" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                                    <!-- Ribbon tie -->
+                                    <path d="M50,35 Q60,38 68,52" fill="none" stroke="var(--clay-yellow)" stroke-width="2" />
+                                    <!-- Star spark -->
+                                    <path d="M25,18 Q23,15 25,12 Q27,15 25,18 Z" fill="var(--clay-yellow)" />
+                                </svg>
+                            </div>
+                            <div class="polaroid-caption">Foto Toga 🎓</div>
+                        </div>
+                        <div class="polaroid-back">
+                            <p class="polaroid-back-text" id="label-pol2-desc">Foto studio kelulusan. Akhirnya bisa senyum lebar pakai toga! 🎓</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER BRANDING -->
+        <footer style="text-align: center; margin-top: 10px; font-size: 0.8rem; opacity: 0.8;">
+            <p><strong>Clouvee / 구름빛</strong></p>
+            <p style="color: rgba(43,43,43,0.6); margin-top: 4px;">Ilustrasi & Kado Kelulusan Personal</p>
+        </footer>
+    </div>
+
+    <!-- CERTIFICATE LETTER MODAL -->
+    <div class="scroll-modal" id="scroll-modal-elem" onclick="closeCertificateLetter()">
+        <div class="scroll-paper-body" onclick="event.stopPropagation()">
+            <button class="scroll-close-btn" onclick="closeCertificateLetter()">×</button>
+            <div style="text-align: center; border-bottom: 2px dashed var(--border-dark); padding-bottom: 12px; margin-bottom: 18px;">
+                <div class="badge" style="background-color: var(--clay-teal); font-family: 'Fredoka', sans-serif;">Surat Kelulusan</div>
+                <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.2rem; color: var(--text-dark);" id="label-surat-title">Congrats, Graduate!</h3>
+                <p style="font-size: 0.75rem; color: #7a6853;" id="label-surat-meta">Dikirim oleh Sahabat-sahabatmu</p>
+            </div>
+            
+            <div class="scroll-text-content" id="label-surat-body">
+                <!-- Content set dynamically from customizer -->
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center; font-family: 'Itim', cursive; font-size: 1.1rem; color: #7a6853; border-top: 1.5px dashed rgba(43,43,43,0.15); padding-top: 15px;">
+                Selamat Menyambut Masa Depan Cerah! ✨
+            </div>
+        </div>
+    </div>
+
+    <!-- RETRO CASSETTE AUDIO PLAYER BAR -->
+    <div class="audio-player-fixed">
+        <div class="tape-deck-visual">
+            <div class="tape-window">
+                <div class="tape-wheel" id="tape-wheel-left"></div>
+                <div class="tape-wheel" id="tape-wheel-right"></div>
+            </div>
+        </div>
+
+        <div class="player-info">
+            <div class="track-title" id="player-song-title">Graduation Anthem - Acoustic Lofi</div>
+            <div class="progress-container" id="player-progress-cont" onclick="seekAudio(event)">
+                <div class="progress-bar" id="player-progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="player-btns">
+            <button class="clay-btn btn-play-pause" onclick="toggleAudio()" id="btn-play-pause-elem">
+                <svg id="svg-play-icon" viewBox="0 0 24 24">
+                    <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+                </svg>
+                <svg id="svg-pause-icon" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- AUDIO SOURCE -->
+    <audio id="bg-audio-elem" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" preload="auto" loop></audio>
+
+    <!-- INTERACTIVE CATS (EASTER EGGS) -->
+    <!-- Milo Tuxedo peeks from bottom left -->
+    <div class="interactive-cat" id="cat-milo" onclick="clickMiloCat(event)" title="Milo si kucing tuxedo">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <path d="M0,90 C10,70 30,65 50,75 C55,78 60,85 55,95 Z" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2" />
+            <path d="M12,85 C18,80 25,80 30,85" fill="none" stroke="#FAF6EE" stroke-width="2" />
+            <circle cx="35" cy="55" r="22" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2" />
+            <path d="M27,65 Q35,70 43,65 C45,60 25,60 27,65 Z" fill="#FAF6EE" />
+            <polygon points="18,44 10,24 28,38" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2" />
+            <polygon points="50,42 58,22 40,36" fill="#2B2B2B" stroke="#2B2B2B" stroke-width="2" />
+            <polygon points="20,41 14,28 26,36" fill="#FFD2DF" />
+            <polygon points="48,39 54,26 42,35" fill="#FFD2DF" />
+            <ellipse cx="26" cy="52" rx="4" ry="2.5" fill="#FFF2CC" stroke="#2B2B2B" stroke-width="1.5"/>
+            <ellipse cx="44" cy="52" rx="4" ry="2.5" fill="#FFF2CC" stroke="#2B2B2B" stroke-width="1.5"/>
+            <circle cx="26" cy="52" r="1.5" fill="#2B2B2B"/>
+            <circle cx="44" cy="52" r="1.5" fill="#2B2B2B"/>
+            <polygon points="35,57 33,55 37,55" fill="#FFD2DF" />
+            <path d="M32,60 Q35,62 38,60" fill="none" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="58" x2="3" y2="58" stroke="#FAF6EE" stroke-width="1"/>
+            <line x1="16" y1="62" x2="5" y2="64" stroke="#FAF6EE" stroke-width="1"/>
+            <line x1="52" y1="58" x2="65" y2="58" stroke="#FAF6EE" stroke-width="1"/>
+            <line x1="52" y1="62" x2="63" y2="64" stroke="#FAF6EE" stroke-width="1"/>
+        </svg>
+    </div>
+
+    <!-- DYNAMIC SPEECH BUBBLE FOR CATS -->
+    <div class="cat-speech-bubble" id="cat-bubble">Meow! 🐾</div>
+
+    <!-- CONFETTI CANVAS ELEMENT -->
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 10002;"></canvas>
+
+
+    <!-- --- JAVASCRIPT CONTROLLER LOGIC --- -->
+    <script>
+        let audioCtx = null;
+        let isAudioPlaying = false;
+        
+        const bgAudio = document.getElementById('bg-audio-elem');
+        const tapeWheelLeft = document.getElementById('tape-wheel-left');
+        const tapeWheelRight = document.getElementById('tape-wheel-right');
+        const btnPlayPause = document.getElementById('btn-play-pause-elem');
+        const playIcon = document.getElementById('svg-play-icon');
+        const pauseIcon = document.getElementById('svg-pause-icon');
+        const progressBar = document.getElementById('player-progress-bar');
+
+        let isTogaCapThrown = false;
+        let isSunglassesOn = false;
+        let selectedDegree = 's1';
+
+        // Customizer content states
+        const configData = {
+            namaWisudawan: "Alya",
+            pengirim: "Sahabat-sahabatmu",
+            surat: ""
+        };
+
+        // Initialize Audio context on gesture
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+        }
+
+        // --- WEB AUDIO API SOUND GENERATION ---
+        
+        function playChiptuneClick() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.03);
+            
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+            
+            osc.start(now);
+            osc.stop(now + 0.04);
+        }
+
+        function playMeowSound() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(350, now);
+            osc.frequency.exponentialRampToValueAtTime(720, now + 0.15);
+            osc.frequency.exponentialRampToValueAtTime(560, now + 0.35);
+            
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.15, now + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            
+            osc.start(now);
+            osc.stop(now + 0.4);
+        }
+
+        function playPopSound() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 0.07);
+            
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+            
+            osc.start(now);
+            osc.stop(now + 0.08);
+        }
+
+        function playWhooshSound() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+            osc.frequency.exponentialRampToValueAtTime(80, now + 0.5);
+            
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.18, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            
+            osc.start(now);
+            osc.stop(now + 0.5);
+        }
+
+        function playChimeSuccess() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+            
+            frequencies.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+                
+                gain.gain.setValueAtTime(0.01, now + idx * 0.07);
+                gain.gain.linearRampToValueAtTime(0.08, now + idx * 0.07 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.22);
+                
+                osc.start(now + idx * 0.07);
+                osc.stop(now + idx * 0.07 + 0.25);
+            });
+        }
+
+        // --- 1. WELCOME OVERLAY CONTROLLER ---
+        function openWelcomeFolder() {
+            const folder = document.getElementById('welcome-folder');
+            folder.classList.add('opened');
+            
+            initAudioContext();
+            
+            setTimeout(() => {
+                playChimeSuccess();
+            }, 150);
+
+            setTimeout(() => {
+                document.getElementById('welcome-overlay').classList.add('hidden');
+                playBackingTrack();
+            }, 600);
+        }
+
+        // --- 2. AUDIO CASSETTE PLAYER CONTROLLER ---
+        function playBackingTrack() {
+            bgAudio.play().then(() => {
+                isAudioPlaying = true;
+                updateAudioUIState();
+            }).catch(e => {
+                isAudioPlaying = false;
+                updateAudioUIState();
+            });
+        }
+
+        function toggleAudio() {
+            playChiptuneClick();
+            if (isAudioPlaying) {
+                bgAudio.pause();
+                isAudioPlaying = false;
+            } else {
+                initAudioContext();
+                bgAudio.play().catch(e => console.log(e));
+                isAudioPlaying = true;
+            }
+            updateAudioUIState();
+        }
+
+        function updateAudioUIState() {
+            if (isAudioPlaying) {
+                tapeWheelLeft.classList.add('spinning');
+                tapeWheelRight.classList.add('spinning');
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                tapeWheelLeft.classList.remove('spinning');
+                tapeWheelRight.classList.remove('spinning');
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        bgAudio.addEventListener('timeupdate', () => {
+            if (bgAudio.duration) {
+                const percent = (bgAudio.currentTime / bgAudio.duration) * 100;
+                progressBar.style.width = percent + '%';
+            }
+        });
+
+        function seekAudio(event) {
+            const cont = document.getElementById('player-progress-cont');
+            const rect = cont.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percent = clickX / rect.width;
+            if (bgAudio.duration) {
+                bgAudio.currentTime = percent * bgAudio.duration;
+            }
+        }
+
+        // --- 3. PHOTO UPLOADER & FILTERS ---
+        function setPhotoFilter(filterName) {
+            playChiptuneClick();
+            const frame = document.getElementById('illustration-frame');
+            frame.classList.remove('filter-line-art', 'filter-monochrome', 'filter-soft-color');
+            frame.classList.add('filter-' + filterName);
+
+            document.getElementById('btn-filt-line').classList.remove('active');
+            document.getElementById('btn-filt-mono').classList.remove('active');
+            document.getElementById('btn-filt-soft').classList.remove('active');
+
+            if (filterName === 'line-art') document.getElementById('btn-filt-line').classList.add('active');
+            if (filterName === 'monochrome') document.getElementById('btn-filt-mono').classList.add('active');
+            if (filterName === 'soft-color') document.getElementById('btn-filt-soft').classList.add('active');
+        }
+
+        function handleUserPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('user-img-preview');
+                const svg = document.getElementById('default-svg');
+                
+                img.src = e.target.result;
+                img.style.display = 'block';
+                svg.style.display = 'none';
+                
+                document.getElementById('btn-reset-photo').style.display = 'inline-flex';
+                playChimeSuccess();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetToDefaultIllustration() {
+            playChiptuneClick();
+            const img = document.getElementById('user-img-preview');
+            const svg = document.getElementById('default-svg');
+            const fileInput = document.getElementById('upload-photo');
+
+            img.src = '';
+            img.style.display = 'none';
+            svg.style.display = 'block';
+            fileInput.value = '';
+
+            document.getElementById('btn-reset-photo').style.display = 'none';
+        }
+
+        // --- 4. DEGREE CONFIGURATION SWITCHER ---
+        function changeDegree(deg) {
+            playChiptuneClick();
+            selectedDegree = deg;
+
+            const buttons = document.querySelectorAll('.degree-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.degree-btn[data-deg="${deg}"]`).classList.add('active');
+
+            // Apply SVG color swaps
+            const hoodLeft = document.getElementById('hood-fill-left');
+            const hoodRight = document.getElementById('hood-fill-right');
+            const s3Bonnet = document.getElementById('toga-bonnet');
+
+            let colorCode = 'var(--s1-color)';
+            let titleTag = 'S1 Graduate Clear! 🎓';
+            let degreeSuffix = 'S.Kom.';
+
+            if (deg === 's1') {
+                colorCode = 'var(--s1-color)';
+                s3Bonnet.style.display = 'none';
+                titleTag = 'S1 Graduate Clear! 🎓';
+                degreeSuffix = 'S.Kom.';
+            } else if (deg === 's2') {
+                colorCode = 'var(--s2-color)';
+                s3Bonnet.style.display = 'none';
+                titleTag = 'S2 Graduate Clear! 🎓';
+                degreeSuffix = 'M.T.';
+            } else if (deg === 's3') {
+                colorCode = 'var(--s3-color)';
+                s3Bonnet.style.display = 'block'; // Show doctoral velvet bonnet
+                titleTag = 'S3 Doctor Degree! 🎓🏆';
+                degreeSuffix = 'Dr.';
+            }
+
+            document.documentElement.style.setProperty('--degree-color', colorCode);
+            document.getElementById('label-degree-tag').innerText = titleTag;
+
+            // Update Name suffix
+            const nameInput = document.getElementById('input-penerima').value;
+            let finalName = `${nameInput}, ${degreeSuffix}`;
+            if (deg === 's3') {
+                finalName = `Dr. ${nameInput}`;
+            }
+            document.getElementById('label-penerima-nama').innerText = finalName;
+            document.getElementById('label-surat-title').innerText = `Congrats, ${nameInput}!`;
+        }
+
+        // --- 5. INTERACTIVE GRADUATION ACTIONS ---
+        function throwTogaCap() {
+            if (isTogaCapThrown) return;
+            isTogaCapThrown = true;
+
+            const cap = document.getElementById('toga-cap-elem');
+            
+            playWhooshSound();
+            cap.classList.add('flying');
+
+            // Flying cap translate vector
+            cap.style.transform = 'translateY(-220px) rotate(540deg) scale(0.7)';
+
+            setTimeout(() => {
+                playChimeSuccess();
+                triggerConfettiParty();
+                
+                const rect = cap.getBoundingClientRect();
+                showCatSpeech("Hooray! Toga terbang melayang! 🎓✨", rect.left - 40, rect.top - 60);
+            }, 550);
+
+            // Return cap to head
+            setTimeout(() => {
+                cap.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+                setTimeout(() => {
+                    cap.classList.remove('flying');
+                    isTogaCapThrown = false;
+                }, 400);
+            }, 2500);
+        }
+
+        function toggleSunglasses() {
+            playChiptuneClick();
+            const glasses = document.getElementById('glasses-overlay');
+            const btn = document.getElementById('btn-sunglasses');
+            
+            if (isSunglassesOn) {
+                glasses.style.display = 'none';
+                btn.style.backgroundColor = 'var(--clay-teal)';
+                btn.innerHTML = '😎 Pakai Kacamata';
+                isSunglassesOn = false;
+            } else {
+                glasses.style.display = 'block';
+                btn.style.backgroundColor = 'var(--clay-pink)';
+                btn.innerHTML = '🕶️ Lepas Kacamata';
+                isSunglassesOn = true;
+                
+                playChimeSuccess();
+                const rect = btn.getBoundingClientRect();
+                showCatSpeech("Oh yeah! Cool graduate unlocked! 😎🎓", rect.left - 40, rect.top - 80);
+            }
+        }
+
+        // --- 6. SWIPE TO UNLOCK IJAZAH LETTER ---
+        let dragStartLeft = 0;
+        let isDragging = false;
+        let handleElemWidth = 0;
+        let trackElemWidth = 0;
+
+        function startDrag(e) {
+            isDragging = true;
+            const handle = document.getElementById('swipe-handle-elem');
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            dragStartLeft = clientX - handle.offsetLeft;
+            
+            handleElemWidth = handle.offsetWidth;
+            trackElemWidth = document.getElementById('swipe-track-elem').offsetWidth;
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchmove', dragMove, { passive: false });
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function dragMove(e) {
+            if (!isDragging) return;
+            if (e.type.startsWith('touch')) {
+                e.preventDefault();
+            }
+            const handle = document.getElementById('swipe-handle-elem');
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            
+            let newLeft = clientX - dragStartLeft;
+            const maxLeft = trackElemWidth - handleElemWidth - 6;
+
+            if (newLeft < 6) newLeft = 6;
+            if (newLeft > maxLeft) newLeft = maxLeft;
+
+            handle.style.left = newLeft + 'px';
+
+            if (newLeft >= maxLeft - 5) {
+                unlockIjazah();
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('touchend', endDrag);
+
+            const handle = document.getElementById('swipe-handle-elem');
+            if (parseInt(handle.style.left) < (trackElemWidth - handleElemWidth - 15)) {
+                handle.style.left = '6px';
+            }
+        }
+
+        function unlockIjazah() {
+            isDragging = false;
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('touchend', endDrag);
+
+            playChimeSuccess();
+            document.getElementById('gift-closed').classList.add('hidden');
+            document.getElementById('gift-opened').classList.add('active');
+        }
+
+        function openCertificateLetter() {
+            playPopSound();
+            document.getElementById('scroll-modal-elem').classList.add('active');
+        }
+
+        function closeCertificateLetter() {
+            playChiptuneClick();
+            document.getElementById('scroll-modal-elem').classList.remove('active');
+        }
+
+        // --- 7. POLAROID IMAGE FLIPPER ---
+        function flipPolaroid(card) {
+            playChiptuneClick();
+            card.classList.toggle('flipped');
+        }
+
+        // --- 8. MASCOT CATS INTERACTIONS ---
+        function showCatSpeech(text, x, y) {
+            playMeowSound();
+            const bubble = document.getElementById('cat-bubble');
+            bubble.innerHTML = text;
+            bubble.className = 'cat-speech-bubble visible';
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
+            setTimeout(() => {
+                bubble.classList.remove('visible');
+            }, 3000);
+        }
+
+        function clickMiloCat(event) {
+            event.stopPropagation();
+            showCatSpeech("Ngeong! 🐾 Selamat atas gelarnya kakak! Sukses selalu! 🎓🏆", event.clientX - 50, event.clientY - 95);
+        }
+
+        function clickKuroCat(event) {
+            event.stopPropagation();
+            showCatSpeech("Meoww~ 🐈 Aku Kuro, kucing pengawas ijazah. Selamat wisuda! 📜✨", event.clientX - 160, event.clientY + 20);
+        }
+
+        // --- 9. CONTENT CUSTOMIZER MECHANICS ---
+        function toggleCustomizer() {
+            playChiptuneClick();
+            document.getElementById('customizer-drawer').classList.toggle('active');
+        }
+
+        function updateLiveContent() {
+            const nameInput = document.getElementById('input-penerima').value;
+            const senderInput = document.getElementById('input-pengirim').value;
+            const letterInput = document.getElementById('input-surat').value;
+            
+            const pol1Text = document.getElementById('input-pol1-text').value;
+            const pol2Text = document.getElementById('input-pol2-text').value;
+            const pol1ImgUrl = document.getElementById('input-pol1').value;
+            const pol2ImgUrl = document.getElementById('input-pol2').value;
+
+            // Trigger degree label updates to pull updated name suffix
+            changeDegree(selectedDegree);
+
+            document.getElementById('overlay-heading').innerText = `Congrats, ${nameInput}! 🎓`;
+            document.getElementById('overlay-subheading').innerText = `Map kelulusan spesial dari ${senderInput} dikirimkan khusus untukmu. Tekan map untuk membukanya!`;
+            
+            document.getElementById('label-kado-desc').innerText = `Ijazah kelulusan wisuda dikirim khusus oleh ${senderInput}!`;
+            document.getElementById('label-surat-title').innerText = `Congrats, ${nameInput}!`;
+            document.getElementById('label-surat-meta').innerText = `Dikirim oleh ${senderInput}`;
+            document.getElementById('label-surat-body').innerText = letterInput;
+
+            document.getElementById('label-pol1-desc').innerText = pol1Text;
+            document.getElementById('label-pol2-desc').innerText = pol2Text;
+
+            // Handle polaroid custom URL loads
+            const pol1Frame = document.querySelector('.polaroid-card:nth-child(1) .polaroid-img-holder');
+            if (pol1ImgUrl) {
+                pol1Frame.innerHTML = `<img src="${pol1ImgUrl}" alt="Photo 1">`;
+            } else {
+                pol1Frame.innerHTML = `
+                    <svg viewBox="0 0 100 100" style="background-color: var(--clay-teal);">
+                        <rect x="25" y="30" width="50" height="40" rx="3" fill="var(--clay-white)" stroke="#2B2B2B" stroke-width="2"/>
+                        <line x1="35" y1="42" x2="65" y2="42" stroke="#2B2B2B" stroke-width="1.5" />
+                        <line x1="35" y1="50" x2="65" y2="50" stroke="#2B2B2B" stroke-width="1.5" />
+                        <line x1="35" y1="58" x2="55" y2="58" stroke="#2B2B2B" stroke-width="1.5" />
+                        <polygon points="18,22 21,26 18,30 15,26" fill="var(--clay-yellow)" />
+                    </svg>
+                `;
+            }
+
+            const pol2Frame = document.querySelector('.polaroid-card:nth-child(2) .polaroid-img-holder');
+            if (pol2ImgUrl) {
+                pol2Frame.innerHTML = `<img src="${pol2ImgUrl}" alt="Photo 2">`;
+            } else {
+                pol2Frame.innerHTML = `
+                    <svg viewBox="0 0 100 100" style="background-color: var(--clay-purple);">
+                        <polygon points="50,25 80,35 50,45 20,35" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                        <path d="M35,40 C35,48 65,48 65,40" fill="#2B2B2B" stroke="var(--clay-white)" stroke-width="2" />
+                        <path d="M50,35 Q60,38 68,52" fill="none" stroke="var(--clay-yellow)" stroke-width="2" />
+                        <path d="M25,18 Q23,15 25,12 Q27,15 25,18 Z" fill="var(--clay-yellow)" />
+                    </svg>
+                `;
+            }
+        }
+
+        // --- 10. LIGHTWEIGHT CONFETTI PARTICLE SYSTEM ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let isConfettiActive = false;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#E2F0D9', '#E6E1F9', '#D2EBF7', '#FFF2CC', '#FFD2DF', '#84C664'];
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 6;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speedX = Math.random() * 10 - 5;
+                this.speedY = Math.random() * -12 - 5; // upward spray
+                this.gravity = 0.35;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+                this.life = 100;
+                this.type = Math.random() > 0.5 ? 'star' : 'scroll';
+            }
+            update() {
+                this.speedY += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+                this.life -= 0.9;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                
+                ctx.strokeStyle = '#2B2B2B';
+                ctx.lineWidth = 1.5;
+                
+                if (this.type === 'star') {
+                    // Y2K star
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size);
+                    ctx.quadraticCurveTo(0, 0, this.size, 0);
+                    ctx.quadraticCurveTo(0, 0, 0, this.size);
+                    ctx.quadraticCurveTo(0, 0, -this.size, 0);
+                    ctx.quadraticCurveTo(0, 0, 0, -this.size);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    // Roll scroll
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath();
+                    ctx.roundRect(-this.size, -this.size/2.5, this.size*2, this.size/1.2, 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    // Red center ribbon band
+                    ctx.fillStyle = '#E53935';
+                    ctx.beginPath();
+                    ctx.rect(-this.size/4, -this.size/2.5, this.size/2, this.size/1.2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+
+        function triggerConfettiParty() {
+            isConfettiActive = true;
+            
+            // Side spray bursts
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(0, window.innerHeight * 0.8));
+                particles.push(new Particle(window.innerWidth, window.innerHeight * 0.8));
+            }
+
+            let counter = 0;
+            const spawnInterval = setInterval(() => {
+                if (counter > 15 || !isConfettiActive) {
+                    clearInterval(spawnInterval);
+                    return;
+                }
+                for (let i = 0; i < 10; i++) {
+                    particles.push(new Particle(Math.random() * window.innerWidth, window.innerHeight + 10));
+                }
+                counter++;
+            }, 200);
+
+            animateParticles();
+        }
+
+        function animateParticles() {
+            if (!isConfettiActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0 || particles[i].y > window.innerHeight) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animateParticles);
+            } else {
+                isConfettiActive = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Initialize state on DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLiveContent();
+            
+            // Bob head black cat ("Kuro") loop matching playing music
+            setInterval(() => {
+                const kuro = document.getElementById('cat-kuro');
+                if (isAudioPlaying && kuro) {
+                    kuro.style.transform = `translateY(${Math.sin(Date.now() / 150) * 3}px) rotate(${Math.sin(Date.now() / 150) * 2}deg) scale(1.05)`;
+                } else if (kuro) {
+                    kuro.style.transform = '';
+                }
+            }, 60);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ashley Kingston Graduation | Magazine Invite Edition 🎓✨</title>
+
+    <!-- Google Fonts for Luxury Editorial Serif & Clean Sans-Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@400;500;600;700&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream-page: #F7F4EB;
+            --charcoal: #2D2A26;
+            --muted-gold: #C5A880;
+            --taupe: #8C8275;
+            --soft-brown: #E6DED4;
+            --bg-mocha: #1E140F;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-mocha);
+            color: var(--charcoal);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                radial-gradient(rgba(255,255,255,0.03) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        /* --- SCREEN FLASH EFFECT --- */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--white);
+            opacity: 0;
+            z-index: 10006;
+            pointer-events: none;
+            transition: opacity 0.06s ease-out;
+        }
+        #flash-overlay.flash {
+            opacity: 1;
+            transition: none;
+        }
+
+        /* --- BOKEH FLOATING PARTICLES --- */
+        #bokeh-stars-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- MAGAZINE BOOK STRUCTURE --- */
+        .magazine-book {
+            width: 100%;
+            max-width: 980px;
+            position: relative;
+            z-index: 10;
+            perspective: 2000px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Cover Page (Page 1) */
+        .magazine-cover {
+            width: 100%;
+            max-width: 480px;
+            height: 660px;
+            background-color: var(--cream-page);
+            border: 1px solid var(--soft-brown);
+            border-radius: 4px;
+            box-shadow: 12px 16px 40px rgba(0, 0, 0, 0.45), 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.9s, visibility 0.9s;
+            transform-origin: left center;
+            z-index: 20;
+        }
+        .magazine-cover.opened {
+            transform: rotateY(-120deg) translateX(-8%);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Magazine Header */
+        .cover-header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--taupe);
+            border-bottom: 1.5px solid var(--soft-brown);
+            padding-bottom: 8px;
+        }
+
+        /* Overlapping Title & Character layout */
+        .cover-visual-zone {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        /* Giant Background Text */
+        .cover-bg-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: rgba(45, 42, 38, 0.08);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* High fashion character SVG cutout */
+        .graduate-svg-cutout {
+            width: 95%; height: 95%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0px 10px 18px rgba(0, 0, 0, 0.22));
+        }
+
+        /* Overlay text grid */
+        .cover-overlay-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .overlay-starring {
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--charcoal);
+            text-transform: uppercase;
+            font-weight: 600;
+            padding: 8px 0;
+            margin-top: 15px;
+        }
+
+        .overlay-headline-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            line-height: 1.3;
+            background-color: rgba(247, 244, 235, 0.85);
+            padding: 8px 12px;
+            border-left: 3px solid var(--muted-gold);
+            align-self: flex-start;
+            margin-bottom: 20px;
+        }
+
+        /* Bottom Row Invite Info */
+        .cover-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1.5px solid var(--soft-brown);
+            padding-top: 12px;
+        }
+        .cover-venue-details {
+            font-size: 0.7rem;
+            line-height: 1.4;
+            color: var(--taupe);
+            font-weight: 500;
+            max-width: 60%;
+        }
+        .cover-venue-details strong { color: var(--charcoal); font-weight: 700; }
+        
+        .cover-gift-qr {
+            width: 60px;
+            height: 60px;
+            background-color: var(--cream-page);
+            border: 1.5px solid var(--soft-brown);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cover-gift-qr svg {
+            width: 100%; height: 100%;
+            color: var(--charcoal);
+        }
+
+        /* Turn cover button */
+        .btn-open-magazine {
+            background-color: var(--charcoal);
+            color: var(--cream-page);
+            border: 1.5px solid var(--charcoal);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+            margin: 15px auto 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.25s, transform 0.2s;
+        }
+        .btn-open-magazine:hover {
+            background-color: var(--muted-gold);
+            border-color: var(--muted-gold);
+            transform: scale(1.03);
+        }
+
+        /* --- DOUBLE PAGE SPREAD (Pages 2 & 3) --- */
+        .magazine-spread {
+            width: 100%;
+            display: none;
+            gap: 15px;
+            animation: fadeIn 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+        .magazine-spread.visible {
+            display: flex;
+        }
+
+        .spread-page {
+            flex: 1;
+            height: 660px;
+            background-color: var(--cream-page);
+            border: 1px solid var(--soft-brown);
+            border-radius: 4px;
+            box-shadow: 12px 16px 45px rgba(0,0,0,0.3);
+            padding: 30px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .spread-page.page-left {
+            box-shadow: -6px 16px 30px rgba(0,0,0,0.15), 12px 16px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Column Grid Layout inside page */
+        .editorial-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--charcoal);
+            padding-bottom: 6px;
+        }
+
+        .editorial-article {
+            column-count: 2;
+            column-gap: 20px;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            color: rgba(45, 42, 38, 0.85);
+            text-align: justify;
+        }
+        .editorial-article::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            float: left;
+            margin-right: 6px;
+            line-height: 0.9;
+            color: var(--muted-gold);
+        }
+
+        /* Milestone Tab Slider */
+        .timeline-container {
+            margin-top: 25px;
+            border-top: 1.5px dashed var(--soft-brown);
+            padding-top: 15px;
+        }
+        .timeline-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .time-tab-btn {
+            background: none;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--taupe);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-bottom: 4px;
+            border-bottom: 1.5px solid transparent;
+            transition: all 0.2s;
+        }
+        .time-tab-btn.active {
+            color: var(--muted-gold);
+            border-bottom-color: var(--muted-gold);
+        }
+
+        .timeline-log-box {
+            background-color: var(--white);
+            border: 1px solid var(--soft-brown);
+            border-radius: 4px;
+            padding: 12px 16px;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.03);
+            animation: fadeIn 0.4s ease;
+        }
+        .log-box-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--muted-gold);
+            margin-bottom: 4px;
+        }
+        .log-box-text {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: var(--taupe);
+        }
+
+        /* --- RIGHT PAGE spreads (RSVP & Gift) --- */
+        .gift-box-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            min-height: 180px;
+        }
+
+        /* Minimalist luxury gift box */
+        .gold-gift-box {
+            width: 110px;
+            height: 110px;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+        .gold-gift-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .gift-box-lid {
+            width: 120px; height: 28px;
+            background-color: var(--charcoal);
+            border: 2px solid var(--muted-gold);
+            position: absolute;
+            top: -24px; left: -5px;
+            z-index: 5;
+            transition: transform 0.6s cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity 0.4s;
+        }
+        /* Ribbon ribbon */
+        .gift-box-ribbon-v {
+            position: absolute;
+            left: 54px; top: 0; width: 12px; height: 100%;
+            background-color: var(--muted-gold);
+        }
+        .gift-box-ribbon-h {
+            position: absolute;
+            top: 49px; left: 0; height: 12px; width: 100%;
+            background-color: var(--muted-gold);
+        }
+
+        .gift-box-body {
+            width: 110px; height: 95px;
+            background-color: var(--charcoal);
+            border: 2.5px solid var(--muted-gold);
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        /* Opened State Account Details */
+        .opened-registry-box {
+            display: none;
+            width: 100%;
+            background-color: var(--white);
+            border: 1.5px solid var(--soft-brown);
+            border-radius: 4px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.03);
+            animation: zoomPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .registry-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: var(--muted-gold);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .registry-number {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95rem;
+            color: var(--charcoal);
+            font-weight: bold;
+            background-color: var(--cream-page);
+            padding: 6px;
+            border-radius: 2px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        /* Guestbook Editorial Quotes */
+        .guestbook-section {
+            border-top: 1.5px dashed var(--soft-brown);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .guestbook-list {
+            max-height: 120px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .guest-wish-item {
+            font-size: 0.74rem;
+            line-height: 1.4;
+            color: var(--taupe);
+            border-left: 2px solid var(--muted-gold);
+            padding-left: 8px;
+            font-style: italic;
+        }
+        .guest-wish-item strong {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            font-style: normal;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+
+        .guest-input-row {
+            display: flex;
+            gap: 6px;
+        }
+        .guest-input-row input {
+            padding: 6px 10px;
+            border: 1.5px solid var(--soft-brown);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            outline: none;
+        }
+        .guest-input-row input:focus {
+            border-color: var(--muted-gold);
+        }
+
+        /* --- EDITORIAL AUDIO player --- */
+        .audio-dock {
+            position: fixed;
+            bottom: 20px; left: 24px;
+            background-color: var(--cream-page);
+            border: 1.5px solid var(--soft-brown);
+            border-radius: 20px;
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-audio-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .audio-text {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--charcoal);
+            text-transform: uppercase;
+        }
+        .audio-spectrogram {
+            display: flex;
+            align-items: flex-end;
+            gap: 1.5px;
+            height: 10px;
+        }
+        .spec-bar {
+            width: 1.5px;
+            height: 2px;
+            background-color: var(--muted-gold);
+            transition: height 0.15s;
+        }
+
+        /* --- PROOFREADER MENU DRAWER --- */
+        .proofreader-drawer {
+            position: fixed;
+            top: 0; right: -300px;
+            width: 280px; height: 100vh;
+            background-color: var(--cream-page);
+            border-left: 2px solid var(--soft-brown);
+            box-shadow: -8px 0px 30px rgba(0,0,0,0.3);
+            z-index: 10001;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .proofreader-drawer.active {
+            right: 0;
+        }
+        .p-header {
+            padding: 14px;
+            background-color: var(--charcoal);
+            color: var(--cream-page);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .p-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .p-close {
+            background: none;
+            border: none;
+            color: var(--cream-page);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .p-body {
+            padding: 14px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .p-group {
+            margin-bottom: 12px;
+        }
+        .p-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--taupe);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .p-group input[type="text"], .p-group textarea {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1.5px solid var(--soft-brown);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.78rem;
+            outline: none;
+        }
+        .p-group input[type="text"]:focus, .p-group textarea:focus {
+            border-color: var(--muted-gold);
+        }
+
+        /* --- RESPONSIVE MECHANICS --- */
+        @media (max-width: 767px) {
+            body {
+                padding: 15px 10px;
+            }
+            .magazine-book {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            .magazine-cover {
+                height: 580px;
+            }
+            .cover-bg-title {
+                font-size: 4rem;
+            }
+            .magazine-spread {
+                flex-direction: column;
+                display: none;
+            }
+            .magazine-spread.visible {
+                display: flex;
+            }
+            .spread-page {
+                height: auto;
+                min-height: 480px;
+                padding: 24px;
+            }
+            .editorial-article {
+                column-count: 1;
+            }
+            .audio-dock {
+                bottom: 15px; left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLASH LAYER -->
+    <div id="flash-overlay"></div>
+
+    <!-- CANVAS STAR BOKEH OVERLAYS -->
+    <canvas id="bokeh-stars-canvas"></canvas>
+
+    <!-- FLOATING SETTINGS TRIGGER -->
+    <button class="btn-open-magazine" onclick="toggleProofreaderDrawer()" style="position: fixed; top: 15px; right: 15px; z-index: 1002; margin-top: 0; padding: 8px 12px;" title="Proofreader Panel">
+        ✍️ Edit
+    </button>
+
+    <!-- PROOFREADER DRAWER PANEL -->
+    <div class="proofreader-drawer" id="proofreader-panel">
+        <div class="p-header">
+            <h3>Editorial Proofreader ✍️</h3>
+            <button class="p-close" onclick="toggleProofreaderDrawer()">×</button>
+        </div>
+        <div class="p-body">
+            <div class="p-group">
+                <label>Nama Wisudawan</label>
+                <input type="text" id="input-starring" value="Ashley Kingston" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Nama Kampus</label>
+                <input type="text" id="input-school" value="University of Excellence" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Headline Cover</label>
+                <input type="text" id="input-headline" value="GRADUATE" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Tanggal Kelulusan</label>
+                <input type="text" id="input-date" value="Saturday, 15 May 2026" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Nama Stadion / Venue</label>
+                <input type="text" id="input-stadium" value="Ford Stadium" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Alamat Venue</label>
+                <input type="text" id="input-address" value="123 Anywhere St., Any City" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Jam Acara</label>
+                <input type="text" id="input-time" value="7PM - 9PM" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Akun Kado / Registry</label>
+                <input type="text" id="input-registry" value="BCA Account: 9830-XXXX-XXXX / Ashley" oninput="liveUpdateEditorial()">
+            </div>
+            <div class="p-group">
+                <label>Log Milestone Freshman</label>
+                <textarea id="input-fresh" rows="2" oninput="liveUpdateEditorial()">Mengikuti debat kampus dan mulai beradaptasi di asrama baru.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Log Milestone Sophomore</label>
+                <textarea id="input-soph" rows="2" oninput="liveUpdateEditorial()">Memilih jurusan riset utama dan mulai bekerja di laboratorium kampus.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Log Milestone Junior</label>
+                <textarea id="input-jun" rows="2" oninput="liveUpdateEditorial()">Menempuh riset exchange ke luar negeri dan memperluas jaringan studi.</textarea>
+            </div>
+            <div class="p-group">
+                <label>Log Milestone Senior</label>
+                <textarea id="input-sen" rows="2" oninput="liveUpdateEditorial()">Menyelesaikan skripsi akhir dan bersiap menyambut upacara kelulusan.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN MAGAZINE BOOK WRAPPER -->
+    <div class="magazine-book">
+
+        <!-- COVER PAGE (Page 1) -->
+        <div class="magazine-cover" id="cover-page">
+            <div class="cover-header-meta">
+                <span id="label-cover-school">University of Excellence</span>
+                <span>VOL. 26</span>
+            </div>
+
+            <!-- Overlapping Visual Zone -->
+            <div class="cover-visual-zone">
+                <div class="cover-bg-title" id="label-cover-headline">GRADUATE</div>
+
+                <!-- Custom High-Fashion Graduate Model SVG -->
+                <svg class="graduate-svg-cutout" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Head & Neck -->
+                    <rect x="146" y="150" width="28" height="35" rx="3" fill="#FAF2DF" stroke="var(--charcoal)" stroke-width="3"/>
+                    <ellipse cx="160" cy="120" rx="27" ry="32" fill="#FAF2DF" stroke="var(--charcoal)" stroke-width="3"/>
+
+                    <!-- Long elegant brown curls behind shoulders -->
+                    <path d="M125,120 C125,60 195,60 195,120 C195,180 205,250 195,280 C185,250 135,250 125,280 Z" fill="#3D291D" stroke="var(--charcoal)" stroke-width="2.5" />
+
+                    <!-- Graduation Robe Body (Classic Navy & Gold hood) -->
+                    <path d="M90,300 C90,210 110,180 150,180 C160,210 180,210 190,180 C230,180 230,210 230,300 Z" fill="#1C2833" stroke="var(--charcoal)" stroke-width="3" stroke-linejoin="round"/>
+                    
+                    <!-- Gold stole / cowl collar -->
+                    <path d="M120,188 C122,180 148,185 158,202 C158,202 144,228 132,238" fill="var(--muted-gold)" stroke="var(--charcoal)" stroke-width="2.5"/>
+                    <path d="M200,188 C198,180 172,185 162,202 C162,202 176,228 188,238" fill="var(--muted-gold)" stroke="var(--charcoal)" stroke-width="2.5"/>
+                    
+                    <!-- Gold medal -->
+                    <circle cx="160" cy="205" r="5" fill="var(--muted-gold)" stroke="var(--charcoal)" stroke-width="1.5"/>
+
+                    <!-- Hair bangs elegant draping -->
+                    <path d="M133,118 C145,95 175,95 187,118" fill="none" stroke="var(--charcoal)" stroke-width="3.5" stroke-linecap="round"/>
+
+                    <!-- Glamour Makeup & Eyes -->
+                    <ellipse cx="147" cy="116" rx="4" ry="2.5" fill="var(--charcoal)"/>
+                    <ellipse cx="173" cy="116" rx="4" ry="2.5" fill="var(--charcoal)"/>
+                    <path d="M142,113 C145,110 150,111 152,114" fill="none" stroke="var(--charcoal)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M178,113 C175,110 170,111 168,114" fill="none" stroke="var(--charcoal)" stroke-width="2" stroke-linecap="round"/>
+                    
+                    <!-- Soft Blush -->
+                    <circle cx="142" cy="123" r="5.5" fill="#FFD2DF" opacity="0.8"/>
+                    <circle cx="178" cy="123" r="5.5" fill="#FFD2DF" opacity="0.8"/>
+
+                    <!-- Smiling Elegant Lips -->
+                    <path d="M152,128 Q160,132 168,128" fill="none" stroke="#C0392B" stroke-width="3.5" stroke-linecap="round"/>
+
+                    <!-- Hand holding degree roll (Front) -->
+                    <g transform="translate(130, 240)">
+                        <!-- Diploma roll -->
+                        <rect x="-8" y="10" width="34" height="12" rx="2" fill="#FFFFFF" stroke="var(--charcoal)" stroke-width="2.5" transform="rotate(-15)"/>
+                        <rect x="5" y="6" width="6" height="16" fill="#C0392B" transform="rotate(-15)"/>
+                        <!-- Hand skin -->
+                        <circle cx="5" cy="15" r="7" fill="#FAF2DF" stroke="var(--charcoal)" stroke-width="2.5"/>
+                    </g>
+
+                    <!-- Elegant Mortarboard Cap -->
+                    <polygon points="160,50 215,62 160,74 105,62" fill="var(--charcoal)" stroke="var(--white)" stroke-width="2.5"/>
+                    <path d="M130,68 C130,73 190,73 190,68" fill="var(--charcoal)" stroke="var(--white)" stroke-width="2"/>
+                    <!-- Tassel -->
+                    <path d="M160,62 Q180,64 194,80" fill="none" stroke="var(--muted-gold)" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="194" cy="80" r="3" fill="var(--muted-gold)"/>
+                </svg>
+
+                <div class="cover-overlay-grid">
+                    <div class="overlay-starring">Starring <strong id="label-cover-starring">Ashley Kingston</strong></div>
+                    <div class="overlay-headline-date" id="label-cover-date">Saturday, 15 May 2026</div>
+                </div>
+            </div>
+
+            <!-- Bottom Row invite metadata -->
+            <div class="cover-bottom-row">
+                <div class="cover-venue-details">
+                    VENUE: <strong id="label-cover-stadium">Ford Stadium</strong><br>
+                    <span id="label-cover-address">123 Anywhere St., Any City</span><br>
+                    TIME: <strong id="label-cover-time">7PM - 9PM</strong>
+                </div>
+                <div class="cover-gift-qr" title="Send a Gift Barcode">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="5" y="5" width="90" height="90" fill="none" stroke="currentColor" stroke-width="5"/>
+                        <rect x="15" y="15" width="22" height="22" fill="currentColor"/>
+                        <rect x="19" y="19" width="14" height="14" fill="var(--cream-page)"/>
+                        <rect x="23" y="23" width="6" height="6" fill="currentColor"/>
+                        <rect x="63" y="15" width="22" height="22" fill="currentColor"/>
+                        <rect x="67" y="19" width="14" height="14" fill="var(--cream-page)"/>
+                        <rect x="71" y="23" width="6" height="6" fill="currentColor"/>
+                        <rect x="15" y="63" width="22" height="22" fill="currentColor"/>
+                        <rect x="19" y="67" width="14" height="14" fill="var(--cream-page)"/>
+                        <rect x="23" y="71" width="6" height="6" fill="currentColor"/>
+                        <rect x="63" y="63" width="8" height="8" fill="currentColor"/>
+                        <rect x="42" y="15" width="6" height="6" fill="currentColor"/>
+                        <rect x="50" y="25" width="6" height="6" fill="currentColor"/>
+                        <rect x="42" y="38" width="6" height="12" fill="currentColor"/>
+                        <rect x="54" y="38" width="6" height="6" fill="currentColor"/>
+                        <rect x="38" y="50" width="12" height="6" fill="currentColor"/>
+                        <rect x="50" y="58" width="6" height="12" fill="currentColor"/>
+                        <rect x="63" y="45" width="6" height="6" fill="currentColor"/>
+                        <rect x="73" y="50" width="6" height="6" fill="currentColor"/>
+                        <rect x="45" y="75" width="12" height="6" fill="currentColor"/>
+                        <rect x="58" y="70" width="6" height="6" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Page flip button trigger -->
+            <button class="btn-open-magazine" onclick="turnMagazineCover()">
+                Open Editorial Issue ➜
+            </button>
+        </div>
+
+        <!-- SPREAD CONTENT VIEW (Page 2 & Page 3) -->
+        <div class="magazine-spread" id="inside-spread">
+            
+            <!-- LEFT EDITORIAL PAGE (Story Column & Milestones) -->
+            <div class="spread-page page-left">
+                <div>
+                    <h2 class="editorial-title">The Cover Story</h2>
+                    <div class="editorial-article">
+                        Perjalanan menempuh studi sarjana dipenuhi dengan malam-malam lembur, tumpukan buku, ujian yang menegangkan, hingga tawa persahabatan di koridor kampus. Kelulusan ini bukan sekadar akhir, melainkan gerbang awal menuju kontribusi nyata yang lebih luas. Melalui kerja keras, dedikasi, serta dukungan dari keluarga dan teman-teman terkasih, babak akademik ini berhasil diselesaikan dengan hasil yang membanggakan. Mari menyambut petualangan masa depan baru yang menanti!
+                    </div>
+                </div>
+
+                <!-- Milestone log box -->
+                <div class="timeline-container">
+                    <div class="timeline-tabs">
+                        <button class="time-tab-btn active" id="tab-fresh" onclick="switchMilestoneTab('fresh')">Freshman</button>
+                        <button class="time-tab-btn" id="tab-soph" onclick="switchMilestoneTab('soph')">Sophomore</button>
+                        <button class="time-tab-btn" id="tab-jun" onclick="switchMilestoneTab('jun')">Junior</button>
+                        <button class="time-tab-btn" id="tab-sen" onclick="switchMilestoneTab('sen')">Senior</button>
+                    </div>
+                    <div class="timeline-log-box">
+                        <div class="log-box-year" id="milestone-year-title">Freshman Year</div>
+                        <div class="log-box-text" id="milestone-text-body">Mengikuti debat kampus dan mulai beradaptasi di asrama baru.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT EDITORIAL PAGE (Registry & Wishes guestbook) -->
+            <div class="spread-page page-right">
+                <h2 class="editorial-title">Registry & Wishes</h2>
+                
+                <!-- Openable gift box section -->
+                <div class="gift-box-stage">
+                    <p style="font-size: 0.75rem; text-transform: uppercase; color: var(--taupe); font-weight: 700; margin-bottom: 12px;" id="label-registry-instruction">
+                        Tap the Gold Ribbon Gift to Reveal Bank Registry
+                    </p>
+                    
+                    <div class="gold-gift-box" id="gift-box-element" onclick="openGiftBoxRegistry()">
+                        <div class="gift-box-lid" id="gift-lid-element">
+                            <div class="gift-box-ribbon-v" style="left: 54px;"></div>
+                        </div>
+                        <div class="gift-box-body">
+                            <div class="gift-box-ribbon-v"></div>
+                            <div class="gift-box-ribbon-h"></div>
+                        </div>
+                    </div>
+
+                    <!-- Revealed details -->
+                    <div class="opened-registry-box" id="registry-details-elem">
+                        <div class="registry-title">Send a Graduation Gift</div>
+                        <div class="registry-number" id="label-registry-number">BCA Account: 9830-XXXX-XXXX / Ashley</div>
+                        <p style="font-size: 0.65rem; color: var(--taupe);">Terima kasih atas segala ucapan dan kado indahnya! ❤️</p>
+                    </div>
+                </div>
+
+                <!-- Editorial guestbook quotes wishes -->
+                <div class="guestbook-section">
+                    <div class="guestbook-list" id="wishes-scroller-elem">
+                        <!-- Wishes wishes wishes -->
+                        <div class="guest-wish-item">
+                            "Selamat atas kelulusan besarmu, Ashley! Bangga sekali melihat pencapaian ini!"
+                            <strong>- Prof. David, Kampus</strong>
+                        </div>
+                        <div class="guest-wish-item">
+                            "Happy graduation! Semoga sukses karir di tempat baru dan selalu bahagia!"
+                            <strong>- Sarah & Family</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="guest-input-row">
+                        <input type="text" id="input-guest-name" placeholder="Nama Anda" style="width: 35%;">
+                        <input type="text" id="input-guest-wish" placeholder="Ketik ucapan hangat..." style="width: 65%;">
+                        <button class="btn-open-magazine" onclick="addGuestWish()" style="margin-top: 0; padding: 6px 14px; border-radius: 4px; font-size: 0.7rem;">
+                            Kirim
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LUXURY MINIMALIST EDITORIAL AUDIO PLAYER -->
+    <div class="audio-dock">
+        <button class="btn-audio-toggle" onclick="toggleAudioTrack()" id="audio-play-toggle">▶</button>
+        <span class="audio-text">Editorial Audio</span>
+        <div class="audio-spectrogram" id="spectrogram-container">
+            <div class="spec-bar"></div>
+            <div class="spec-bar"></div>
+            <div class="spec-bar"></div>
+            <div class="spec-bar"></div>
+        </div>
+    </div>
+
+    <!-- AUDIO SOURCE SINK -->
+    <audio id="editorial-audio-elem" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" preload="auto" loop></audio>
+
+
+    <!-- --- JAVASCRIPT CONTROLLER --- -->
+    <script>
+        let audioCtx = null;
+        let isMusicPlaying = false;
+
+        const audioNode = document.getElementById('editorial-audio-elem');
+        const playToggleBtn = document.getElementById('audio-play-toggle');
+        const specBars = document.querySelectorAll('.spec-bar');
+
+        let activeMilestone = 'fresh';
+        let isGiftOpened = false;
+
+        // Custom config state storage
+        const configState = {
+            milestones: {
+                fresh: "Mengikuti debat kampus dan mulai beradaptasi di asrama baru.",
+                soph: "Memilih jurusan riset utama dan mulai bekerja di laboratorium kampus.",
+                jun: "Menempuh riset exchange ke luar negeri dan memperluas jaringan studi.",
+                sen: "Menyelesaikan skripsi akhir dan bersiap menyambut upacara kelulusan."
+            }
+        };
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+        }
+
+        // --- WEB AUDIO API SFX SYNTHS ---
+
+        function playClickSynth() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+            
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            
+            osc.start(now);
+            osc.stop(now + 0.06);
+        }
+
+        function playSuccessChime() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const notes = [440.00, 554.37, 659.25, 880.00]; // A4, C#5, E5, A5
+            
+            notes.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + index * 0.08);
+                
+                gain.gain.setValueAtTime(0.01, now + index * 0.08);
+                gain.gain.linearRampToValueAtTime(0.06, now + index * 0.08 + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.08 + 0.25);
+                
+                osc.start(now + index * 0.08);
+                osc.stop(now + index * 0.08 + 0.28);
+            });
+        }
+
+        function playWhooshSynth() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            
+            const bufferSize = audioCtx.sampleRate * 0.45;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            
+            const lowpass = audioCtx.createBiquadFilter();
+            lowpass.type = 'lowpass';
+            lowpass.frequency.setValueAtTime(250, now);
+            lowpass.frequency.exponentialRampToValueAtTime(1400, now + 0.2);
+            lowpass.frequency.exponentialRampToValueAtTime(80, now + 0.45);
+            
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.18, now + 0.18);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            
+            noise.connect(lowpass);
+            lowpass.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            noise.start(now);
+            noise.stop(now + 0.46);
+        }
+
+        function playBoxUnwrapPop() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(480, now + 0.08);
+            
+            gain.gain.setValueAtTime(0.24, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            
+            osc.start(now);
+            osc.stop(now + 0.09);
+        }
+
+        // --- 1. COVER PAGE FLIP NAVIGATION ---
+        function turnMagazineCover() {
+            playWhooshSynth();
+            
+            const isDesktop = window.innerWidth >= 768;
+            
+            if (isDesktop) {
+                // Flip cover left 3D style
+                document.getElementById('cover-page').classList.add('opened');
+                setTimeout(() => {
+                    document.getElementById('inside-spread').classList.add('visible');
+                    triggerGoldBokehParty();
+                    playSuccessChime();
+                }, 400);
+            } else {
+                // Mobile layout: Scroll down to inside spread pages smoothly!
+                document.getElementById('inside-spread').classList.add('visible');
+                triggerGoldBokehParty();
+                playSuccessChime();
+                
+                setTimeout(() => {
+                    document.getElementById('inside-spread').scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+
+            // Start playing background editorial music track!
+            setTimeout(() => {
+                startEditorialMusic();
+            }, 500);
+        }
+
+        // --- 2. EDITORIAL AUDIO PLAY ENGINE ---
+        function startEditorialMusic() {
+            audioNode.play().then(() => {
+                isMusicPlaying = true;
+                syncAudioUI();
+            }).catch(() => {
+                isMusicPlaying = false;
+                syncAudioUI();
+            });
+        }
+
+        function toggleAudioTrack() {
+            playClickSynth();
+            if (isMusicPlaying) {
+                audioNode.pause();
+                isMusicPlaying = false;
+            } else {
+                initAudioContext();
+                audioNode.play().catch(e => console.log(e));
+                isMusicPlaying = true;
+            }
+            syncAudioUI();
+        }
+
+        function syncAudioUI() {
+            if (isMusicPlaying) {
+                playToggleBtn.innerHTML = '⏸';
+            } else {
+                playToggleBtn.innerHTML = '▶';
+                specBars.forEach(bar => bar.style.height = '2px');
+            }
+        }
+
+        // Spectrogram audio simulation bar loop
+        setInterval(() => {
+            if (isMusicPlaying) {
+                specBars.forEach(bar => {
+                    const h = Math.random() * 12 + 2;
+                    bar.style.height = h + 'px';
+                });
+            }
+        }, 150);
+
+        // --- 3. MILESTONE LOG TAB SWITCHER ---
+        function switchMilestoneTab(tabKey) {
+            playClickSynth();
+            activeMilestone = tabKey;
+
+            const tabs = document.querySelectorAll('.time-tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabKey).classList.add('active');
+
+            const yearTitle = document.getElementById('milestone-year-title');
+            const textBody = document.getElementById('milestone-text-body');
+
+            let yearName = 'Freshman Year';
+            if (tabKey === 'fresh') yearName = 'Freshman Year';
+            if (tabKey === 'soph') yearName = 'Sophomore Year';
+            if (tabKey === 'jun') yearName = 'Junior Year';
+            if (tabKey === 'sen') yearName = 'Senior Year';
+
+            yearTitle.innerText = yearName;
+            textBody.innerText = configState.milestones[tabKey];
+        }
+
+        // --- 4. LUXURY GIFT BOX OPENER ---
+        function openGiftBoxRegistry() {
+            if (isGiftOpened) return;
+            isGiftOpened = true;
+
+            playBoxUnwrapPop();
+            
+            // Lift lid lid flying up
+            const lid = document.getElementById('gift-lid-element');
+            lid.style.transform = 'translateY(-110px) rotate(15deg) scale(0.9)';
+            lid.style.opacity = '0';
+            
+            // Pop box body shrink
+            const bodyObj = document.getElementById('gift-box-element');
+            bodyObj.style.transform = 'scale(0.8)';
+            bodyObj.style.opacity = '0';
+
+            setTimeout(() => {
+                playSuccessChime();
+                triggerGoldBokehParty();
+                
+                bodyObj.style.display = 'none';
+                document.getElementById('label-registry-instruction').style.display = 'none';
+                document.getElementById('registry-details-elem').style.display = 'block';
+            }, 450);
+        }
+
+        // --- 5. EDITORIAL GUESTBOOK SYSTEM ---
+        function addGuestWish() {
+            const nameInput = document.getElementById('input-guest-name');
+            const wishInput = document.getElementById('input-guest-wish');
+
+            const name = nameInput.value.trim();
+            const wish = wishInput.value.trim();
+
+            if (!name || !wish) return;
+
+            playClickSynth();
+
+            // Append item quote style
+            const list = document.getElementById('wishes-scroller-elem');
+            const item = document.createElement('div');
+            item.className = 'guest-wish-item';
+            item.style.animation = 'zoomPop 0.4s ease';
+            item.innerHTML = `"${wish}"<strong>- ${name}</strong>`;
+            
+            list.appendChild(item);
+            list.scrollTop = list.scrollHeight; // Auto scroll down
+
+            // Reset inputs
+            nameInput.value = '';
+            wishInput.value = '';
+
+            triggerGoldBokehParty();
+        }
+
+        // --- 6. PROOFREADER DRAWER SETTINGS CONTROLLERS ---
+        function toggleProofreaderDrawer() {
+            playClickSynth();
+            document.getElementById('proofreader-panel').classList.toggle('active');
+        }
+
+        function liveUpdateEditorial() {
+            const starring = document.getElementById('input-starring').value;
+            const school = document.getElementById('input-school').value;
+            const headline = document.getElementById('input-headline').value;
+            const date = document.getElementById('input-date').value;
+            
+            const stadium = document.getElementById('input-stadium').value;
+            const address = document.getElementById('input-address').value;
+            const time = document.getElementById('input-time').value;
+            
+            const registry = document.getElementById('input-registry').value;
+            
+            // Milestones input updates
+            configState.milestones.fresh = document.getElementById('input-fresh').value;
+            configState.milestones.soph = document.getElementById('input-soph').value;
+            configState.milestones.jun = document.getElementById('input-jun').value;
+            configState.milestones.sen = document.getElementById('input-sen').value;
+
+            // Apply updates
+            document.getElementById('label-cover-starring').innerText = starring;
+            document.getElementById('label-cover-school').innerText = school;
+            document.getElementById('label-cover-headline').innerText = headline;
+            document.getElementById('label-cover-date').innerText = date;
+            
+            document.getElementById('label-cover-stadium').innerText = stadium;
+            document.getElementById('label-cover-address').innerText = address;
+            document.getElementById('label-cover-time').innerText = time;
+            
+            document.getElementById('label-registry-number').innerText = registry;
+
+            // Force tab sync description
+            switchMilestoneTab(activeMilestone);
+        }
+
+        // --- 7. LUXURY BOKEH & STAR BURST CANVAS ---
+        const canvas = document.getElementById('bokeh-stars-canvas');
+        const ctx = canvas.getContext('2d');
+        let lights = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class BokehLight {
+            constructor(isSparkle = false, targetX, targetY) {
+                this.x = targetX !== undefined ? targetX : Math.random() * canvas.width;
+                this.y = targetY !== undefined ? targetY : Math.random() * canvas.height + canvas.height;
+                this.size = Math.random() * 20 + 8;
+                this.speedY = Math.random() * -0.6 - 0.2;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.alpha = Math.random() * 0.4 + 0.1;
+                this.life = 100;
+                this.decay = Math.random() * 0.5 + 0.2;
+                this.isSparkle = isSparkle;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.isSparkle) {
+                    this.life -= this.decay;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.isSparkle ? this.life / 100 * this.alpha : this.alpha;
+                
+                if (this.isSparkle) {
+                    // Draw a 4-point gold sparkle star
+                    ctx.fillStyle = '#D4AF37';
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y - this.size);
+                    ctx.quadraticCurveTo(this.x, this.y, this.x + this.size, this.y);
+                    ctx.quadraticCurveTo(this.x, this.y, this.x, this.y + this.size);
+                    ctx.quadraticCurveTo(this.x, this.y, this.x - this.size, this.y);
+                    ctx.quadraticCurveTo(this.x, this.y, this.x, this.y - this.size);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Soft light bokeh circles
+                    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                    gradient.addColorStop(0, 'rgba(197, 168, 128, 0.7)');
+                    gradient.addColorStop(0.5, 'rgba(197, 168, 128, 0.2)');
+                    gradient.addColorStop(1, 'rgba(197, 168, 128, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Initialize steady slow background lights
+        for (let i = 0; i < 20; i++) {
+            lights.push(new BokehLight(false));
+        }
+
+        function triggerGoldBokehParty() {
+            // Spawn rapid sparkles from bottom center
+            for (let i = 0; i < 30; i++) {
+                lights.push(new BokehLight(true, canvas.width / 2, canvas.height * 0.75 + Math.random()*80));
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = lights.length - 1; i >= 0; i--) {
+                lights[i].update();
+                lights[i].draw();
+                
+                // Cleanup dead sparkles or offscreen items
+                if (lights[i].isSparkle && lights[i].life <= 0) {
+                    lights.splice(i, 1);
+                } else if (!lights[i].isSparkle && lights[i].y < -lights[i].size) {
+                    // Recycle generic ambient lights
+                    lights[i].y = canvas.height + lights[i].size;
+                    lights[i].x = Math.random() * canvas.width;
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // Sync initial customizer configurations
+        window.addEventListener('DOMContentLoaded', () => {
+            liveUpdateEditorial();
+        });
+    </script>
+</body>
+</html>

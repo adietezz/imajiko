@@ -8,7 +8,7 @@
     <title>Jihanki Card Dispenser | Vending Machine Imajiko</title>
     
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3.0">
     
     <!-- Vending Machine Specific Styles -->
     <style>
@@ -1120,7 +1120,9 @@
                 </ul>
 
                 <div class="card-buy-row">
-                    <span class="card-price" id="cardProductPrice">Rp 35.000</span>
+                    <div class="card-price-container" id="cardProductPriceContainer">
+                        <span class="card-price" id="cardProductPrice">Rp 35.000</span>
+                    </div>
                     <a href="https://lynk.id/imajiko/ultah" target="_blank" class="btn-card-checkout" id="cardCheckoutLink">MILIKI SEKARANG</a>
                 </div>
             </div>
@@ -1141,6 +1143,7 @@
                 desc: "Kirim kejutan spesial dengan lilin digital interaktif yang bisa ditiup, balon warna-warni yang terbang di layar, dan lagu ulang tahun otomatis.",
                 features: ["Lilin Tiup Sensor Mikrofon", "Galeri Foto Scrapbook", "Musik Latar Otomatis", "Balon Terbang Interaktif"],
                 price: "Rp 35.000",
+                originalPrice: "Rp 50.000",
                 colorClass: "can-birthday",
                 lynk: "https://lynk.id/imajiko/ultah"
             },
@@ -1150,6 +1153,7 @@
                 desc: "Scrapbook digital untuk mengenang memori masa kuliah/sekolah. Dilengkapi dengan animasi toga terbang interaktif dan pesan harapan digital.",
                 features: ["Animasi Toga Terbang", "Scrapbook Masa Kuliah/Sekolah", "Kolom Ucapan Selamat Kustom", "Pemutar Lagu Kelulusan"],
                 price: "Rp 39.000",
+                originalPrice: "Rp 55.000",
                 colorClass: "can-graduation",
                 lynk: "https://lynk.id/imajiko/wisuda"
             },
@@ -1159,6 +1163,7 @@
                 desc: "Hadiah romantis dengan penghitung waktu mundur hari jadian, amplop surat cinta interaktif yang bisa dibuka, dan galeri album foto cinta.",
                 features: ["Penghitung Waktu Jadian", "Amplop Surat Cinta Interaktif", "Galeri Slideshow Kenangan", "Latar Musik Romantis"],
                 price: "Rp 45.000",
+                originalPrice: "Rp 65.000",
                 colorClass: "can-anniversary",
                 lynk: "https://lynk.id/imajiko/anniv"
             }
@@ -1326,7 +1331,21 @@
             cardProductIcon.textContent = selectedProduct.icon;
             cardProductTitle.textContent = selectedProduct.title;
             cardProductDesc.textContent = selectedProduct.desc;
-            cardProductPrice.textContent = selectedProduct.price;
+            const priceContainer = document.getElementById("cardProductPriceContainer");
+            if (priceContainer) {
+                if (selectedProduct.originalPrice) {
+                    priceContainer.innerHTML = `
+                        <span class="card-price-original">${selectedProduct.originalPrice}</span>
+                        <span class="card-price" id="cardProductPrice">${selectedProduct.price}</span>
+                    `;
+                } else {
+                    priceContainer.innerHTML = `
+                        <span class="card-price" id="cardProductPrice">${selectedProduct.price}</span>
+                    `;
+                }
+            } else {
+                cardProductPrice.textContent = selectedProduct.price;
+            }
             cardCheckoutLink.setAttribute("href", selectedProduct.lynk);
             
             cardProductFeatures.innerHTML = "";

@@ -10,6 +10,7 @@ const state = {
   totalScore: 0,
   lives: 3,
   gameActive: false,
+  gameStarted: false,
   fontsInteracted: { aeonik: false, helvetica: false },
   // Playroom gamification states
   tickets: 0,
@@ -56,7 +57,7 @@ function syncUnlockedItemsDOM() {
       btn.classList.remove("locked");
     }
   });
-  
+
   // 2. Stickers
   const stickerButtons = document.querySelectorAll(".btn-sticker[data-sticker]");
   stickerButtons.forEach(btn => {
@@ -154,13 +155,13 @@ const pointerContainer = document.getElementById("pointer");
 window.addEventListener("mousemove", (e) => {
   const mouseX = e.clientX;
   const mouseY = e.clientY;
-  
+
   // Directly position cursor containers
   cursorContainer.style.left = `${mouseX}px`;
   cursorContainer.style.top = `${mouseY}px`;
   pointerContainer.style.left = `${mouseX}px`;
   pointerContainer.style.top = `${mouseY}px`;
-  
+
   // Show cursor
   if (cursorContainer.style.display !== "block" && pointerContainer.style.display !== "block") {
     cursorContainer.style.display = "block";
@@ -169,7 +170,7 @@ window.addEventListener("mousemove", (e) => {
 
 function setupCursorHovers() {
   const interactiveEls = document.querySelectorAll("a, button, input, textarea, .figma-radio-label, .window-close-btn");
-  
+
   interactiveEls.forEach(el => {
     el.addEventListener("mouseenter", () => {
       cursorContainer.style.display = "none";
@@ -214,29 +215,57 @@ function addInteractiveScore(amount) {
   window.Sound.playCoin();
 }
 
-function loseLife(reasonHtml) {
+function loseLife(reasonHtml, isDinoGame = false) {
   state.lives--;
   window.Sound.playHit();
   updateHeartsDOM();
-  
-  if (state.lives <= 0) {
-    // Game Over modal
+
+  if (isDinoGame) {
     window.Sound.playGameOver();
-    koModalText.innerHTML = `
-      <span class="bad-design">GAME OVER!</span>
-      Skor akhir kamu: <strong>${state.totalScore.toLocaleString()}</strong>. Hati-hati dengan rintangan kaktus dan pilihan desainmu!
-    `;
-    koModalBtn.textContent = "Ulangi Game";
-    koModal.classList.add("visible");
-    state.gameActive = false;
+    const dinoKoOverlay = document.getElementById("dinoKoOverlay");
+    if (dinoKoOverlay) {
+      dinoKoOverlay.classList.add("active");
+      state.gameActive = false;
+      setTimeout(() => {
+        dinoKoOverlay.classList.remove("active");
+        resetDinoRun();
+        if (state.lives <= 0) {
+          koModalText.innerHTML = `
+            <span class="bad-design">GAME OVER!</span>
+            Skor akhir kamu: <strong>${state.totalScore.toLocaleString()}</strong>. Hati-hati dengan rintangan kaktus dan pilihan desainmu!
+          `;
+          koModalBtn.textContent = "Ulangi Game";
+          koModal.classList.add("visible");
+        }
+      }, 2200);
+    } else {
+      resetDinoRun();
+      if (state.lives <= 0) {
+        koModalText.innerHTML = `
+          <span class="bad-design">GAME OVER!</span>
+          Skor akhir kamu: <strong>${state.totalScore.toLocaleString()}</strong>. Hati-hati dengan rintangan kaktus dan pilihan desainmu!
+        `;
+        koModalBtn.textContent = "Ulangi Game";
+        koModal.classList.add("visible");
+      }
+    }
   } else {
-    // Lose a life warning
-    koModalText.innerHTML = reasonHtml;
-    koModalBtn.textContent = "Lanjutkan";
-    koModal.classList.add("visible");
-    
-    // Pause Dino game loop
-    state.gameActive = false;
+    if (state.lives <= 0) {
+      window.Sound.playGameOver();
+      koModalText.innerHTML = `
+        <span class="bad-design">GAME OVER!</span>
+        Skor akhir kamu: <strong>${state.totalScore.toLocaleString()}</strong>. Hati-hati dengan rintangan kaktus dan pilihan desainmu!
+      `;
+      koModalBtn.textContent = "Ulangi Game";
+      koModal.classList.add("visible");
+      state.gameActive = false;
+    } else {
+      // Lose a life warning
+      koModalText.innerHTML = reasonHtml;
+      koModalBtn.textContent = "Lanjutkan";
+      koModal.classList.add("visible");
+      state.gameActive = false;
+    }
   }
 }
 
@@ -252,6 +281,15 @@ function updateHeartsDOM() {
   }
 }
 
+function resetDinoRun() {
+  tRex = new TRexDino();
+  cacti = [];
+  dinoSpeed = 6;
+  spawnTimer = 0;
+  state.gameStarted = false;
+  state.gameActive = false;
+}
+
 function resetGame() {
   state.scrollScore = 0;
   state.interactiveScore = 0;
@@ -260,10 +298,9 @@ function resetGame() {
   updateScoreDisplay();
   updateHeartsDOM();
   koModal.classList.remove("visible");
-  
-  // Redisplay dino overlay
-  document.getElementById("dinoStartOverlay").style.display = "flex";
+
   window.Sound.playGameStart();
+  startDinoGame();
 }
 
 // --- 4. PURIKURA CARD DECORATOR & PHOTO BOOTH ---
@@ -273,20 +310,20 @@ function setupPurikuraGame() {
   const btnToggleCamera = document.getElementById("btnToggleCamera");
   const btnCapturePhoto = document.getElementById("btnCapturePhoto");
   const btnRestartPhoto = document.getElementById("btnRestartPhoto");
-  
+
   const fileUploadInput = document.getElementById("fileUploadInput");
   const btnUploadProxy = document.getElementById("btnUploadProxy");
-  
+
   const filterButtons = document.querySelectorAll("#filterButtonsGrid .btn-sticker");
-  
+
   const chkToggleTextOverlay = document.getElementById("chkToggleTextOverlay");
   const txtCustomOverlayText = document.getElementById("txtCustomOverlayText");
   const purikuraTextOverlay = document.getElementById("purikuraTextOverlay");
-  
+
   const radioAeonik = document.getElementById("radio-aeonik");
   const radioHelvetica = document.getElementById("radio-helvetica");
   const radioComic = document.getElementById("radio-comic");
-  
+
   const labelAeonik = document.getElementById("label-aeonik");
   const labelHelvetica = document.getElementById("label-helvetica");
   const labelComic = document.getElementById("label-comic");
@@ -301,9 +338,9 @@ function setupPurikuraGame() {
   let activeFont = "kawaii";
 
   const moodTexts = {
-    kawaii: "Selamat ulang tahun yaaa! 💕✨",
-    romantis: "Happy anniversary, cintaku. 💖",
-    tsundere: "H-Hmph! Selamat wisuda ya... B-Baka! 💢"
+    kawaii: "ニコニコ! 💕✨",
+    romantis: "ドキドキ... 💖",
+    tsundere: "ツンデレ! 💢"
   };
 
   // Initial setup
@@ -403,14 +440,14 @@ function setupPurikuraGame() {
   // Snapshot photo capture
   btnCapturePhoto.addEventListener("click", () => {
     if (!videoStream) return;
-    
+
     const tempCanvas = document.createElement("canvas");
     tempCanvas.width = purikuraVideo.videoWidth || 640;
     tempCanvas.height = purikuraVideo.videoHeight || 480;
-    
+
     const ctx = tempCanvas.getContext("2d");
     ctx.drawImage(purikuraVideo, 0, 0, tempCanvas.width, tempCanvas.height);
-    
+
     // Load captured stream into background photo
     purikuraPhoto.src = tempCanvas.toDataURL("image/png");
     state.originalPhotoSrc = purikuraPhoto.src;
@@ -421,7 +458,7 @@ function setupPurikuraGame() {
     filterButtons.forEach(b => {
       b.classList.toggle("active-filter", b.getAttribute("data-filter") === "normal");
     });
-    
+
     // Stop stream
     videoStream.getTracks().forEach(track => track.stop());
     videoStream = null;
@@ -429,7 +466,7 @@ function setupPurikuraGame() {
     purikuraPhoto.style.display = "block";
     btnToggleCamera.textContent = "📸 KAMERA";
     btnCapturePhoto.disabled = true;
-    
+
     // Reward & SFX
     window.Sound.playCoin();
     addInteractiveScore(150);
@@ -444,7 +481,7 @@ function setupPurikuraGame() {
   fileUploadInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = (event) => {
       purikuraPhoto.src = event.target.result;
@@ -456,7 +493,7 @@ function setupPurikuraGame() {
       filterButtons.forEach(b => {
         b.classList.toggle("active-filter", b.getAttribute("data-filter") === "normal");
       });
-      
+
       // Stop video if it's active
       if (videoStream) {
         videoStream.getTracks().forEach(track => track.stop());
@@ -466,7 +503,7 @@ function setupPurikuraGame() {
         btnToggleCamera.textContent = "📸 KAMERA";
         btnCapturePhoto.disabled = true;
       }
-      
+
       window.Sound.playCoin();
       addInteractiveScore(100);
       showRetroToast("📤 FOTO BERHASIL DIUNGGAH!");
@@ -482,7 +519,7 @@ function setupPurikuraGame() {
         videoStream.getTracks().forEach(track => track.stop());
         videoStream = null;
       }
-      
+
       // Reset UI elements to default halftone dot placeholder
       purikuraVideo.style.display = "none";
       purikuraPhoto.style.display = "block";
@@ -495,14 +532,14 @@ function setupPurikuraGame() {
       filterButtons.forEach(b => {
         b.classList.toggle("active-filter", b.getAttribute("data-filter") === "normal");
       });
-      
+
       // Reset button states
       btnToggleCamera.textContent = "📸 KAMERA";
       btnCapturePhoto.disabled = true;
-      
+
       // Clear file upload input value
       fileUploadInput.value = "";
-      
+
       // Play audio & show notification
       window.Sound.playClose();
       showRetroToast("🔄 FOTO BERHASIL DI-RESET!");
@@ -516,26 +553,26 @@ function setupPurikuraGame() {
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      
+
       canvas.width = img.naturalWidth || img.width || 640;
       canvas.height = img.naturalHeight || img.height || 480;
-      
+
       const w = Math.ceil(canvas.width / pixelSize);
       const h = Math.ceil(canvas.height / pixelSize);
-      
+
       // Downscale
       const smallCanvas = document.createElement("canvas");
       smallCanvas.width = w;
       smallCanvas.height = h;
       const smallCtx = smallCanvas.getContext("2d");
       smallCtx.drawImage(img, 0, 0, w, h);
-      
+
       // Upscale crisp
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.drawImage(smallCanvas, 0, 0, w, h, 0, 0, canvas.width, canvas.height);
-      
+
       purikuraPhoto.src = canvas.toDataURL("image/png");
     };
     img.src = srcDataUrl;
@@ -546,11 +583,11 @@ function setupPurikuraGame() {
     btn.addEventListener("click", () => {
       const filter = btn.getAttribute("data-filter");
       activeFilter = filter;
-      
+
       if (!state.originalPhotoSrc) {
         state.originalPhotoSrc = purikuraPhoto.src;
       }
-      
+
       if (filter !== "pixel") {
         purikuraPhoto.src = state.originalPhotoSrc;
         purikuraPhoto.className = `purikura-bg-photo filter-${filter}`;
@@ -558,11 +595,11 @@ function setupPurikuraGame() {
         pixelatePhotoAction(state.originalPhotoSrc, 12);
         purikuraPhoto.className = `purikura-bg-photo filter-normal`;
       }
-      
+
       // Sync buttons visual active-filter state
       filterButtons.forEach(b => b.classList.remove("active-filter"));
       btn.classList.add("active-filter");
-      
+
       window.Sound.playClick();
       addInteractiveScore(50);
       showRetroToast(`🎨 FILTER DIUBAH: ${filter.toUpperCase()}`);
@@ -572,14 +609,14 @@ function setupPurikuraGame() {
   // Frames selection & Locked Frames purchases
   const frameButtons = document.querySelectorAll("#frameButtonsGrid .btn-frame-choice");
   const purikuraFrameOverlay = document.getElementById("purikuraFrameOverlay");
-  
+
   if (frameButtons && purikuraFrameOverlay) {
     frameButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         const frame = btn.getAttribute("data-frame");
         const cost = parseInt(btn.getAttribute("data-cost") || "0");
         const itemId = `frame-${frame}`;
-        
+
         // Buy locked frame
         if (btn.classList.contains("locked")) {
           if (state.tickets >= cost) {
@@ -600,14 +637,14 @@ function setupPurikuraGame() {
             return;
           }
         }
-        
+
         state.activeFrame = frame;
         purikuraFrameOverlay.className = `purikura-frame-overlay frame-${frame}`;
-        
+
         // Sync active frame choices
         frameButtons.forEach(b => b.classList.remove("active-frame"));
         btn.classList.add("active-frame");
-        
+
         window.Sound.playClick();
         addInteractiveScore(50);
         showRetroToast(`🖼️ BINGKAI DIUBAH: ${frame.toUpperCase()}`);
@@ -619,7 +656,7 @@ function setupPurikuraGame() {
   function makeDraggable(el) {
     let isDragging = false;
     let startX, startY, initialLeft, initialTop;
-    
+
     el.addEventListener("mousedown", (e) => {
       isDragging = true;
       startX = e.clientX;
@@ -628,7 +665,7 @@ function setupPurikuraGame() {
       initialTop = el.offsetTop;
       e.preventDefault();
     });
-    
+
     window.addEventListener("mousemove", (e) => {
       if (!isDragging) return;
       const dx = e.clientX - startX;
@@ -636,11 +673,11 @@ function setupPurikuraGame() {
       el.style.left = `${initialLeft + dx}px`;
       el.style.top = `${initialTop + dy}px`;
     });
-    
+
     window.addEventListener("mouseup", () => {
       isDragging = false;
     });
-    
+
     // Touch support for mobile devices
     el.addEventListener("touchstart", (e) => {
       isDragging = true;
@@ -649,7 +686,7 @@ function setupPurikuraGame() {
       initialLeft = el.offsetLeft;
       initialTop = el.offsetTop;
     });
-    
+
     window.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
       const dx = e.touches[0].clientX - startX;
@@ -657,7 +694,7 @@ function setupPurikuraGame() {
       el.style.left = `${initialLeft + dx}px`;
       el.style.top = `${initialTop + dy}px`;
     });
-    
+
     window.addEventListener("touchend", () => {
       isDragging = false;
     });
@@ -672,7 +709,7 @@ function setupPurikuraGame() {
       const emoji = btn.getAttribute("data-sticker");
       const cost = parseInt(btn.getAttribute("data-cost") || "0");
       const itemId = `sticker-${emoji}`;
-      
+
       // Buy locked sticker
       if (btn.classList.contains("locked")) {
         if (state.tickets >= cost) {
@@ -697,23 +734,23 @@ function setupPurikuraGame() {
       const sticker = document.createElement("span");
       sticker.className = "placed-sticker";
       sticker.textContent = emoji;
-      
+
       // Random coordinates inside container
       const randomLeft = Math.floor(Math.random() * 65) + 10;
       const randomTop = Math.floor(Math.random() * 50) + 15;
       const randomRot = Math.floor(Math.random() * 60) - 30;
-      
+
       sticker.style.left = `${randomLeft}%`;
       sticker.style.top = `${randomTop}%`;
       sticker.style.transform = `rotate(${randomRot}deg)`;
-      
+
       purikuraScreen.appendChild(sticker);
       makeDraggable(sticker);
-      
+
       window.Sound.playCoin();
       addInteractiveScore(100);
       showRetroToast(`✨ Tempel stiker ${emoji}! Seret stiker sesukamu.`);
-      
+
       // Double click to delete
       sticker.addEventListener("dblclick", () => {
         sticker.remove();
@@ -740,7 +777,7 @@ function setupPurikuraGame() {
       canvas.width = purikuraScreen.clientWidth || 500;
       canvas.height = purikuraScreen.clientHeight || 350;
       const ctx = canvas.getContext("2d");
-      
+
       // A. Draw background photo (with filters applied)
       if (activeFilter === "mono") {
         ctx.filter = "grayscale(1) contrast(1.15)";
@@ -751,7 +788,7 @@ function setupPurikuraGame() {
       } else {
         ctx.filter = "none";
       }
-      
+
       // Draw background image depending on active frame
       if (state.activeFrame === "polaroid") {
         ctx.fillStyle = "#ffffff";
@@ -766,7 +803,7 @@ function setupPurikuraGame() {
       } else {
         drawImageCover(ctx, purikuraPhoto, 0, 0, canvas.width, canvas.height);
       }
-      
+
       ctx.filter = "none"; // reset filter
 
       // B. Draw frame graphics overlay on top of photo
@@ -780,16 +817,16 @@ function setupPurikuraGame() {
         ctx.lineWidth = 30;
         ctx.strokeStyle = "#1a1a1a";
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
-        
+
         // Draw glowing inner lines
         ctx.strokeStyle = "#ff007f";
         ctx.lineWidth = 4;
         ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
-        
+
         ctx.strokeStyle = "#00f0ff";
         ctx.lineWidth = 2;
         ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
-        
+
         // Title Text
         ctx.fillStyle = "#00f0ff";
         ctx.font = "7px 'Press Start 2P', monospace";
@@ -800,22 +837,22 @@ function setupPurikuraGame() {
         ctx.strokeStyle = "#ffd13b";
         ctx.lineWidth = 6;
         ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
-        
+
         ctx.lineWidth = 2;
         ctx.strokeRect(8, 8, canvas.width - 16, canvas.height - 16);
-        
+
         // SSR badge
         ctx.fillStyle = "#ffd13b";
         ctx.fillRect(16, 16, 40, 18);
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 1;
         ctx.strokeRect(16, 16, 40, 18);
-        
+
         ctx.fillStyle = "#000000";
         ctx.font = "bold 8px 'Press Start 2P', monospace";
         ctx.textAlign = "center";
         ctx.fillText("SSR", 16 + 20, 16 + 12);
-        
+
         // Holographic sheen lines
         ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
         ctx.lineWidth = 15;
@@ -824,7 +861,7 @@ function setupPurikuraGame() {
         ctx.moveTo(-30, 0); ctx.lineTo(canvas.width + 70, canvas.height + 70);
         ctx.moveTo(30, 0); ctx.lineTo(canvas.width + 130, canvas.height + 70);
         ctx.stroke();
-        
+
         // Stats text
         ctx.fillStyle = "#ffd13b";
         ctx.font = "6px 'Press Start 2P', monospace";
@@ -840,48 +877,37 @@ function setupPurikuraGame() {
         const width = purikuraTextOverlay.offsetWidth;
         const height = purikuraTextOverlay.offsetHeight;
 
-        // Draw bubble rectangle background
-        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-        ctx.strokeStyle = "#ff007f";
-        ctx.lineWidth = 2;
-        
-        // Draw round rectangle path
-        ctx.beginPath();
-        ctx.roundRect(left, top, width, height, 4);
-        ctx.fill();
-        ctx.stroke();
+        ctx.save();
 
-        // Configure font styles matching presets exactly
-        let fontStr = "";
-        let lineHeight = 22;
+        // Translate to center of text block and rotate -6 degrees (matching CSS)
+        const centerX = left + width / 2;
+        const centerY = top + height / 2;
+        ctx.translate(centerX, centerY);
+        ctx.rotate(-6 * Math.PI / 180);
+
+        // Draw bubble rectangle background (no border stroke!)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.beginPath();
+        ctx.roundRect(-width / 2, -height / 2, width, height, 8);
+        ctx.fill();
+
+        // Configure font styles matching sfxMap exactly
+        let fontStr = "22px 'Press Start 2P', monospace";
+        let lineHeight = 28;
         let textColor = "#ff007f";
-        let strokeColor = "";
-        let strokeWidth = 0;
-        let textShadow = false;
 
         if (activeFont === "kawaii") {
-          fontStr = "800 20px 'Plus Jakarta Sans', sans-serif";
-          lineHeight = 26;
-          textColor = "#ff007f";
-          strokeColor = "#ffffff";
-          strokeWidth = 4;
+          textColor = "#ff007f"; // Neon Pink
         } else if (activeFont === "romantis") {
-          fontStr = "italic 600 20px 'Plus Jakarta Sans', sans-serif";
-          lineHeight = 28;
-          textColor = "#c71585";
-          textShadow = true;
+          textColor = "#8257e5"; // Neon Purple
         } else {
-          fontStr = "bold 14px 'Press Start 2P', monospace";
-          lineHeight = 24;
-          textColor = "#d9534f";
-          strokeColor = "#000000";
-          strokeWidth = 3;
+          textColor = "#e2e77d"; // MakeReign Yellow
         }
 
         ctx.font = fontStr;
 
         // Wrap text to fit inside the bubble box width (accounting for padding)
-        const paddingX = 24;
+        const paddingX = 32;
         const maxWidth = width - paddingX;
         const lines = [];
         const paragraphs = textStr.split("\n");
@@ -905,33 +931,36 @@ function setupPurikuraGame() {
           }
         });
 
-        // Vertical centering matching standard middle baseline behavior on blocks
+        // Vertical centering relative to the translated origin (0, 0)
         const totalTextHeight = lines.length * lineHeight;
-        let startY = top + (height - totalTextHeight) / 2;
+        let startY = -totalTextHeight / 2;
 
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
 
         lines.forEach((line, index) => {
-          const x = left + width / 2;
+          const x = 0;
           const y = startY + index * lineHeight;
 
-          if (strokeColor && strokeWidth > 0) {
-            ctx.strokeStyle = strokeColor;
-            ctx.lineWidth = strokeWidth;
-            ctx.lineJoin = "round";
-            ctx.miterLimit = 2;
-            ctx.strokeText(line, x, y);
-          }
+          // 1. Draw flat brutalist black shadow (offset +4px, +4px)
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 3;
+          ctx.lineJoin = "round";
+          ctx.miterLimit = 2;
+          ctx.strokeText(line, x + 4, y + 4);
+          ctx.fillStyle = "#000000";
+          ctx.fillText(line, x + 4, y + 4);
 
-          if (textShadow) {
-            ctx.fillStyle = "#ffffff";
-            ctx.fillText(line, x + 1.5, y + 1.5);
-          }
+          // 2. Draw thick black outline for main text
+          ctx.lineWidth = 3;
+          ctx.strokeText(line, x, y);
 
+          // 3. Draw colored main text fill
           ctx.fillStyle = textColor;
           ctx.fillText(line, x, y);
         });
+
+        ctx.restore();
       }
 
       // C. Draw placed stickers
@@ -987,6 +1016,17 @@ let tRex;
 let cacti = [];
 let dinoSpeed = 6;
 let spawnTimer = 0;
+let isFooterVisible = false;
+let groundX = 0;
+
+// Preload original Chrome Dino spritesheet
+const dinoSpriteSheet = new Image();
+dinoSpriteSheet.crossOrigin = "anonymous";
+dinoSpriteSheet.src = "https://raw.githubusercontent.com/wayou/t-rex-runner/master/assets/default_200_percent/offline-sprite-2x.png";
+let isSpriteSheetLoaded = false;
+dinoSpriteSheet.onload = () => {
+  isSpriteSheetLoaded = true;
+};
 
 function resizeDinoCanvas() {
   dinoCanvas.width = dinoCanvas.parentElement.clientWidth;
@@ -996,14 +1036,16 @@ window.addEventListener("resize", resizeDinoCanvas);
 
 class TRexDino {
   constructor() {
-    this.width = 30;
-    this.height = 34;
+    this.width = 44;
+    this.height = 47;
     this.x = 50;
     this.y = 100;
     this.vy = 0;
     this.gravity = 0.7;
     this.jumpForce = -11;
     this.isGrounded = false;
+    this.crashed = false;
+    this.animFrame = 0;
   }
 
   jump() {
@@ -1024,37 +1066,64 @@ class TRexDino {
       this.vy = 0;
       this.isGrounded = true;
     }
+
+    if (this.isGrounded && state.gameActive) {
+      this.animFrame = Math.floor(Date.now() / 100) % 2;
+    }
   }
 
   draw() {
-    dinoCtx.fillStyle = "#e2e77d"; // MakeReign Yellow
-    
-    // Draw pixelated T-Rex outline using filled segments
-    dinoCtx.fillRect(this.x + 12, this.y, 16, 12);
-    dinoCtx.fillRect(this.x + 10, this.y + 2, 4, 4);
-    // Eye block (remove to create eye)
-    dinoCtx.clearRect(this.x + 16, this.y + 2, 2, 2);
-    
-    // Body & neck
-    dinoCtx.fillRect(this.x + 6, this.y + 12, 14, 12);
-    dinoCtx.fillRect(this.x, this.y + 14, 12, 8); // Tail base
-    dinoCtx.fillRect(this.x - 4, this.y + 16, 4, 4); // Tail tip
-    
-    // Short arms
-    dinoCtx.fillRect(this.x + 20, this.y + 14, 4, 2);
-    
-    // Legs
-    dinoCtx.fillRect(this.x + 6, this.y + 24, 4, 8);
-    dinoCtx.fillRect(this.x + 14, this.y + 24, 4, 8);
-    dinoCtx.fillRect(this.x + 4, this.y + 30, 4, 2);
-    dinoCtx.fillRect(this.x + 12, this.y + 30, 4, 2);
+    if (isSpriteSheetLoaded) {
+      if (this.crashed) {
+        dinoCtx.drawImage(dinoSpriteSheet, 2030, 2, 88, 94, this.x, this.y, this.width, this.height);
+      } else if (!this.isGrounded) {
+        dinoCtx.drawImage(dinoSpriteSheet, 1678, 2, 88, 94, this.x, this.y, this.width, this.height);
+      } else {
+        const frameX = this.animFrame === 0 ? 1854 : 1942;
+        dinoCtx.drawImage(dinoSpriteSheet, frameX, 2, 88, 94, this.x, this.y, this.width, this.height);
+      }
+    } else {
+      dinoCtx.fillStyle = "#535353"; // Classic grey T-Rex
+      // Head
+      dinoCtx.fillRect(this.x + 22, this.y, 22, 17);
+      dinoCtx.clearRect(this.x + 28, this.y + 4, 4, 4); // Eye
+      // Body / neck
+      dinoCtx.fillRect(this.x + 14, this.y + 17, 22, 17);
+      dinoCtx.fillRect(this.x, this.y + 20, 14, 11); // Tail
+      dinoCtx.fillRect(this.x + 36, this.y + 20, 6, 3); // Arm
+      // Legs
+      if (this.isGrounded && this.animFrame === 0) {
+        dinoCtx.fillRect(this.x + 14, this.y + 34, 6, 13);
+        dinoCtx.fillRect(this.x + 26, this.y + 34, 6, 8);
+      } else if (this.isGrounded && this.animFrame === 1) {
+        dinoCtx.fillRect(this.x + 14, this.y + 34, 6, 8);
+        dinoCtx.fillRect(this.x + 26, this.y + 34, 6, 13);
+      } else {
+        dinoCtx.fillRect(this.x + 14, this.y + 34, 6, 13);
+        dinoCtx.fillRect(this.x + 26, this.y + 34, 6, 13);
+      }
+    }
   }
 }
 
 class CactusObstacle {
   constructor() {
-    this.width = 16 + Math.floor(Math.random() * 10);
-    this.height = 30 + Math.floor(Math.random() * 15);
+    this.type = Math.random() > 0.5 ? "large" : "small";
+    if (this.type === "small") {
+      this.width = 17;
+      this.height = 35;
+      this.spriteX = 446;
+      this.spriteY = 2;
+      this.spriteW = 34;
+      this.spriteH = 70;
+    } else {
+      this.width = 25;
+      this.height = 50;
+      this.spriteX = 652;
+      this.spriteY = 2;
+      this.spriteW = 50;
+      this.spriteH = 100;
+    }
     this.x = dinoCanvas.width;
     this.y = dinoCanvas.height - 30 - this.height;
   }
@@ -1064,13 +1133,25 @@ class CactusObstacle {
   }
 
   draw() {
-    dinoCtx.fillStyle = "#00f0ff"; // Neon Cyan/Blue
-    
-    // Draw classic cactus branch shape
-    dinoCtx.fillRect(this.x + this.width / 2 - 3, this.y, 6, this.height); // Center stem
-    dinoCtx.fillRect(this.x, this.y + 10, this.width, 5); // Side branch link
-    dinoCtx.fillRect(this.x, this.y + 5, 4, 6); // Left arm up
-    dinoCtx.fillRect(this.x + this.width - 4, this.y + 7, 4, 6); // Right arm up
+    if (isSpriteSheetLoaded) {
+      dinoCtx.drawImage(
+        dinoSpriteSheet,
+        this.spriteX,
+        this.spriteY,
+        this.spriteW,
+        this.spriteH,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+    } else {
+      dinoCtx.fillStyle = "#535353"; // Classic Grey
+      dinoCtx.fillRect(this.x + this.width / 2 - 3, this.y, 6, this.height);
+      dinoCtx.fillRect(this.x, this.y + 10, this.width, 5);
+      dinoCtx.fillRect(this.x, this.y + 5, 4, 6);
+      dinoCtx.fillRect(this.x + this.width - 4, this.y + 7, 4, 6);
+    }
   }
 }
 
@@ -1081,24 +1162,77 @@ function startDinoGame() {
   dinoSpeed = 6;
   spawnTimer = 0;
   state.gameActive = true;
-  dinoStartOverlay.style.display = "none";
-  
+  state.gameStarted = true;
+
   if (dinoAnimationId) cancelAnimationFrame(dinoAnimationId);
   animateDino();
 }
 
+function drawDinoStartScreen() {
+  if (!tRex) {
+    tRex = new TRexDino();
+  }
+  tRex.crashed = false; // Reset crashed state
+  dinoCtx.clearRect(0, 0, dinoCanvas.width, dinoCanvas.height);
+
+  // Draw Ground
+  if (isSpriteSheetLoaded) {
+    dinoCtx.drawImage(dinoSpriteSheet, 2, 104, 2400, 24, 0, dinoCanvas.height - 38, 1200, 12);
+  } else {
+    dinoCtx.strokeStyle = "#535353";
+    dinoCtx.lineWidth = 2;
+    dinoCtx.beginPath();
+    dinoCtx.moveTo(0, dinoCanvas.height - 30);
+    dinoCtx.lineTo(dinoCanvas.width, dinoCanvas.height - 30);
+    dinoCtx.stroke();
+  }
+
+  // Draw Dino standing
+  tRex.draw();
+
+  // Flashing prompt text: show/hide every 600ms
+  if (Math.floor(Date.now() / 600) % 2 === 0) {
+    dinoCtx.fillStyle = "#535353";
+    dinoCtx.font = "10px 'Press Start 2P', monospace";
+    dinoCtx.textAlign = "center";
+    dinoCtx.fillText("TEKAN SPASI / TAP UNTUK BERMAIN", dinoCanvas.width / 2, dinoCanvas.height / 2 - 20);
+  }
+}
+
 function animateDino() {
-  if (!state.gameActive) return;
+  if (!isFooterVisible) return;
+
+  if (!state.gameStarted) {
+    drawDinoStartScreen();
+    dinoAnimationId = requestAnimationFrame(animateDino);
+    return;
+  }
+
+  if (!state.gameActive) {
+    // Game is paused (warning modal open)
+    dinoAnimationId = requestAnimationFrame(animateDino);
+    return;
+  }
 
   dinoCtx.clearRect(0, 0, dinoCanvas.width, dinoCanvas.height); // Transparent frame
 
-  // Draw Ground Line
-  dinoCtx.strokeStyle = "#8257e5"; // Purple Glow
-  dinoCtx.lineWidth = 2;
-  dinoCtx.beginPath();
-  dinoCtx.moveTo(0, dinoCanvas.height - 30);
-  dinoCtx.lineTo(dinoCanvas.width, dinoCanvas.height - 30);
-  dinoCtx.stroke();
+  // Scroll and draw Ground
+  groundX -= dinoSpeed;
+  if (groundX <= -1200) {
+    groundX = 0;
+  }
+
+  if (isSpriteSheetLoaded) {
+    dinoCtx.drawImage(dinoSpriteSheet, 2, 104, 2400, 24, groundX, dinoCanvas.height - 38, 1200, 12);
+    dinoCtx.drawImage(dinoSpriteSheet, 2, 104, 2400, 24, groundX + 1200, dinoCanvas.height - 38, 1200, 12);
+  } else {
+    dinoCtx.strokeStyle = "#535353"; // Grey line
+    dinoCtx.lineWidth = 2;
+    dinoCtx.beginPath();
+    dinoCtx.moveTo(0, dinoCanvas.height - 30);
+    dinoCtx.lineTo(dinoCanvas.width, dinoCanvas.height - 30);
+    dinoCtx.stroke();
+  }
 
   // Update Dino
   tRex.update();
@@ -1123,10 +1257,11 @@ function animateDino() {
       tRex.y < cactus.y + cactus.height &&
       tRex.y + tRex.height > cactus.y
     ) {
+      tRex.crashed = true;
       loseLife(`
         <span class="bad-design">GAME OVER - KAMU MENABRAK KAKTUS!</span>
         T-Rex menabrak rintangan kaktus saat berlari. Nyawa kamu berkurang 1.
-      `);
+      `, true);
       return;
     }
 
@@ -1142,7 +1277,7 @@ function animateDino() {
   dinoAnimationId = requestAnimationFrame(animateDino);
 }
 
-// Global key events for jump
+// Global key events for jump/start
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space" || e.code === "ArrowUp") {
     // Exceptions for typing in text inputs/textareas
@@ -1150,26 +1285,65 @@ window.addEventListener("keydown", (e) => {
     if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT")) {
       return; // Let standard typing happen
     }
-    
-    if (state.gameActive) {
+
+    if (isFooterVisible) {
       e.preventDefault();
-      tRex.jump();
+      if (!state.gameStarted) {
+        startDinoGame();
+      } else if (state.gameActive) {
+        tRex.jump();
+      }
     }
   }
 });
 
 dinoCanvas.addEventListener("touchstart", (e) => {
-  if (state.gameActive) {
+  if (isFooterVisible) {
     e.preventDefault();
-    tRex.jump();
+    if (!state.gameStarted) {
+      startDinoGame();
+    } else if (state.gameActive) {
+      tRex.jump();
+    }
   }
 }, { passive: false });
 
 dinoCanvas.addEventListener("mousedown", () => {
-  if (state.gameActive) {
-    tRex.jump();
+  if (isFooterVisible) {
+    if (!state.gameStarted) {
+      startDinoGame();
+    } else if (state.gameActive) {
+      tRex.jump();
+    }
   }
 });
+
+function setupDinoAutoStart() {
+  const footerEl = document.querySelector(".section.footer");
+  if (!footerEl) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      isFooterVisible = entry.isIntersecting;
+      if (isFooterVisible) {
+        if (state.gameStarted && !koModal.classList.contains("visible")) {
+          state.gameActive = true;
+        }
+        if (!dinoAnimationId) {
+          animateDino();
+        }
+      } else {
+        state.gameActive = false;
+        if (dinoAnimationId) {
+          cancelAnimationFrame(dinoAnimationId);
+          dinoAnimationId = null;
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  observer.observe(footerEl);
+}
 
 // Helper to draw image mimicking CSS object-fit: cover
 function drawImageCover(ctx, img, x, y, w, h) {
@@ -1216,9 +1390,9 @@ function showRetroToast(message) {
   toast.style.zIndex = "9999";
   toast.style.textAlign = "center";
   toast.innerHTML = message;
-  
+
   document.body.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.remove();
   }, 4000);
@@ -1230,7 +1404,7 @@ function bindDynamicCatalogEvents() {
   if (btnCopyPromoLink) {
     btnCopyPromoLink.addEventListener("click", () => {
       const shareText = `Yuk beli template website ucapan keren (Ulang Tahun, Wisuda, Anniversary) di Imajiko Store! Desain premium & harga bersahabat. Kunjungi: ${window.location.href}`;
-      
+
       navigator.clipboard.writeText(shareText).then(() => {
         addInteractiveScore(200);
         showRetroToast("🔗 LINK PROMOSI DISALIN!<br>Sebarkan ke TikTok atau WA untuk membantu kami!");
@@ -1267,7 +1441,7 @@ function initCatalog() {
   const brutalistGrid = document.getElementById("brutalistGrid");
   if (!brutalistGrid) return;
   brutalistGrid.innerHTML = "";
-  
+
   // A. RIRI_SAMA (Sakura Theme)
   const card1 = document.createElement("div");
   card1.className = "stationery-card sakura-theme scroll-reveal";
@@ -1373,7 +1547,7 @@ function initCatalog() {
     </div>
   `;
   brutalistGrid.appendChild(tiktokCard);
-  
+
   // Global listener for closing windows and stationery cards
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("window-close-btn")) {
@@ -1473,7 +1647,7 @@ function initCard3DTilt() {
   const cardModal = document.getElementById("cardModal");
   const cardModalContent = document.getElementById("cardModalContent");
 
-  window.openCardModal = function(container) {
+  window.openCardModal = function (container) {
     const inner = container.querySelector(".card-inner");
     const cardBack = container.querySelector(".card-back");
     if (!cardBack || !inner || !cardModal || !cardModalContent) return;
@@ -1482,17 +1656,15 @@ function initCard3DTilt() {
     const category = container.getAttribute("data-category") || "birthday";
     cardModal.setAttribute("data-category", category);
 
-    // Save references to restore later
-    cardModal._activeCardBack = cardBack;
-    cardModal._activeOriginalParent = inner;
+    // Clone card back to avoid layout reflows on original parent grid item
+    const cardBackClone = cardBack.cloneNode(true);
+    cardBackClone.classList.add("in-modal");
 
-    // Change btn-flip-back text to ✕
-    const closeBtn = cardBack.querySelector(".btn-flip-back");
+    // Change btn-flip-back text inside clone to ✕
+    const closeBtn = cardBackClone.querySelector(".btn-flip-back");
     if (closeBtn) closeBtn.textContent = "✕";
 
-    // Reparent card back to modal content
-    cardBack.classList.add("in-modal");
-    cardModalContent.appendChild(cardBack);
+    cardModalContent.appendChild(cardBackClone);
 
     // Inject pulsating manga SFX overlay badge
     const sfxMap = {
@@ -1515,29 +1687,11 @@ function initCard3DTilt() {
     }
   };
 
-  window.closeCardModal = function() {
+  window.closeCardModal = function () {
     if (!cardModal || !cardModalContent) return;
-    const cardBack = cardModal._activeCardBack;
-    const originalParent = cardModal._activeOriginalParent;
 
-    // Remove manga SFX overlay badge
-    const sfxEl = cardModalContent.querySelector(".modal-sfx-text");
-    if (sfxEl) sfxEl.remove();
-
-    if (cardBack && originalParent) {
-      // Remove class override
-      cardBack.classList.remove("in-modal");
-
-      // Reset close button text back to ↺
-      const closeBtn = cardBack.querySelector(".btn-flip-back");
-      if (closeBtn) closeBtn.textContent = "↺";
-
-      // Move element back to original container
-      originalParent.appendChild(cardBack);
-    }
-
-    cardModal._activeCardBack = null;
-    cardModal._activeOriginalParent = null;
+    // Clear contents of modal content container completely
+    cardModalContent.innerHTML = "";
     cardModal.removeAttribute("data-category");
 
     // Hide modal overlay
@@ -1759,7 +1913,7 @@ function setupMenuDrawer() {
   menuSoundBtn.addEventListener("click", () => {
     const isMuted = window.Sound.toggleMute();
     window.Sound.playClick();
-    
+
     // Sync HUD status
     if (isMuted) {
       menuSoundBtn.textContent = "SUARA: MATI";
@@ -1777,22 +1931,22 @@ function setupMenuDrawer() {
 function setupCopyTextHelper() {
   const btnCopyCustomText = document.getElementById("btnCopyCustomText");
   const txtCustomOverlayText = document.getElementById("txtCustomOverlayText");
-  
+
   if (btnCopyCustomText && txtCustomOverlayText) {
     btnCopyCustomText.addEventListener("click", () => {
       const textToCopy = txtCustomOverlayText.value.trim();
       if (!textToCopy) return;
-      
+
       navigator.clipboard.writeText(textToCopy).then(() => {
         addInteractiveScore(150);
         showRetroToast("📋 TEKS KUSTOM BERHASIL DISALIN!<br>Rekatkan teks ini pada formulir pesanan di Lynk.id.");
-        
+
         // Dynamic visual confirmation
         const originalText = btnCopyCustomText.textContent;
         btnCopyCustomText.textContent = "✅ TEKS DISALIN!";
         btnCopyCustomText.style.backgroundColor = "var(--color-bg-yellow)";
         btnCopyCustomText.style.color = "var(--color-text-dark)";
-        
+
         setTimeout(() => {
           btnCopyCustomText.textContent = originalText;
           btnCopyCustomText.style.backgroundColor = "";
@@ -1864,7 +2018,10 @@ function renderCatalogCards() {
                     ${getOverlayHTML(card.lcdOverlay)}
                 </div>
                 <div class="card-back-action">
-                    <span class="card-price">${card.price}</span>
+                    <div class="card-price-container">
+                        ${card.originalPrice ? `<span class="card-price-original">${card.originalPrice}</span>` : ''}
+                        <span class="card-price">${card.price}</span>
+                    </div>
                     <div class="card-action-buttons">
                         <a href="${card.tiktokUrl}" target="_blank" class="btn-card-tiktok" title="Lihat Demo TikTok">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="tiktok-icon">
@@ -1915,7 +2072,7 @@ function setupJukebox() {
   const btnJukeboxShuffle = document.getElementById("btnJukeboxShuffle");
   const jukeboxDisplay = document.getElementById("jukeboxDisplay");
   const cassetteLabelTitle = document.getElementById("cassetteLabelTitle");
-  
+
   const progressBar = document.getElementById("progress-bar");
   const leftRoll = document.getElementById("left-roll");
   const rightRoll = document.getElementById("right-roll");
@@ -1964,23 +2121,32 @@ function setupJukebox() {
       }
     });
   }
-  
+
   // Toggle Jukebox window (active state for mobile click override)
   if (jukeboxHandle) {
     jukeboxHandle.addEventListener("click", () => {
+      retroJukebox.classList.remove("closed-clicked");
       retroJukebox.classList.toggle("open-active");
       if (window.Sound && typeof window.Sound.playClick === "function") {
         window.Sound.playClick();
       }
     });
   }
-  
+
   if (jukeboxCloseBtn) {
     jukeboxCloseBtn.addEventListener("click", () => {
       retroJukebox.classList.remove("open-active");
+      retroJukebox.classList.add("closed-clicked");
       if (window.Sound && typeof window.Sound.playClose === "function") {
         window.Sound.playClose();
       }
+    });
+  }
+
+  // Clear closed-clicked state when mouse leaves the jukebox area (for desktop hover reuse)
+  if (retroJukebox) {
+    retroJukebox.addEventListener("mouseleave", () => {
+      retroJukebox.classList.remove("closed-clicked");
     });
   }
 
@@ -2037,17 +2203,17 @@ function setupJukebox() {
       activeItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
   }
-  
+
   // Sync kaset & status text display
   function updateJukeboxDisplay() {
     if (!window.Sound || !window.Sound.playlist) return;
     const isPlaying = window.Sound.isPlayingBgm;
     const track = window.Sound.playlist[window.Sound.currentTrackIndex];
-    
+
     if (cassetteLabelTitle && track) {
       cassetteLabelTitle.textContent = track.name.toUpperCase();
     }
-    
+
     if (isPlaying) {
       retroJukebox.classList.add("playing");
       if (jukeboxDisplay && track) {
@@ -2061,41 +2227,41 @@ function setupJukebox() {
     }
 
     if (btnJukeboxShuffle && window.Sound) {
-      btnJukeboxShuffle.innerHTML = window.Sound.isShuffle ? "🔀 SHUFFLE: ON" : "🔀 SHUFFLE: OFF";
+      btnJukeboxShuffle.innerHTML = window.Sound.isShuffle ? " SHUFFLE: ON" : " SHUFFLE: OFF";
       btnJukeboxShuffle.style.backgroundColor = window.Sound.isShuffle ? "#ffe675" : "var(--color-bg-yellow)";
     }
 
     renderQueue();
   }
-  
+
   // Play/Pause button
   btnJukeboxPlay.addEventListener("click", () => {
     if (!window.Sound) return;
     if (!window.Sound.ctx) {
       window.Sound.init();
     }
-    
+
     if (window.Sound.isPlayingBgm) {
       window.Sound.stopBGM();
     } else {
       window.Sound.startBGM();
     }
-    
+
     window.Sound.playClick();
   });
-  
+
   // Next track button
   btnJukeboxNext.addEventListener("click", () => {
     if (!window.Sound || !window.Sound.playlist) return;
     if (!window.Sound.ctx) {
       window.Sound.init();
     }
-    
+
     let nextIndex = window.Sound.currentTrackIndex + 1;
     if (nextIndex >= window.Sound.playlist.length) {
       nextIndex = 0;
     }
-    
+
     window.Sound.setTrack(nextIndex);
     window.Sound.playClick();
     addInteractiveScore(50);
@@ -2113,7 +2279,7 @@ function setupJukebox() {
       addInteractiveScore(30);
     });
   }
-  
+
   // Hook Sound class methods to auto-update display and simulate tapes in real-time
   if (window.Sound) {
     window.Sound.onBgmStateChange = () => {
@@ -2129,7 +2295,7 @@ function setupJukebox() {
       updateTapeSizes(percent / 100);
     };
   }
-  
+
   updateJukeboxDisplay();
 }
 
@@ -2205,6 +2371,130 @@ function initGooeyText() {
   animate();
 }
 
+// --- 7.5 MOBILE INTERACTIVE PIXEL CAT GUARD ---
+function setupMobileCat() {
+  const mobileCatContainer = document.getElementById("mobileCatContainer");
+  const pixelCat = document.getElementById("pixelCat");
+  const customizerSection = document.getElementById("customizer-section");
+
+  if (!mobileCatContainer || !pixelCat || !customizerSection) {
+    console.warn("Mobile cat container elements missing from DOM.");
+    return;
+  }
+
+  let clickCount = 0;
+  let isUnlocked = false;
+
+  function playMeowSound() {
+    if (!window.Sound) return;
+    window.Sound.init();
+
+    // Pitch-bend meow frequency sweep using oscillator (triangle wave)
+    const pitch = 380 + Math.random() * 40; // slight random pitch variety
+    window.Sound.playTone(pitch, 'triangle', 0.12, 0.1, pitch * 1.55);
+    setTimeout(() => {
+      window.Sound.playTone(pitch * 1.55, 'triangle', 0.18, 0.1, pitch * 1.15);
+    }, 100);
+  }
+
+  function playVictoryChime() {
+    if (!window.Sound) return;
+    window.Sound.init();
+
+    // Retro upward arpeggio: C5 (523.25Hz), E5 (659.25Hz), G5 (783.99Hz), C6 (1046.50Hz)
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, idx) => {
+      setTimeout(() => {
+        window.Sound.playTone(freq, 'square', 0.15, 0.12, freq * 1.05);
+      }, idx * 100);
+    });
+
+    // Sparkling final chord
+    setTimeout(() => {
+      window.Sound.playTone(1318.51, 'sine', 0.4, 0.08); // E6
+      window.Sound.playTone(1567.98, 'sine', 0.4, 0.08); // G6
+    }, 400);
+  }
+
+  function spawnEmojiParticle(emoji) {
+    if (!mobileCatContainer) return;
+    const particle = document.createElement("div");
+    particle.className = "cat-emoji-particle";
+    particle.textContent = emoji;
+
+    // Position randomly inside the mobileCatContainer near the cat
+    particle.style.left = "calc(50% + " + (Math.random() * 60 - 30) + "px)";
+    particle.style.top = "calc(50% + " + (Math.random() * 40 - 20) + "px)";
+
+    const dx = (Math.random() * 60 - 30);
+    particle.style.setProperty("--dx", `${dx}px`);
+
+    mobileCatContainer.appendChild(particle);
+
+    setTimeout(() => {
+      particle.remove();
+    }, 1000);
+  }
+
+  // Bind click handlers to both cat and container for responsive clicking
+  pixelCat.addEventListener("click", (e) => {
+    e.stopPropagation();
+    handleCatInteraction();
+  });
+
+  mobileCatContainer.addEventListener("click", () => {
+    handleCatInteraction();
+  });
+
+  function handleCatInteraction() {
+    if (isUnlocked) return;
+
+    // Increment clicks
+    clickCount++;
+
+    // Apply bounce animation class
+    pixelCat.classList.remove("is-clicking");
+    void pixelCat.offsetWidth; // Reflow to restart CSS animation
+    pixelCat.classList.add("is-clicking");
+
+    // Play retro meow sound
+    playMeowSound();
+
+    // Spawn particles
+    spawnEmojiParticle("🐾");
+    spawnEmojiParticle("✨");
+
+    if (clickCount >= 4) {
+      isUnlocked = true;
+
+      // Play retro victory chime
+      playVictoryChime();
+
+      // Explosion of particles
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          spawnEmojiParticle(["🌟", "✨", "💕", "🐾", "🎉"][i % 5]);
+        }, i * 50);
+      }
+
+      // Transition delay before hide and reveal
+      setTimeout(() => {
+        customizerSection.classList.add("booth-unlocked");
+
+        // Scroll smoothly to revealed customizer booth
+        const yOffset = -80; // offset for nav bar
+        const elementPosition = customizerSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY + yOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }, 1000);
+    }
+  }
+}
+
 // --- 8. BOOTSTRAP ---
 function bootstrap() {
   // Load custom catalog data from localStorage if present
@@ -2216,7 +2506,7 @@ function bootstrap() {
       console.error("Failed to parse local catalog:", e);
     }
   }
-  
+
   // Fallback to globally declared cardsData if window.cardsData is not defined yet
   if (!window.cardsData && typeof cardsData !== "undefined") {
     window.cardsData = cardsData;
@@ -2250,13 +2540,19 @@ function bootstrap() {
       resetGame();
     } else {
       koModal.classList.remove("visible");
-      dinoStartOverlay.style.display = "flex";
+      startDinoGame();
     }
   });
 
   btnStartDino.addEventListener("click", () => {
     startDinoGame();
   });
+
+  // Start auto-start observer for Dino Game
+  setupDinoAutoStart();
+
+  // Initialize mobile interactive cat guard
+  setupMobileCat();
 }
 
 window.addEventListener("DOMContentLoaded", bootstrap);

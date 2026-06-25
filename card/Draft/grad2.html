@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chrysty Graduation | J-Pop Idol Congrats Card! 🎓✨</title>
+
+    <!-- Google Fonts for Bold J-Pop Posters & Retro Script -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Fredoka:wght@400;600;700&family=Caveat:wght@700&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --mustard: #F5B041;
+            --charcoal: #2B2B2B;
+            --cream: #FFFCEB;
+            --orange: #E67E22;
+            --pink: #FFD2DF;
+            --teal: #D2EBF7;
+            --white: #FFFFFF;
+            
+            /* Degree tie/accent status colors */
+            --s1-color: #1E88E5;
+            --s2-color: #8E24AA;
+            --s3-color: #E53935;
+            --degree-color: var(--s1-color);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(245, 176, 65, 0.12) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(245, 176, 65, 0.12) 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            padding-bottom: 140px;
+        }
+
+        /* --- SCREEN FLASH OVERLAY --- */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--white);
+            opacity: 0;
+            z-index: 10006;
+            pointer-events: none;
+            transition: opacity 0.05s ease-out;
+        }
+        #flash-overlay.flash {
+            opacity: 1;
+            transition: none;
+        }
+
+        /* --- WARNING STRIPES ON SIDES --- */
+        .warning-stripes-left, .warning-stripes-right {
+            position: fixed;
+            top: 0; width: 14px; height: 100vh;
+            background: repeating-linear-gradient(
+                -45deg,
+                var(--mustard),
+                var(--mustard) 10px,
+                var(--charcoal) 10px,
+                var(--charcoal) 20px
+            );
+            z-index: 998;
+        }
+        .warning-stripes-left { left: 0; border-right: 2px solid var(--charcoal); }
+        .warning-stripes-right { right: 0; border-left: 2px solid var(--charcoal); }
+
+        /* --- BOKEH BACKGROUND CANVAS --- */
+        #bokeh-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        /* --- CONTAINER --- */
+        .container {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- WELCOME SCREEN OVERLAY --- */
+        #welcome-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--mustard);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s;
+            background-image: 
+                repeating-linear-gradient(-45deg, rgba(43,43,43,0.03) 0px, rgba(43,43,43,0.03) 2px, transparent 2px, transparent 10px),
+                radial-gradient(at 10% 20%, var(--pink) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, var(--teal) 0px, transparent 50%);
+            background-size: 100% 100%;
+        }
+        #welcome-overlay.hidden {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Concert Ticket Box Opening */
+        .welcome-ticket-pass {
+            width: 250px;
+            height: 130px;
+            background-color: var(--white);
+            border: 3.5px solid var(--charcoal);
+            border-radius: 12px;
+            box-shadow: 6px 6px 0px var(--charcoal);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 30px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .welcome-ticket-pass:hover {
+            transform: scale(1.06) rotate(1deg);
+        }
+        .ticket-pass-perforated {
+            position: absolute;
+            top: 0; bottom: 0; left: 65px;
+            border-left: 3px dashed var(--charcoal);
+        }
+        .ticket-emblem {
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        .ticket-pass-meta {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            color: var(--charcoal);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* --- POP POSTER COMPONENTS --- */
+        .poster-header {
+            width: 100%;
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        /* Slanted Banners (Neobrutalist, No layout overflow) */
+        .poster-banner {
+            background-color: var(--mustard);
+            border: 3px solid var(--charcoal);
+            color: var(--white);
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            padding: 6px 20px;
+            display: block;
+            margin: 8px auto;
+            width: 95%;
+            box-shadow: 4px 4px 0px var(--charcoal);
+            transform: rotate(-3.5deg);
+            text-shadow: 2px 2px 0px var(--charcoal);
+            letter-spacing: 1px;
+            position: relative;
+            text-align: center;
+        }
+        .poster-banner.reverse {
+            background-color: var(--white);
+            color: var(--mustard);
+            transform: rotate(2deg);
+        }
+
+        /* --- DEGREE CONTROLLER PANEL --- */
+        .degree-pill-panel {
+            display: flex;
+            background-color: var(--white);
+            border: 3px solid var(--charcoal);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0px var(--charcoal);
+        }
+        .degree-pill-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: rgba(43,43,43,0.5);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+        .degree-pill-btn.active {
+            color: var(--white);
+            border: 2px solid var(--charcoal);
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .degree-pill-btn.active[data-deg="s1"] { background-color: var(--s1-color); }
+        .degree-pill-btn.active[data-deg="s2"] { background-color: var(--s2-color); }
+        .degree-pill-btn.active[data-deg="s3"] { background-color: var(--s3-color); }
+
+        /* --- VIEWPORT POSTER FRAME --- */
+        .poster-card {
+            background-color: var(--white);
+            border: 3.5px solid var(--charcoal);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 6px 6px 0px var(--charcoal);
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Viewfinder Camera Styling */
+        .viewfinder-frame {
+            border: 3px solid var(--charcoal);
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #FAF5DC;
+            position: relative;
+            height: 310px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: filter 0.3s ease;
+        }
+        .viewfinder-frame.filter-line-art { filter: grayscale(1) contrast(3.5) brightness(1.05); }
+        .viewfinder-frame.filter-monochrome { filter: grayscale(1) contrast(1.2); }
+        .viewfinder-frame.filter-soft-color { filter: sepia(0.15) saturate(1.3) contrast(0.95); }
+
+        /* Digicam Viewfinder Elements */
+        .vf-marker {
+            position: absolute;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.65rem;
+            color: var(--charcoal);
+            opacity: 0.7;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        .vf-marker.rec {
+            top: 10px; left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .rec-dot {
+            width: 8px; height: 8px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulseRec 1s infinite alternate;
+        }
+        .vf-marker.battery {
+            top: 10px; right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .vf-marker.iso { bottom: 10px; left: 10px; }
+        .vf-marker.shutter { bottom: 10px; right: 10px; }
+
+        .vf-crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px; height: 30px;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+        .vf-crosshair::before, .vf-crosshair::after {
+            content: '';
+            position: absolute;
+            background-color: var(--charcoal);
+        }
+        .vf-crosshair::before { top: 14px; left: 0; width: 30px; height: 2px; }
+        .vf-crosshair::after { top: 0; left: 14px; width: 2px; height: 30px; }
+
+        /* Custom SVG Sticker Outline */
+        .default-svg-character {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0px 0px 0px 5px var(--white)) drop-shadow(5px 5px 0px rgba(43,43,43,0.15));
+        }
+
+        .user-uploaded-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+            filter: drop-shadow(0px 0px 0px 5px var(--white)) drop-shadow(5px 5px 0px rgba(43,43,43,0.15));
+        }
+
+        /* Filter buttons */
+        .filter-ribbon {
+            display: flex;
+            background-color: #EEE;
+            border: 2px solid var(--charcoal);
+            border-radius: 8px;
+            padding: 2px;
+            gap: 2px;
+            margin: 15px 0;
+        }
+        .filter-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #777;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
+            background-color: var(--mustard);
+            color: var(--charcoal);
+            border: 1.5px solid var(--charcoal);
+            font-weight: bold;
+        }
+
+        /* Neo-button styles */
+        .neo-btn {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            color: var(--charcoal);
+            background-color: var(--white);
+            border: 2.5px solid var(--charcoal);
+            border-radius: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--charcoal);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            user-select: none;
+            text-transform: uppercase;
+        }
+        .neo-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--charcoal);
+        }
+        .neo-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--charcoal);
+        }
+
+        /* --- DASHBOARD CONTROLS --- */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        /* --- SNAPSHOT REVEAL POLAROID --- */
+        .polaroid-popup-holder {
+            display: none;
+            background-color: var(--white);
+            border: 3px solid var(--charcoal);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 5px 5px 0px var(--charcoal);
+            margin-bottom: 28px;
+            text-align: center;
+            animation: zoomPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .polaroid-popup-holder.visible { display: block; }
+        
+        .instax-polaroid {
+            width: 140px;
+            height: 175px;
+            border: 2.5px solid var(--charcoal);
+            background-color: var(--white);
+            margin: 10px auto;
+            padding: 8px 8px 22px 8px;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            position: relative;
+            transform: rotate(-1.5deg);
+        }
+        .instax-polaroid img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border: 1.5px solid var(--charcoal);
+            border-radius: 4px;
+        }
+        .instax-timestamp {
+            position: absolute;
+            bottom: 3px; right: 8px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.65rem;
+            color: #ff5722;
+            font-weight: bold;
+        }
+
+        /* --- CONCERT TICKET STUB UNLOCK --- */
+        .ticket-slot {
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ticket-wrapper {
+            width: 100%;
+            height: 110px;
+            background-color: var(--white);
+            border: 3px solid var(--charcoal);
+            border-radius: 12px;
+            box-shadow: 5px 5px 0px var(--charcoal);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        /* Left Stub */
+        .ticket-left-side {
+            flex: 3;
+            background-color: var(--pink);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .t-badge {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.7rem;
+            background-color: var(--charcoal);
+            color: var(--white);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+        .t-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            color: var(--charcoal);
+            line-height: 1.1;
+        }
+        .t-subtitle {
+            font-size: 0.75rem;
+            color: rgba(43,43,43,0.7);
+            font-weight: bold;
+        }
+
+        /* Perforated Rip Line */
+        .ticket-rip-line {
+            width: 12px;
+            position: relative;
+            background-color: var(--white);
+            border-left: 2.5px dashed var(--charcoal);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 0;
+            z-index: 10;
+        }
+        .ticket-rip-line::before, .ticket-rip-line::after {
+            content: '';
+            width: 8px; height: 8px;
+            background-color: var(--cream);
+            border: 2px solid var(--charcoal);
+            border-radius: 50%;
+        }
+
+        /* Ticket Right Drag Handle */
+        .ticket-right-side {
+            flex: 1.2;
+            background-color: var(--mustard);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            position: relative;
+            z-index: 5;
+            transition: background-color 0.2s;
+            border-left: 2px solid var(--charcoal);
+        }
+        .ticket-right-side:active { cursor: grabbing; background-color: var(--orange); }
+        .rip-arrow { font-size: 1.3rem; margin-bottom: 2px; animation: bounceHorizontal 1s infinite alternate; }
+        .rip-text { font-family: 'Oswald', sans-serif; font-size: 0.65rem; font-weight: bold; text-align: center; }
+
+        /* Revealed Pass Letter Box */
+        .backstage-letter-box {
+            display: none;
+            width: 100%;
+            background-color: #FAF5E8;
+            border: 3px solid var(--charcoal);
+            border-radius: 16px;
+            box-shadow: 5px 5px 0px var(--charcoal);
+            padding: 20px;
+            position: relative;
+            background-image: radial-gradient(var(--charcoal) 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+            animation: zoomPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .backstage-letter-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            text-align: center;
+            border-bottom: 2px dashed var(--charcoal);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .backstage-letter-body {
+            font-family: 'Caveat', cursive;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: #3e3223;
+            text-align: left;
+            white-space: pre-wrap;
+            min-height: 120px;
+        }
+
+        /* --- INSTAX GALLERY WALL --- */
+        .memory-collage {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+        .polaroid-sticker {
+            background-color: var(--white);
+            border: 2.5px solid var(--charcoal);
+            border-radius: 8px;
+            padding: 8px 8px 20px 8px;
+            box-shadow: 3px 3px 0px var(--charcoal);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            height: 190px;
+        }
+        .polaroid-sticker.flipped { transform: rotateY(180deg); }
+
+        .pol-front, .pol-back {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+        }
+        .pol-front { z-index: 2; }
+        .pol-back {
+            background-color: var(--teal);
+            transform: rotateY(180deg);
+            z-index: 1;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .pol-image {
+            width: 100%; height: 120px;
+            border: 1.8px solid var(--charcoal);
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #DDD;
+        }
+        .pol-image svg { width: 100%; height: 100%; object-fit: cover; }
+        .pol-caption {
+            font-family: 'Caveat', cursive;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .pol-desc-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            line-height: 1.3;
+            text-align: center;
+            color: var(--charcoal);
+        }
+
+        .tape-sticker {
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%) rotate(-3deg);
+            width: 55px; height: 15px;
+            background-color: rgba(255, 232, 147, 0.85);
+            border-left: 2px dashed rgba(43,43,43,0.3);
+            border-right: 2px dashed rgba(43,43,43,0.3);
+            z-index: 10;
+        }
+
+        /* --- RETRO SONY WALKMAN PLAYER --- */
+        .walkman-player {
+            position: fixed;
+            bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 480px;
+            background-color: var(--mustard);
+            border: 3.5px solid var(--charcoal);
+            border-radius: 16px;
+            padding: 10px 16px;
+            box-shadow: 5px 5px 0px var(--charcoal);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .walkman-window {
+            width: 60px; height: 38px;
+            background-color: var(--charcoal);
+            border-radius: 6px;
+            border: 2px solid var(--charcoal);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 4px;
+        }
+        .walkman-spindle {
+            width: 10px; height: 10px;
+            background-color: var(--white);
+            border-radius: 50%;
+            border: 2.5px dotted var(--charcoal);
+        }
+        .walkman-spindle.spinning { animation: spin 2.5s linear infinite; }
+        
+        .walkman-mid { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; }
+        .walkman-song-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .walkman-progress-track {
+            height: 6px;
+            background-color: rgba(43,43,43,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        .walkman-progress-bar {
+            height: 100%;
+            background-color: var(--white);
+            border-radius: 3px;
+            width: 0%;
+        }
+
+        .walkman-ctrls button {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            padding: 0;
+        }
+        .walkman-ctrls button svg { width: 14px; height: 14px; fill: var(--charcoal); }
+
+        /* --- DIGICAM SETTINGS DRAWER --- */
+        .digicam-menu-drawer {
+            position: fixed;
+            top: 0; right: -310px;
+            width: 290px; height: 100vh;
+            background-color: var(--white);
+            border-left: 3.5px solid var(--charcoal);
+            box-shadow: -6px 0px 0px rgba(43,43,43,0.1);
+            z-index: 10001;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .digicam-menu-drawer.active { right: 0; }
+        
+        .menu-header {
+            padding: 14px;
+            border-bottom: 2.5px solid var(--charcoal);
+            background-color: var(--mustard);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .menu-header h2 { font-family: 'Oswald', sans-serif; font-size: 1rem; text-transform: uppercase; }
+        .menu-close { font-size: 1.4rem; font-weight: bold; background: none; border: none; cursor: pointer; }
+
+        .menu-body { padding: 14px; overflow-y: auto; flex-grow: 1; }
+        .m-form { margin-bottom: 12px; }
+        .m-form label { display: block; font-family: 'Oswald', sans-serif; font-size: 0.7rem; margin-bottom: 4px; color: #555; }
+        .m-form input[type="text"], .m-form textarea {
+            width: 100%; padding: 8px; border: 2px solid var(--charcoal); border-radius: 6px;
+            font-family: inherit; font-size: 0.8rem; outline: none;
+        }
+        .m-form input[type="text"]:focus, .m-form textarea:focus { border-color: var(--mustard); }
+
+        .drawer-trigger-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 997;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            padding: 0;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes pulseRec { 0% { opacity: 0.2; } 100% { opacity: 1; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes bounceHorizontal { 0% { transform: translateX(0); } 100% { transform: translateX(5px); } }
+        @keyframes zoomPop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        @media (max-width: 480px) {
+            .poster-banner { font-size: 1.1rem; }
+            .viewfinder-frame { height: 260px; }
+            .walkman-player { width: calc(100% - 28px); padding: 8px 12px; }
+            .container { padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN FLASH EFFECT -->
+    <div id="flash-overlay"></div>
+
+    <!-- SIDE WARNING HAZARD STRIPES -->
+    <div class="warning-stripes-left"></div>
+    <div class="warning-stripes-right"></div>
+
+    <!-- BACKGROUND LIGHT PARTICLES -->
+    <canvas id="bokeh-canvas"></canvas>
+
+    <!-- 1. BACKSTAGE TICKET WELCOME OVERLAY -->
+    <div id="welcome-overlay">
+        <div class="welcome-ticket-pass" onclick="openWelcomeScreen()">
+            <div class="ticket-pass-perforated"></div>
+            <div class="ticket-pass-meta">VIP Graduation Access</div>
+            <div class="ticket-emblem">🎫</div>
+            <div class="ticket-pass-meta" style="font-weight: bold;">Tap to Tear & Enter ✨</div>
+        </div>
+        <div style="text-align: center; max-width: 280px; padding: 0 10px;">
+            <h1 style="font-family: 'Oswald', sans-serif; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 8px;">Chrysty kelulusan!</h1>
+            <p style="font-size: 0.85rem; opacity: 0.8; line-height: 1.4;">Tekan pass tiket konser kelulusan di atas untuk memasuki poster album digital personal.</p>
+        </div>
+    </div>
+
+    <!-- FLOATING SETTINGS TRIGGER -->
+    <button class="neo-btn drawer-trigger-btn" onclick="toggleSettingsDrawer()" style="background-color: var(--mustard);" title="Edit Poster">
+        ⚙️
+    </button>
+
+    <!-- SETTINGS LCD MENU DRAWER -->
+    <div class="digicam-menu-drawer" id="settings-drawer">
+        <div class="menu-header">
+            <h2>Poster Settings ⚙️</h2>
+            <button class="menu-close" onclick="toggleSettingsDrawer()">×</button>
+        </div>
+        <div class="menu-body">
+            <div class="m-form">
+                <label>Nama Wisudawan</label>
+                <input type="text" id="input-nama" value="Chrysty" oninput="updateLiveContent()">
+            </div>
+            <div class="m-form">
+                <label>Grup / Angkatan</label>
+                <input type="text" id="input-group" value="JKT48 7th Gen" oninput="updateLiveContent()">
+            </div>
+            <div class="m-form">
+                <label>Nama Pengirim</label>
+                <input type="text" id="input-pengirim" value="Fans Terbaikmu" oninput="updateLiveContent()">
+            </div>
+            <div class="m-form">
+                <label>Isi Backstage Diary</label>
+                <textarea id="input-letter" rows="7" oninput="updateLiveContent()">Dear Chrysty,
+
+SELAMAT ATAS KELULUSAN BESARMU! 🎓✨
+
+Dedikasi, senyum cerah, dan energi luar biasa yang selalu kamu tampilkan telah menginspirasi kami semua. Kelulusan ini merupakan penanda awal dari perjalanan petualangan barumu yang tak terbatas.
+
+Teruslah melangkah dengan berani, menyanyikan lagu hidupmu dengan penuh percaya diri, dan selalu pancarkan sinarmu yang indah! Kami selalu mendukungmu.
+
+Dengan bangga,
+Fans Terbaikmu ❤️</textarea>
+            </div>
+            <div class="m-form">
+                <label>Polaroid Caption 1</label>
+                <input type="text" id="input-caption1" value="Latihan vokal & koreografi konser kelulusan! 🎤" oninput="updateLiveContent()">
+            </div>
+            <div class="m-form">
+                <label>Polaroid Caption 2</label>
+                <input type="text" id="input-caption2" value="Foto kado merchandise dari kelulusan teater! 🌸" oninput="updateLiveContent()">
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP POSTER CONTAINER -->
+    <div class="container">
+        
+        <!-- J-POP SLANTED POSTER BANNERS -->
+        <div class="poster-header">
+            <div class="poster-banner" id="banner-text1">Chrysty JKT48</div>
+            <div class="poster-banner reverse" id="banner-text2">Graduation Day!</div>
+        </div>
+
+        <!-- ACADEMIC SWITCHER SYSTEM -->
+        <div class="degree-pill-panel">
+            <button class="degree-pill-btn active" data-deg="s1" onclick="changeDegree('s1')">S1 Degree</button>
+            <button class="degree-pill-btn" data-deg="s2" onclick="changeDegree('s2')">S2 Master</button>
+            <button class="degree-pill-btn" data-deg="s3" onclick="changeDegree('s3')">S3 Doctor</button>
+        </div>
+
+        <!-- POSTER COVER FRAME -->
+        <div class="poster-card">
+            
+            <h2 id="poster-title-h2" style="font-family: 'Oswald', sans-serif; font-size: 1.6rem; text-align: center; text-transform: uppercase; margin-bottom: 4px;">Chrysty</h2>
+            
+            <div style="text-align: center; margin-bottom: 12px;">
+                <span class="t-badge" id="poster-degree-badge" style="background-color: var(--degree-color); border: 2.5px solid var(--charcoal); box-shadow: 2px 2px 0px var(--charcoal); font-size: 0.75rem; font-weight: bold;">S1 Graduate Clear!</span>
+            </div>
+
+            <!-- Digicam LCD Viewfinder Frame -->
+            <div class="viewfinder-frame filter-soft-color" id="digicam-lens">
+                <!-- LCD overlays -->
+                <div class="vf-marker rec"><span class="rec-dot"></span>REC</div>
+                <div class="vf-marker battery">
+                    <svg viewBox="0 0 24 14" width="20" height="11">
+                        <rect x="0" y="0" width="18" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <rect x="2" y="2" width="14" height="7" fill="currentColor"/>
+                        <path d="M19,3 L19,8" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    <span>100%</span>
+                </div>
+                <div class="vf-marker iso">ISO 400</div>
+                <div class="vf-marker shutter">F3.2 1/120</div>
+                <div class="vf-crosshair"></div>
+
+                <!-- Custom Vector Character SVG (Pinstripe Vest & Camera) -->
+                <svg class="default-svg-character" id="graduate-svg" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Frame grid inner -->
+                    <rect width="320" height="300" rx="10" fill="#FCFAF0" />
+                    <g stroke="rgba(245, 176, 65, 0.25)" stroke-width="1">
+                        <line x1="0" y1="60" x2="320" y2="60"/>
+                        <line x1="0" y1="120" x2="320" y2="120"/>
+                        <line x1="0" y1="180" x2="320" y2="180"/>
+                        <line x1="0" y1="240" x2="320" y2="240"/>
+                        <line x1="60" y1="0" x2="60" y2="300"/>
+                        <line x1="120" y1="0" x2="120" y2="300"/>
+                        <line x1="180" y1="0" x2="180" y2="300"/>
+                        <line x1="240" y1="0" x2="240" y2="300"/>
+                    </g>
+
+                    <!-- Star elements J-Pop -->
+                    <path d="M260,40 L263,48 L271,50 L263,52 L260,60 L257,52 L249,50 L257,48 Z" fill="var(--mustard)" />
+                    <path d="M50,220 L52,225 L58,226 L52,227 L50,232 L48,227 L42,226 L48,225 Z" fill="var(--pink)" />
+
+                    <!-- Character Body (Uniform Shirt) -->
+                    <path d="M90,300 C90,220 115,180 150,180 C160,215 180,215 190,180 C225,180 230,220 230,300 Z" fill="#FFFFFF" stroke="var(--charcoal)" stroke-width="3" stroke-linejoin="round"/>
+                    
+                    <!-- Navy pinstripe vest -->
+                    <path d="M104,260 C106,230 118,200 150,200 C155,225 165,225 170,200 C202,200 214,230 216,260 L220,300 L100,300 Z" fill="#1B263B" stroke="var(--charcoal)" stroke-width="3"/>
+                    <!-- Pinstripe lines -->
+                    <line x1="120" y1="210" x2="120" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+                    <line x1="138" y1="218" x2="138" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+                    <line x1="182" y1="218" x2="182" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+                    <line x1="200" y1="210" x2="200" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+                    
+                    <!-- School Tie (Degree status colored) -->
+                    <path id="svg-tie" d="M144,198 L176,198 L166,260 L154,260 Z" fill="var(--degree-color)" stroke="var(--charcoal)" stroke-width="2.5" stroke-linejoin="round"/>
+                    <!-- Tie stripes -->
+                    <line x1="147" y1="210" x2="167" y2="225" stroke="#FFFFFF" stroke-width="2" />
+                    <line x1="149" y1="230" x2="164" y2="242" stroke="#FFFFFF" stroke-width="2" />
+                    
+                    <!-- Gold necklace chain -->
+                    <path d="M136,182 Q160,200 184,182" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                    <circle cx="160" cy="192" r="3.5" fill="#D4AF37" stroke="var(--charcoal)" stroke-width="1"/>
+
+                    <!-- Neck -->
+                    <rect x="146" y="155" width="28" height="30" rx="3" fill="#FAF2DF" stroke="var(--charcoal)" stroke-width="3"/>
+                    <!-- Head -->
+                    <ellipse cx="160" cy="130" rx="27" ry="32" fill="#FAF2DF" stroke="var(--charcoal)" stroke-width="3"/>
+
+                    <!-- Cuteness Blush -->
+                    <circle cx="143" cy="138" r="4" fill="var(--pink)"/>
+                    <circle cx="177" cy="138" r="4" fill="var(--pink)"/>
+
+                    <!-- Hair long black -->
+                    <path d="M128,135 C125,80 195,80 192,135 L196,250 L124,250 Z" fill="var(--charcoal)" />
+                    <!-- Fringe bangs -->
+                    <path d="M133,124 C140,105 180,105 187,124" fill="none" stroke="var(--charcoal)" stroke-width="3.5" stroke-linecap="round"/>
+
+                    <!-- Eyes (Big glossy pop) -->
+                    <ellipse cx="146" cy="128" rx="3.5" ry="5" fill="var(--charcoal)"/>
+                    <ellipse cx="174" cy="128" rx="3.5" ry="5" fill="var(--charcoal)"/>
+                    <circle cx="148" cy="126" r="1.2" fill="#FFFFFF"/>
+                    <circle cx="176" cy="126" r="1.2" fill="#FFFFFF"/>
+                    
+                    <!-- Happy Smile -->
+                    <path d="M155,138 Q160,141 165,138" fill="none" stroke="var(--charcoal)" stroke-width="2" stroke-linecap="round"/>
+
+                    <!-- Retro Camera held in hand (Right) -->
+                    <g transform="translate(62, 192) rotate(-10)">
+                        <rect x="0" y="10" width="46" height="30" rx="4" fill="#3A3A3A" stroke="var(--charcoal)" stroke-width="3" />
+                        <circle cx="23" cy="25" r="11" fill="#1C1C1C" stroke="var(--charcoal)" stroke-width="2.5" />
+                        <circle cx="23" cy="25" r="5" fill="#5DADE2" />
+                        <!-- Flash Attachment -->
+                        <rect x="13" y="0" width="20" height="10" fill="#EAECEE" stroke="var(--charcoal)" stroke-width="2.5" rx="1" />
+                        <line x1="17" y1="5" x2="29" y2="5" stroke="var(--charcoal)" stroke-width="1.5"/>
+                    </g>
+
+                    <!-- Interactive Glasses (Move down on eye toggling) -->
+                    <g id="svg-glasses" style="transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: translateY(0px);">
+                        <!-- Left Lens frame -->
+                        <rect x="134" y="86" width="23" height="15" rx="3" fill="none" stroke="var(--charcoal)" stroke-width="3" />
+                        <!-- Right Lens frame -->
+                        <rect x="163" y="86" width="23" height="15" rx="3" fill="none" stroke="var(--charcoal)" stroke-width="3" />
+                        <!-- Bridge link -->
+                        <line x1="157" y1="92" x2="163" y2="92" stroke="var(--charcoal)" stroke-width="3" />
+                        <!-- Temple sides -->
+                        <path d="M130,92 L134,92 M186,92 L190,92" stroke="var(--charcoal)" stroke-width="3" />
+                    </g>
+
+                    <!-- Graduation Toga Cap (Shown conditionally on toggle cap) -->
+                    <g id="svg-grad-cap" style="display: none;">
+                        <polygon points="160,65 205,75 160,85 115,75" fill="var(--charcoal)" stroke="var(--white)" stroke-width="2" />
+                        <path d="M135,78 C135,84 185,84 185,78" fill="var(--charcoal)" stroke="var(--white)" stroke-width="2" />
+                        <path d="M160,75 Q175,77 185,92" fill="none" stroke="#D4AF37" stroke-width="2.5" />
+                        <circle cx="185" cy="92" r="2.5" fill="#D4AF37"/>
+                    </g>
+                </svg>
+
+                <img id="user-photo-preview" class="user-uploaded-img" src="" alt="Uploaded Portrait">
+            </div>
+
+            <!-- Filter Switcher Ribbon -->
+            <div class="filter-controls">
+                <div class="filter-ribbon">
+                    <button class="filter-btn" id="filt-btn-line" onclick="applyPhotoFilter('line-art')">Line Art</button>
+                    <button class="filter-btn" id="filt-btn-mono" onclick="applyPhotoFilter('monochrome')">B&W</button>
+                    <button class="filter-btn active" id="filt-btn-soft" onclick="applyPhotoFilter('soft-color')">Soft Warm</button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                <label for="photo-file-loader" class="neo-btn" style="background-color: var(--teal); font-size: 0.8rem; padding: 6px 12px;">
+                    📷 Ganti Foto
+                </label>
+                <input type="file" id="photo-file-loader" style="display: none;" accept="image/*" onchange="uploadUserPhoto(event)">
+                <button id="photo-reset-btn" class="neo-btn" style="background-color: var(--pink); font-size: 0.8rem; padding: 6px 12px; display: none;" onclick="resetPhotoToIllustration()">
+                    Reset ❌
+                </button>
+            </div>
+        </div>
+
+        <!-- POSTER INTERACTIVE DASHBOARD CARD -->
+        <div class="poster-card" style="background-color: var(--mustard);">
+            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.15rem; text-transform: uppercase; margin-bottom: 8px;">Poster Controls 🕹️</h3>
+            
+            <div class="action-grid">
+                <button class="neo-btn" id="glasses-ctrl-btn" onclick="animateGlassesPosition()" style="background-color: var(--pink);">
+                    👓 Turunkan Kacamata
+                </button>
+                <button class="neo-btn" id="cap-ctrl-btn" onclick="toggleTogaCapSticker()" style="background-color: var(--teal);">
+                    🎓 Pakai Toga Cap
+                </button>
+            </div>
+            
+            <div style="margin-top: 12px; text-align: center;">
+                <button class="neo-btn" onclick="takeSnapshot()" style="width: 100%; background-color: var(--white); font-weight: bold; border-color: var(--charcoal);">
+                    📸 Jepret Foto Saku
+                </button>
+            </div>
+        </div>
+
+        <!-- CAMERA SNAPSHOT INSTAX STICKER -->
+        <div class="polaroid-popup-holder" id="snapshot-result-card">
+            <span class="t-badge" style="background-color: var(--pink);">Digicam Output!</span>
+            <div class="instax-polaroid">
+                <img id="snapshot-result-img" src="" alt="Snapshot Image">
+                <div class="instax-timestamp" id="snapshot-time-stamp">2026/06/25</div>
+            </div>
+            <p style="font-size: 0.75rem; font-style: italic; color: #666; margin-top: 5px;">"Foto instax kelulusan berhasil dicetak!"</p>
+        </div>
+
+        <!-- UNLOCK TICKET STUB SLOT -->
+        <div class="poster-card" style="background-color: var(--white);">
+            <div class="t-badge" style="background-color: var(--teal); margin-bottom: 8px;">Backstage Entry</div>
+            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.15rem; text-transform: uppercase; margin-bottom: 12px;">Diary Kelulusan Virtual</h3>
+            
+            <div class="ticket-slot">
+                <!-- Closed state ticket -->
+                <div class="ticket-wrapper" id="ticket-card-elem">
+                    <div class="ticket-left-side">
+                        <span class="t-badge">VIP PASS</span>
+                        <div class="t-title" id="ticket-recipient-text">Chrysty</div>
+                        <div class="t-subtitle" id="ticket-group-text">JKT48 7th Gen</div>
+                    </div>
+                    
+                    <div class="ticket-rip-line"></div>
+                    
+                    <div class="ticket-right-side" id="ticket-drag-stub" onmousedown="startTearing(event)" ontouchstart="startTearing(event)">
+                        <div class="rip-arrow">➜</div>
+                        <div class="rip-text">RIP STUB</div>
+                    </div>
+                </div>
+
+                <!-- Opened state letter envelope -->
+                <div class="backstage-letter-box" id="revealed-letter-box-elem">
+                    <div class="backstage-letter-title" id="letter-title-header">Congratulations!</div>
+                    <div class="backstage-letter-body" id="letter-body-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INSTAX GALLERY COLLAGE -->
+        <div class="poster-card" style="background-color: var(--pink);">
+            <div class="t-badge" style="background-color: var(--white); color: var(--charcoal); margin-bottom: 8px;">Concert Memories</div>
+            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.15rem; text-transform: uppercase; margin-bottom: 12px;">Instax Album Kenangan</h3>
+            
+            <div class="memory-collage">
+                <!-- Card 1 -->
+                <div class="polaroid-sticker" onclick="flipSticker(this)">
+                    <div class="tape-sticker"></div>
+                    <div class="pol-front">
+                        <div class="pol-image">
+                            <svg viewBox="0 0 100 100" style="background-color: var(--teal); fill: var(--charcoal);">
+                                <path d="M50,20 Q60,35 50,50 Q40,35 50,20 Z" />
+                                <rect x="30" y="60" width="40" height="20" rx="3" />
+                            </svg>
+                        </div>
+                        <div class="pol-caption">Stage Rehearsal</div>
+                    </div>
+                    <div class="pol-back">
+                        <p class="pol-desc-text" id="gallery-cap1-text">Latihan vokal & koreografi konser kelulusan! 🎤</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="polaroid-sticker" onclick="flipSticker(this)">
+                    <div class="tape-sticker" style="background-color: rgba(210, 235, 247, 0.85); transform: translateX(-50%) rotate(4deg);"></div>
+                    <div class="pol-front">
+                        <div class="pol-image">
+                            <svg viewBox="0 0 100 100" style="background-color: var(--mustard); fill: var(--charcoal);">
+                                <circle cx="50" cy="50" r="22" />
+                                <polygon points="50,20 80,70 20,70" />
+                            </svg>
+                        </div>
+                        <div class="pol-caption">Teater Gift</div>
+                    </div>
+                    <div class="pol-back">
+                        <p class="pol-desc-text" id="gallery-cap2-text">Foto kado merchandise dari kelulusan teater! 🌸</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER SIGNATURE -->
+        <footer style="text-align: center; margin-top: 15px; font-family: 'Oswald', sans-serif; font-size: 0.85rem; letter-spacing: 0.5px; opacity: 0.7;">
+            <p>CHRYSTY GRADUATION ALBUM POSTER • J-POP RETRO DIGICAM</p>
+        </footer>
+
+    </div>
+
+    <!-- RETRO FLOATING WALKMAN CASSETTE PLAYER -->
+    <div class="walkman-player">
+        <div class="walkman-window">
+            <div class="walkman-spindle" id="spindle-left"></div>
+            <div class="walkman-spindle" id="spindle-right"></div>
+        </div>
+        <div class="walkman-mid">
+            <div class="walkman-song-name">Idol Symphony - Acoustic Retro</div>
+            <div class="walkman-progress-track" id="walkman-seeker" onclick="seekSong(event)">
+                <div class="walkman-progress-bar" id="walkman-progress"></div>
+            </div>
+        </div>
+        <div class="walkman-ctrls">
+            <button class="neo-btn" onclick="toggleWalkmanMusic()" id="walkman-play-btn" style="background-color: var(--white);">
+                <svg id="play-svg" viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z"/></svg>
+                <svg id="pause-svg" viewBox="0 0 24 24" style="display: none;"><path d="M14,19H18V5H14M6,19H10V5H6V19Z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- BACKGROUND AUDIO ELEMENT -->
+    <audio id="walkman-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" preload="auto" loop></audio>
+
+
+    <!-- --- JAVASCRIPT CONTROLLER --- -->
+    <script>
+        let audioCtx = null;
+        let isBackingMusicPlaying = false;
+
+        const walkmanAudio = document.getElementById('walkman-audio');
+        const spindleL = document.getElementById('spindle-left');
+        const spindleR = document.getElementById('spindle-right');
+        const playBtn = document.getElementById('walkman-play-btn');
+        const playIcon = document.getElementById('play-svg');
+        const pauseIcon = document.getElementById('pause-svg');
+        const progressBar = document.getElementById('walkman-progress');
+
+        let isGlassesDown = false;
+        let isGradCapActive = false;
+        let activeDegree = 's1';
+
+        // Custom particles system
+        let isConfettiPlaying = false;
+        let confettiArray = [];
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+        }
+
+        // --- WEB AUDIO SYNTHESIZERS ---
+
+        function playClickSynth() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(900, now);
+            osc.frequency.exponentialRampToValueAtTime(150, now + 0.04);
+            
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+            
+            osc.start(now);
+            osc.stop(now + 0.05);
+        }
+
+        function playSuccessChime() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const chords = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            
+            chords.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + index * 0.06);
+                
+                gain.gain.setValueAtTime(0.01, now + index * 0.06);
+                gain.gain.linearRampToValueAtTime(0.06, now + index * 0.06 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.06 + 0.22);
+                
+                osc.start(now + index * 0.06);
+                osc.stop(now + index * 0.06 + 0.25);
+            });
+        }
+
+        function playRipSynth() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            
+            // Noise burst for paper tearing sound
+            const bufferSize = audioCtx.sampleRate * 0.22;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                // Wave modulator simulating cracking fibers
+                const amplitudeMod = Math.sin((i / bufferSize) * Math.PI);
+                data[i] = amplitudeMod * (Math.random() * 2 - 1) * (Math.random() > 0.45 ? 1.0 : 0.25);
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            
+            const bandpass = audioCtx.createBiquadFilter();
+            bandpass.type = 'bandpass';
+            bandpass.frequency.setValueAtTime(950, now);
+            bandpass.frequency.exponentialRampToValueAtTime(320, now + 0.2);
+            bandpass.Q.setValueAtTime(3.0, now);
+            
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+            
+            noise.connect(bandpass);
+            bandpass.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            noise.start(now);
+            noise.stop(now + 0.23);
+        }
+
+        function playShutterSynth() {
+            initAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            
+            // Low release click
+            const releaseOsc = audioCtx.createOscillator();
+            const releaseGain = audioCtx.createGain();
+            releaseOsc.connect(releaseGain);
+            releaseGain.connect(audioCtx.destination);
+            releaseOsc.type = 'triangle';
+            releaseOsc.frequency.setValueAtTime(220, now);
+            releaseOsc.frequency.exponentialRampToValueAtTime(40, now + 0.08);
+            releaseGain.gain.setValueAtTime(0.18, now);
+            releaseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            
+            // Sharp mechanical spring hiss
+            const bufferSize = audioCtx.sampleRate * 0.12;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * (1 - (i / bufferSize));
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1600;
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.15, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            
+            noise.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            
+            releaseOsc.start(now);
+            noise.start(now);
+            releaseOsc.stop(now + 0.08);
+            noise.stop(now + 0.12);
+        }
+
+        // --- 1. WELCOME OVERLAY CONTROLLER ---
+        function openWelcomeScreen() {
+            playRipSynth();
+            setTimeout(() => {
+                playSuccessChime();
+            }, 150);
+            
+            document.getElementById('welcome-overlay').classList.add('hidden');
+            
+            setTimeout(() => {
+                startWalkmanTrack();
+            }, 850);
+        }
+
+        // --- 2. WALKMAN CASSETTE PLAYER CONTROLS ---
+        function startWalkmanTrack() {
+            walkmanAudio.play().then(() => {
+                isBackingMusicPlaying = true;
+                syncWalkmanUI();
+            }).catch(() => {
+                isBackingMusicPlaying = false;
+                syncWalkmanUI();
+            });
+        }
+
+        function toggleWalkmanMusic() {
+            playClickSynth();
+            if (isBackingMusicPlaying) {
+                walkmanAudio.pause();
+                isBackingMusicPlaying = false;
+            } else {
+                initAudioContext();
+                walkmanAudio.play().catch(e => console.log(e));
+                isBackingMusicPlaying = true;
+            }
+            syncWalkmanUI();
+        }
+
+        function syncWalkmanUI() {
+            if (isBackingMusicPlaying) {
+                spindleL.classList.add('spinning');
+                spindleR.classList.add('spinning');
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                spindleL.classList.remove('spinning');
+                spindleR.classList.remove('spinning');
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        walkmanAudio.addEventListener('timeupdate', () => {
+            if (walkmanAudio.duration) {
+                const pct = (walkmanAudio.currentTime / walkmanAudio.duration) * 100;
+                progressBar.style.width = pct + '%';
+            }
+        });
+
+        function seekSong(event) {
+            const seeker = document.getElementById('walkman-seeker');
+            const rect = seeker.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const progressRatio = clickX / rect.width;
+            if (walkmanAudio.duration) {
+                walkmanAudio.currentTime = progressRatio * walkmanAudio.duration;
+            }
+        }
+
+        // --- 3. DIGICAM FILTER SWITCHER ---
+        function applyPhotoFilter(filterName) {
+            playClickSynth();
+            const lens = document.getElementById('digicam-lens');
+            lens.className = 'viewfinder-frame filter-' + filterName;
+
+            document.getElementById('filt-btn-line').classList.remove('active');
+            document.getElementById('filt-btn-mono').classList.remove('active');
+            document.getElementById('filt-btn-soft').classList.remove('active');
+
+            if (filterName === 'line-art') document.getElementById('filt-btn-line').classList.add('active');
+            if (filterName === 'monochrome') document.getElementById('filt-btn-mono').classList.add('active');
+            if (filterName === 'soft-color') document.getElementById('filt-btn-soft').classList.add('active');
+        }
+
+        // Photo Uploader
+        function uploadUserPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('user-photo-preview');
+                const svg = document.getElementById('graduate-svg');
+                
+                img.src = e.target.result;
+                img.style.display = 'block';
+                svg.style.display = 'none';
+
+                document.getElementById('photo-reset-btn').style.display = 'inline-flex';
+                playSuccessChime();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetPhotoToIllustration() {
+            playClickSynth();
+            const img = document.getElementById('user-photo-preview');
+            const svg = document.getElementById('graduate-svg');
+            
+            img.src = '';
+            img.style.display = 'none';
+            svg.style.display = 'block';
+
+            document.getElementById('photo-file-loader').value = '';
+            document.getElementById('photo-reset-btn').style.display = 'none';
+        }
+
+        // --- 4. DEGREE TOGGLERS ---
+        function changeDegree(deg) {
+            playClickSynth();
+            activeDegree = deg;
+
+            const buttons = document.querySelectorAll('.degree-pill-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.degree-pill-btn[data-deg="${deg}"]`).classList.add('active');
+
+            let clr = 'var(--s1-color)';
+            let title = 'S1 Graduate Clear!';
+            let suffix = 'S.Kom.';
+
+            if (deg === 's1') {
+                clr = 'var(--s1-color)';
+                title = 'S1 Graduate Clear!';
+                suffix = 'S.Kom.';
+            } else if (deg === 's2') {
+                clr = 'var(--s2-color)';
+                title = 'S2 Master Clear!';
+                suffix = 'M.T.';
+            } else if (deg === 's3') {
+                clr = 'var(--s3-color)';
+                title = 'S3 Doctor Degree!';
+                suffix = 'Dr.';
+            }
+
+            document.documentElement.style.setProperty('--degree-color', clr);
+
+            // Trigger content updates
+            updateLiveContent();
+        }
+
+        // --- 5. POSTER ACTIONS INTERACTION ---
+        function animateGlassesPosition() {
+            playClickSynth();
+            const glasses = document.getElementById('svg-glasses');
+            const btn = document.getElementById('glasses-ctrl-btn');
+
+            if (isGlassesDown) {
+                // Move back to head
+                glasses.setAttribute('transform', 'translateY(0px)');
+                btn.innerHTML = '👓 Turunkan Kacamata';
+                isGlassesDown = false;
+            } else {
+                // Move down onto eyes
+                glasses.setAttribute('transform', 'translateY(32px)');
+                btn.innerHTML = '🕶️ Naikkan Kacamata';
+                isGlassesDown = true;
+                playSuccessChime();
+            }
+        }
+
+        function toggleTogaCapSticker() {
+            playClickSynth();
+            const cap = document.getElementById('svg-grad-cap');
+            const btn = document.getElementById('cap-ctrl-btn');
+
+            if (isGradCapActive) {
+                cap.style.display = 'none';
+                btn.innerHTML = '🎓 Pakai Toga Cap';
+                isGradCapActive = false;
+            } else {
+                cap.style.display = 'block';
+                btn.innerHTML = '🎓 Lepas Toga Cap';
+                isGradCapActive = true;
+                playSuccessChime();
+            }
+        }
+
+        // Camera Shutter Take Snap
+        function takeSnapshot() {
+            playShutterSynth();
+            
+            // Screen Flash Overlay
+            const overlay = document.getElementById('flash-overlay');
+            overlay.classList.add('flash');
+            setTimeout(() => { overlay.classList.remove('flash'); }, 70);
+
+            const userImg = document.getElementById('user-photo-preview');
+            const defaultSvg = document.getElementById('graduate-svg');
+            const resultImg = document.getElementById('snapshot-result-img');
+
+            if (userImg.style.display === 'block') {
+                resultImg.src = userImg.src;
+            } else {
+                // Clone the SVG and inject computed CSS styles to render properly in img
+                const clone = defaultSvg.cloneNode(true);
+                
+                // Copy current dynamic attributes from active illustration
+                const capSource = document.getElementById('svg-grad-cap');
+                const glassesSource = document.getElementById('svg-glasses');
+                
+                const capClone = clone.querySelector('#svg-grad-cap');
+                const glassesClone = clone.querySelector('#svg-glasses');
+
+                if (capClone && capSource) capClone.style.display = capSource.style.display;
+                if (glassesClone && glassesSource) glassesClone.setAttribute('transform', glassesSource.getAttribute('transform'));
+
+                // Inject CSS variable declarations for SVG fills
+                const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+                const compStyles = getComputedStyle(document.documentElement);
+                style.textContent = `
+                    :root {
+                        --degree-color: ${compStyles.getPropertyValue('--degree-color').trim() || '#1E88E5'};
+                        --mustard: #F5B041;
+                        --pink: #FFD2DF;
+                        --charcoal: #2B2B2B;
+                    }
+                `;
+                clone.insertBefore(style, clone.firstChild);
+
+                const svgString = new XMLSerializer().serializeToString(clone);
+                const blob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+                const URL = window.URL || window.webkitURL || window;
+                resultImg.src = URL.createObjectURL(blob);
+            }
+
+            // Date formatting
+            const date = new Date();
+            const zeroPad = (val) => String(val).padStart(2, '0');
+            document.getElementById('snapshot-time-stamp').innerText = `${date.getFullYear()}/${zeroPad(date.getMonth()+1)}/${zeroPad(date.getDate())}`;
+
+            // Reveal Polaroid
+            setTimeout(() => {
+                playSuccessChime();
+                const card = document.getElementById('snapshot-result-card');
+                card.classList.add('visible');
+                card.scrollIntoView({ behavior: 'smooth' });
+            }, 350);
+        }
+
+        // --- 6. DRAG AND TEAR CONCERT TICKET ---
+        let dragStartX = 0;
+        let isTicketTearing = false;
+        let cardWidth = 0;
+        let isTicketTorn = false;
+
+        function startTearing(e) {
+            if (isTicketTorn) return;
+            isTicketTearing = true;
+            
+            const handle = document.getElementById('ticket-drag-stub');
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            dragStartX = clientX - handle.offsetLeft;
+            
+            cardWidth = document.getElementById('ticket-card-elem').offsetWidth;
+
+            document.addEventListener('mousemove', movingTear);
+            document.addEventListener('mouseup', finishTear);
+            document.addEventListener('touchmove', movingTear, { passive: false });
+            document.addEventListener('touchend', finishTear);
+            
+            handle.style.transition = 'none';
+        }
+
+        function movingTear(e) {
+            if (!isTicketTearing) return;
+            if (e.type.startsWith('touch')) e.preventDefault();
+            
+            const handle = document.getElementById('ticket-drag-stub');
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            
+            let offset = clientX - dragStartX;
+            const limit = cardWidth * 0.35; // Maximum slide distance to tear
+
+            if (offset < 0) offset = 0;
+            if (offset > limit) offset = limit;
+
+            handle.style.transform = `translateX(${offset}px) rotate(${offset * 0.07}deg)`;
+
+            // Fade perforation line out as it pulls apart
+            const perf = document.querySelector('.ticket-rip-line');
+            if (perf) perf.style.opacity = 1 - (offset / limit);
+
+            if (offset >= limit - 3) {
+                completeTearAction(limit);
+            }
+        }
+
+        function finishTear() {
+            if (!isTicketTearing) return;
+            isTicketTearing = false;
+
+            document.removeEventListener('mousemove', movingTear);
+            document.removeEventListener('mouseup', finishTear);
+            document.removeEventListener('touchmove', movingTear);
+            document.removeEventListener('touchend', finishTear);
+
+            const handle = document.getElementById('ticket-drag-stub');
+            handle.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            handle.style.transform = 'translateX(0px) rotate(0deg)';
+            
+            const perf = document.querySelector('.ticket-rip-line');
+            if (perf) perf.style.opacity = '1';
+        }
+
+        function completeTearAction(maxOffset) {
+            isTicketTearing = false;
+            isTicketTorn = true;
+            
+            document.removeEventListener('mousemove', movingTear);
+            document.removeEventListener('mouseup', finishTear);
+            document.removeEventListener('touchmove', movingTear);
+            document.removeEventListener('touchend', finishTear);
+
+            playRipSynth();
+            
+            // Animate ticket rip off physically
+            const handle = document.getElementById('ticket-drag-stub');
+            handle.style.transition = 'all 0.6s cubic-bezier(0.6, -0.28, 0.735, 0.045)';
+            handle.style.transform = `translateX(${maxOffset + 250}px) translateY(80px) rotate(50deg)`;
+            handle.style.opacity = '0';
+
+            const card = document.getElementById('ticket-card-elem');
+            card.style.transition = 'all 0.6s ease-out';
+            card.style.transform = 'translateY(-20px)';
+            card.style.opacity = '0';
+
+            setTimeout(() => {
+                card.style.display = 'none';
+                playSuccessChime();
+                triggerConfetti();
+
+                const letter = document.getElementById('revealed-letter-box-elem');
+                letter.style.display = 'block';
+            }, 600);
+        }
+
+        // --- 7. POLAROID FLIPPER ---
+        function flipSticker(element) {
+            playClickSynth();
+            element.classList.toggle('flipped');
+        }
+
+        // --- 8. DIGICAM SETTINGS MENU TOGGLE ---
+        function toggleSettingsDrawer() {
+            playClickSynth();
+            document.getElementById('settings-drawer').classList.toggle('active');
+        }
+
+        function updateLiveContent() {
+            const name = document.getElementById('input-nama').value;
+            const group = document.getElementById('input-group').value;
+            const sender = document.getElementById('input-pengirim').value;
+            const letter = document.getElementById('input-letter').value;
+            
+            const cap1 = document.getElementById('input-caption1').value;
+            const cap2 = document.getElementById('input-caption2').value;
+
+            // Generate name based on degree suffixes
+            let suffix = 'S.Kom.';
+            let degreeText = 'S1 Graduate Clear!';
+            if (activeDegree === 's1') {
+                suffix = 'S.Kom.';
+                degreeText = 'S1 Graduate Clear!';
+            } else if (activeDegree === 's2') {
+                suffix = 'M.T.';
+                degreeText = 'S2 Master Clear!';
+            } else if (activeDegree === 's3') {
+                suffix = 'Dr.';
+                degreeText = 'S3 Doctor Degree!';
+            }
+
+            let nameDisplay = `${name}, ${suffix}`;
+            if (activeDegree === 's3') {
+                nameDisplay = `Dr. ${name}`;
+            }
+
+            // Sync to elements
+            document.getElementById('banner-text1').innerText = `${name} ${group}`;
+            document.getElementById('poster-title-h2').innerText = nameDisplay;
+            document.getElementById('poster-degree-badge').innerText = degreeText;
+            
+            // Ticket info
+            document.getElementById('ticket-recipient-text').innerText = name;
+            document.getElementById('ticket-group-text').innerText = group;
+
+            // Backstage Letter
+            document.getElementById('letter-title-header').innerText = `Congrats, ${name}! 🎓`;
+            document.getElementById('letter-body-content').innerText = letter;
+
+            // Gallery captions
+            document.getElementById('gallery-cap1-text').innerText = cap1;
+            document.getElementById('gallery-cap2-text').innerText = cap2;
+        }
+
+        // --- 9. BOKEH LIGHT CANVAS GRAPHICS ---
+        const bCanvas = document.getElementById('bokeh-canvas');
+        const bCtx = bCanvas.getContext('2d');
+        let lights = [];
+
+        function resizeBokehCanvas() {
+            bCanvas.width = window.innerWidth;
+            bCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBokehCanvas);
+        resizeBokehCanvas();
+
+        class LightParticle {
+            constructor() {
+                this.x = Math.random() * bCanvas.width;
+                this.y = Math.random() * bCanvas.height;
+                this.size = Math.random() * 25 + 15;
+                this.speedY = Math.random() * -0.5 - 0.2; // float up
+                this.alpha = Math.random() * 0.4 + 0.15;
+                this.glowColor = `245, 176, 65`; // gold RGB
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < -this.size) {
+                    this.y = bCanvas.height + this.size;
+                    this.x = Math.random() * bCanvas.width;
+                }
+            }
+            draw() {
+                bCtx.save();
+                bCtx.globalAlpha = this.alpha;
+                const gradient = bCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                gradient.addColorStop(0, `rgba(${this.glowColor}, 1)`);
+                gradient.addColorStop(0.5, `rgba(${this.glowColor}, 0.3)`);
+                gradient.addColorStop(1, `rgba(${this.glowColor}, 0)`);
+                bCtx.fillStyle = gradient;
+                bCtx.beginPath();
+                bCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                bCtx.fill();
+                bCtx.restore();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < 18; i++) {
+            lights.push(new LightParticle());
+        }
+
+        function runBokehLoop() {
+            bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height);
+            lights.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(runBokehLoop);
+        }
+        runBokehLoop();
+
+        // --- 10. STARS CONFETTI POP SYSTEM ---
+        let confettiCanvas = null;
+        let cCtx = null;
+
+        function triggerConfetti() {
+            if (!confettiCanvas) {
+                confettiCanvas = document.createElement('canvas');
+                confettiCanvas.style.position = 'fixed';
+                confettiCanvas.style.top = '0';
+                confettiCanvas.style.left = '0';
+                confettiCanvas.style.width = '100vw';
+                confettiCanvas.style.height = '100vh';
+                confettiCanvas.style.pointerEvents = 'none';
+                confettiCanvas.style.zIndex = '10005';
+                document.body.appendChild(confettiCanvas);
+                cCtx = confettiCanvas.getContext('2d');
+            }
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+
+            isConfettiPlaying = true;
+            confettiArray = [];
+
+            // Spawn bursts from corners
+            for (let i = 0; i < 40; i++) {
+                confettiArray.push(new ConfettiItem(0, window.innerHeight * 0.8, 8));
+                confettiArray.push(new ConfettiItem(window.innerWidth, window.innerHeight * 0.8, -8));
+            }
+
+            animateConfetti();
+        }
+
+        class ConfettiItem {
+            constructor(x, y, baseSpeedX) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 6;
+                this.color = ['#F5B041', '#E67E22', '#FFD2DF', '#D2EBF7', '#FFFFFF'][Math.floor(Math.random() * 5)];
+                this.vx = baseSpeedX + (Math.random() * 8 - 4);
+                this.vy = -12 - Math.random() * 8;
+                this.gravity = 0.35;
+                this.angle = Math.random() * 360;
+                this.spinSpeed = Math.random() * 5 - 2.5;
+                this.life = 100;
+            }
+            update() {
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.spinSpeed;
+                this.life -= 0.8;
+            }
+            draw() {
+                cCtx.save();
+                cCtx.translate(this.x, this.y);
+                cCtx.rotate((this.angle * Math.PI) / 180);
+                cCtx.fillStyle = this.color;
+                cCtx.strokeStyle = 'var(--charcoal)';
+                cCtx.lineWidth = 1.5;
+
+                // 4-point J-Pop Star
+                cCtx.beginPath();
+                cCtx.moveTo(0, -this.size);
+                cCtx.quadraticCurveTo(0, 0, this.size, 0);
+                cCtx.quadraticCurveTo(0, 0, 0, this.size);
+                cCtx.quadraticCurveTo(0, 0, -this.size, 0);
+                cCtx.quadraticCurveTo(0, 0, 0, -this.size);
+                cCtx.closePath();
+                cCtx.fill();
+                cCtx.stroke();
+                cCtx.restore();
+            }
+        }
+
+        function animateConfetti() {
+            if (!isConfettiPlaying) return;
+            cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            for (let i = confettiArray.length - 1; i >= 0; i--) {
+                confettiArray[i].update();
+                confettiArray[i].draw();
+                if (confettiArray[i].life <= 0 || confettiArray[i].y > window.innerHeight) {
+                    confettiArray.splice(i, 1);
+                }
+            }
+
+            if (confettiArray.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                isConfettiPlaying = false;
+                cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        // Initialize content on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLiveContent();
+            
+            // J-Pop beat dance animation for glasses/accessories while music is active
+            setInterval(() => {
+                const badgeSticker = document.getElementById('poster-degree-badge');
+                if (isBackingMusicPlaying && badgeSticker) {
+                    badgeSticker.style.transform = `scale(${1 + Math.sin(Date.now() / 150) * 0.05}) rotate(${Math.sin(Date.now() / 300) * 3}deg)`;
+                } else if (badgeSticker) {
+                    badgeSticker.style.transform = '';
+                }
+            }, 50);
+        });
+    </script>
+</body>
+</html>

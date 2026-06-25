@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imajiko Master Generator | Buat Web Ucapan Berdasarkan Tema</title>
+
+    <!-- Meta SEO -->
+    <meta name="description" content="Generator link ucapan terkeren dari Imajiko. Buat web ucapan selamat ulang tahun, wisuda, atau anniversary secara mandiri dengan mudah.">
+    <meta name="keywords" content="generator website ucapan, imajiko generator, link ucapan custom">
+
+    <!-- Google Fonts: Space Grotesk for Pop-Art Neo-Brutalism -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (Compat version for simplicity & CDN load) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f4efe2;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --accent-pink: #ff5e97;
+            --accent-yellow: #ffe066;
+            --accent-yellow-hover: #ffd11a;
+            --accent-teal: #00f5d4;
+            --accent-green: #51cf66;
+            --accent-green-bg: #e2f9e7;
+            --border-width: 3.5px;
+            --shadow-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(var(--shadow-color) 1.5px, transparent 1.5px), radial-gradient(var(--shadow-color) 1.5px, var(--bg-color) 1.5px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .generator-container {
+            background-color: var(--card-bg);
+            border: var(--border-width) solid var(--shadow-color);
+            box-shadow: 10px 10px 0px var(--shadow-color);
+            border-radius: 12px;
+            padding: 35px;
+            width: 100%;
+            max-width: 580px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Error state styling */
+        .error-container {
+            display: none;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .error-badge {
+            background-color: #ff3333;
+            color: white;
+            border: var(--border-width) solid var(--shadow-color);
+            padding: 6px 14px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transform: rotate(-3deg);
+            box-shadow: 4px 4px 0px var(--shadow-color);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .error-container h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .error-container p {
+            font-weight: 500;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Active state styling */
+        #formState {
+            display: none; /* Displayed dynamically if valid theme */
+        }
+
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: var(--border-width) solid var(--shadow-color);
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        .badge-wrapper {
+            position: absolute;
+            top: -15px;
+            right: 0;
+        }
+
+        .badge {
+            background-color: var(--accent-pink);
+            color: #ffffff;
+            border: 2.5px solid var(--shadow-color);
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 800;
+            display: inline-block;
+            transform: rotate(4deg);
+            box-shadow: 3px 3px 0px var(--shadow-color);
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 800;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 14px 16px;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            outline: none;
+            width: 100%;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            background-color: var(--accent-yellow);
+            box-shadow: 4px 4px 0px var(--shadow-color);
+            transform: translate(-3px, -3px);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Styled File Dropzone */
+        .file-dropzone-wrapper {
+            position: relative;
+        }
+
+        .file-dropzone {
+            border: var(--border-width) dashed var(--shadow-color);
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fafaf8;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .file-dropzone.dragover {
+            background-color: var(--accent-yellow);
+            border-style: solid;
+        }
+
+        .file-dropzone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-dropzone .icon {
+            font-size: 2.2rem;
+            background: var(--accent-teal);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid var(--shadow-color);
+            box-shadow: 3px 3px 0px var(--shadow-color);
+            margin-bottom: 5px;
+        }
+
+        .file-dropzone .text-main {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .file-dropzone .text-sub {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .preview-container {
+            margin-top: 15px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fafaf8;
+            box-shadow: 3px 3px 0px var(--shadow-color);
+        }
+
+        .file-preview {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+        }
+
+        .btn-remove-preview {
+            background: var(--accent-pink);
+            color: white;
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--shadow-color);
+            transition: all 0.1s ease;
+        }
+
+        .btn-remove-preview:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--shadow-color);
+        }
+
+        .btn-remove-preview:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--shadow-color);
+        }
+
+        /* Custom Link Wrapper */
+        .slug-input-wrapper {
+            display: flex;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .slug-input-wrapper:focus-within {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--shadow-color);
+        }
+
+        .slug-prefix {
+            background-color: #eae6db;
+            border-right: var(--border-width) solid var(--shadow-color);
+            padding: 14px 16px;
+            font-weight: 700;
+            color: #555;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .slug-input-wrapper input {
+            flex: 1;
+            border: none;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .slug-input-wrapper input:focus {
+            background-color: var(--accent-yellow);
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            width: 100%;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 18px;
+            background-color: var(--accent-pink);
+            color: #ffffff;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            box-shadow: 5px 5px 0px var(--shadow-color);
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px var(--shadow-color);
+            background-color: #ff3c80;
+        }
+
+        .btn-submit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--shadow-color);
+        }
+
+        /* Loading Screen Over Form */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .loader-box {
+            background: var(--accent-yellow);
+            border: var(--border-width) solid var(--shadow-color);
+            box-shadow: 6px 6px 0px var(--shadow-color);
+            padding: 30px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            max-width: 80%;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 6px solid var(--shadow-color);
+            border-top: 6px solid var(--accent-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-text {
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Card Result */
+        .success-container {
+            display: none;
+            margin-top: 30px;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 10px;
+            background-color: var(--accent-green-bg);
+            padding: 24px;
+            box-shadow: 5px 5px 0px var(--shadow-color);
+            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .success-icon {
+            font-size: 1.5rem;
+            background: var(--accent-green);
+            color: white;
+            border: 2px solid var(--shadow-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0px var(--shadow-color);
+        }
+
+        .success-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1a5c2d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .success-desc {
+            font-size: 0.9rem;
+            color: #2b6c3d;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .url-box {
+            display: flex;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            margin-bottom: 15px;
+            box-shadow: 3px 3px 0px var(--shadow-color);
+        }
+
+        .url-text {
+            flex: 1;
+            padding: 14px 16px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            word-break: break-all;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-weight: 700;
+            outline: none;
+        }
+
+        .btn-copy {
+            background-color: var(--accent-yellow);
+            border: none;
+            border-left: var(--border-width) solid var(--shadow-color);
+            padding: 14px 20px;
+            font-family: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-copy:hover {
+            background-color: var(--accent-yellow-hover);
+        }
+
+        .btn-copy:active {
+            background-color: #e6b800;
+        }
+
+        .btn-view-site {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: var(--accent-teal);
+            color: var(--text-color);
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            padding: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 3px 3px 0px var(--shadow-color);
+            text-transform: uppercase;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+        }
+
+        .btn-view-site:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--shadow-color);
+            background-color: #00e1c2;
+        }
+
+        .btn-view-site:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--shadow-color);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--text-color);
+            color: white;
+            border: 2px solid white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive corrections */
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+            .generator-container {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            .slug-prefix {
+                padding: 12px 10px;
+                font-size: 0.8rem;
+            }
+            .slug-input-wrapper input {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="generator-container">
+
+        <!-- Error State Area (Shown if theme invalid/missing) -->
+        <div id="errorState" class="error-container">
+            <div class="error-badge">⚠️ Error</div>
+            <h2>Tema Tidak Ditemukan</h2>
+            <p>Halaman ini memerlukan parameter tema yang valid untuk dimuat. Silakan periksa kembali link Anda atau hubungi admin.</p>
+        </div>
+
+        <!-- Active State Area (Dynamic Form Formed by JS) -->
+        <div id="formState">
+            
+            <!-- Loading Overlay -->
+            <div id="loaderOverlay" class="loader-overlay">
+                <div class="loader-box">
+                    <div class="loader-spinner"></div>
+                    <div id="loaderText" class="loader-text">Menyulap Data...</div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="header-section">
+                <div class="badge-wrapper">
+                    <div class="badge" id="themeBadge">Tema Kustom</div>
+                </div>
+                <h1 id="themeTitle">Buat Link Ucapan</h1>
+                <div class="subtitle" id="themeSubtitle">Isi form di bawah untuk membuat web ucapan kustom kamu secara otomatis.</div>
+            </div>
+
+            <!-- Form Generator -->
+            <form id="generatorForm" autocomplete="off">
+                
+                <!-- Dynamic Form Container (JS will inject inputs here) -->
+                <div id="dynamic-form-container"></div>
+
+                <!-- Custom Slug (Always appended at the end) -->
+                <div class="form-group" style="margin-top: 10px; border-top: var(--border-width) solid var(--shadow-color); padding-top: 24px;">
+                    <label for="slugInput">🔗 Custom Link (Opsional)</label>
+                    <div class="slug-input-wrapper">
+                        <div class="slug-prefix" id="domainPrefix">imajiko.com/ultah.html?id=</div>
+                        <input type="text" id="slugInput" placeholder="untuk-ayang">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    <span>🚀 Buat Web Ucapan</span>
+                </button>
+
+            </form>
+
+            <!-- Success Result -->
+            <div class="success-container" id="successContainer">
+                <div class="success-header">
+                    <div class="success-icon">✓</div>
+                    <h3 class="success-title">Web Ucapan Siap Dikirim!</h3>
+                </div>
+                <p class="success-desc">Salin link di bawah ini lalu bagikan ke penerima melalui WhatsApp atau media sosial.</p>
+                
+                <div class="url-box">
+                    <input type="text" id="resultUrl" class="url-text" readonly>
+                    <button type="button" class="btn-copy" id="btnCopy">Copy Link 📋</button>
+                </div>
+
+                <a href="#" id="btnViewSite" class="btn-view-site" target="_blank">Buka Halaman Web Ucapan ➔</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toastIcon">📋</span> <span id="toastMessage">Link berhasil disalin!</span>
+    </div>
+
+    <!-- External JS Logic -->
+    <script src="generator.js"></script>
+</body>
+</html>

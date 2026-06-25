@@ -7,7 +7,7 @@
     <title>Imajiko Catalog Dashboard | Pengelola Produk Kartu</title>
     
     <!-- Link to the main style sheet to load fonts and design elements -->
-    <link rel="stylesheet" href="css/style.css?v=2.8">
+    <link rel="stylesheet" href="css/style.css?v=3.0">
 
     <style>
         body.dashboard-body {
@@ -365,9 +365,14 @@
                         <input type="text" id="txtPrice" class="form-input" placeholder="Rp 35.000" required>
                     </div>
                     <div>
-                        <label for="txtBadge">BADGE DEPAN</label>
-                        <input type="text" id="txtBadge" class="form-input" placeholder="BEST DEAL" required>
+                        <label for="txtOriginalPrice">HARGA CORET (OPSIONAL)</label>
+                        <input type="text" id="txtOriginalPrice" class="form-input" placeholder="Rp 50.000">
                     </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="txtBadge">BADGE DEPAN</label>
+                    <input type="text" id="txtBadge" class="form-input" placeholder="BEST DEAL" required>
                 </div>
 
                 <div class="form-row">
@@ -518,6 +523,7 @@
                 title: document.getElementById("txtTitle").value.trim(),
                 desc: document.getElementById("txtDesc").value.trim(),
                 price: document.getElementById("txtPrice").value.trim(),
+                originalPrice: document.getElementById("txtOriginalPrice").value.trim(),
                 tiktokUrl: document.getElementById("txtTiktokUrl").value.trim(),
                 checkoutUrl: document.getElementById("txtCheckoutUrl").value.trim(),
                 lcdImage: document.getElementById("txtLcdImage").value.trim(),
@@ -550,6 +556,7 @@
             document.getElementById("txtTitle").value = product.title;
             document.getElementById("txtDesc").value = product.desc;
             document.getElementById("txtPrice").value = product.price;
+            document.getElementById("txtOriginalPrice").value = product.originalPrice || "";
             document.getElementById("txtTiktokUrl").value = product.tiktokUrl;
             document.getElementById("txtCheckoutUrl").value = product.checkoutUrl;
             document.getElementById("txtLcdImage").value = product.lcdImage;
@@ -592,6 +599,7 @@
             document.getElementById("editingIndex").value = "-1";
             document.getElementById("formPanelTitle").textContent = "TAMBAH PRODUK BARU";
             document.getElementById("btnSubmitForm").textContent = "SIMPAN";
+            document.getElementById("txtOriginalPrice").value = "";
         }
 
         // Save entire state locally
