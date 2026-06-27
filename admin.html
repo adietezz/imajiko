@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin Imajiko | Dashboard Owner</title>
+
+    <!-- Meta SEO -->
+    <meta name="description" content="Dashboard manajemen dan pembuat token kustom untuk administrator Imajiko Store.">
+
+    <!-- Google Fonts: Space Grotesk for Pop-Art Neo-Brutalism -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Supabase JS SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-color: #f4efe2;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --accent-pink: #ff5e97;
+            --accent-yellow: #ffe066;
+            --accent-yellow-hover: #ffd11a;
+            --accent-teal: #00f5d4;
+            --accent-green: #51cf66;
+            --accent-purple: #e6e1f9;
+            --border-width: 3.5px;
+            --shadow-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+            min-height: 100vh;
+            background-image: radial-gradient(var(--shadow-color) 1.5px, transparent 1.5px), radial-gradient(var(--shadow-color) 1.5px, var(--bg-color) 1.5px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        /* 1. LOGIN OVERLAY */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--shadow-color) 1.5px, transparent 1.5px), radial-gradient(var(--shadow-color) 1.5px, var(--bg-color) 1.5px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: var(--card-bg);
+            border: var(--border-width) solid var(--shadow-color);
+            box-shadow: 10px 10px 0px var(--shadow-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        /* 2. MAIN LAYOUT */
+        #adminDashboard {
+            display: none; /* Hidden until authorized */
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        header.admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: var(--border-width) solid var(--shadow-color);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header.admin-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .btn {
+            font-family: inherit;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--shadow-color);
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--shadow-color);
+        }
+
+        .btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--shadow-color);
+        }
+
+        .btn-pink { background-color: var(--accent-pink); color: white; }
+        .btn-teal { background-color: var(--accent-teal); }
+        .btn-yellow { background-color: var(--accent-yellow); }
+        .btn-yellow:hover { background-color: var(--accent-yellow-hover); }
+        .btn-danger { background-color: #ff3333; color: white; }
+
+        /* GRID PANELS */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 900px) {
+            .admin-grid {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--card-bg);
+            border: var(--border-width) solid var(--shadow-color);
+            box-shadow: 8px 8px 0px var(--shadow-color);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .panel h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: var(--border-width) solid var(--shadow-color);
+            padding-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        /* FORM ELEMENTS */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"],
+        select {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 12px 14px;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            background-color: var(--accent-purple);
+            box-shadow: 3px 3px 0px var(--shadow-color);
+            transform: translate(-2px, -2px);
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            background-color: #fafaf8;
+            padding: 15px;
+            animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #1a5c2d;
+            margin-bottom: 8px;
+        }
+
+        .result-input-wrapper {
+            display: flex;
+            border: 2px solid var(--shadow-color);
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .result-input-wrapper input {
+            border: none;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            flex: 1;
+            outline: none;
+        }
+
+        .result-input-wrapper button {
+            border: none;
+            border-left: 2px solid var(--shadow-color);
+            background-color: var(--accent-yellow);
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* TABLES */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            box-shadow: 4px 4px 0px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+            background-color: white;
+        }
+
+        th {
+            background-color: var(--accent-purple);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            padding: 12px 16px;
+            border-bottom: var(--border-width) solid var(--shadow-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--shadow-color);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* BADGES */
+        .status-badge {
+            padding: 4px 8px;
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            box-shadow: 2px 2px 0px var(--shadow-color);
+        }
+
+        .badge-active { background-color: var(--accent-teal); }
+        .badge-used { background-color: var(--accent-pink); color: white; }
+        .badge-expired { background-color: #ddd; }
+
+        /* LOADER OVERLAY */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 5px solid var(--shadow-color);
+            border-top: 5px solid var(--accent-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--text-color);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            z-index: 3000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.85rem;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. PASSWORD OVERLAY -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>🔐 Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminPasswordInput">Masukkan Password Admin:</label>
+                    <input type="password" id="adminPasswordInput" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-yellow" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    Masuk Dashboard ➜
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. MAIN ADMIN DASHBOARD -->
+    <div id="adminDashboard">
+        
+        <!-- Header -->
+        <header class="admin-header">
+            <div>
+                <h1>⚙️ Imajiko Admin</h1>
+                <p style="font-weight: 500; color: #555; margin-top: 2px;">Kelola pesanan, generate token, dan pantau aktivitas pembeli.</p>
+            </div>
+            <button class="btn btn-pink" id="btnLogout">
+                Keluar 🚪
+            </button>
+        </header>
+
+        <!-- Workspace Grid -->
+        <div class="admin-grid">
+            
+            <!-- Left Panel: Token Generator Form -->
+            <div class="panel">
+                <h2>Pembuat Token</h2>
+                <form id="tokenGenForm">
+                    <div class="form-group">
+                        <label for="templateSelect">Pilih Template:</label>
+                        <select id="templateSelect" required>
+                            <!-- Dynamically populated from templates.config.js -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="buyerEmail">Email Pembeli:</label>
+                        <input type="email" id="buyerEmail" placeholder="pembeli@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expireHours">Masa Berlaku (Jam):</label>
+                        <input type="number" id="expireHours" value="24" min="1" max="8760" required>
+                    </div>
+                    <button type="submit" class="btn btn-teal" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <span>Create Token 🔑</span>
+                    </button>
+                </form>
+
+                <!-- Token Result Box -->
+                <div class="result-box" id="tokenResultBox">
+                    <div class="result-title">Tautan Generator Siap Dibagikan:</div>
+                    <div class="result-input-wrapper">
+                        <input type="text" id="generatedLinkInput" readonly>
+                        <button type="button" id="btnCopyGenerated">Salin 📋</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Data Lists -->
+            <div style="display: flex; flex-direction: column; gap: 40px;">
+                
+                <!-- Tokens List -->
+                <div class="panel">
+                    <h2>Daftar Token Terbuat</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Token</th>
+                                    <th>Template ID</th>
+                                    <th>Email Pembeli</th>
+                                    <th>Status</th>
+                                    <th>Kadaluwarsa</th>
+                                    <th style="width: 80px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tokensTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #777;">Memuat data token...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="panel">
+                    <h2>Daftar Order Halaman Ucapan</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Order</th>
+                                    <th>Template ID</th>
+                                    <th>Pengirim</th>
+                                    <th>Penerima</th>
+                                    <th>Email Pembeli</th>
+                                    <th>Tanggal Dibuat</th>
+                                    <th style="width: 160px; text-align: center;">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: #777;">Memuat data order...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader-spinner"></div>
+        <div id="loaderText" class="loader-text">Loading...</div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Link berhasil disalin!</div>
+
+    <!-- Setup Env variables and load logic -->
+    <script>
+        // Set local fallbacks if not defined by hosting
+        window.SUPABASE_URL = window.SUPABASE_URL || "https://xxxxx.supabase.co";
+        window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJ...";
+    </script>
+    <script src="/js/templates.config.js"></script>
+    <script src="/js/supabase.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

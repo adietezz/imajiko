@@ -15,9 +15,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK (Compat version for simplicity & CDN load) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Supabase JS SDK & EmailJS SDK CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
         :root {
@@ -645,14 +645,7 @@
                 <!-- Dynamic Form Container (JS will inject inputs here) -->
                 <div id="dynamic-form-container"></div>
 
-                <!-- Custom Slug (Always appended at the end) -->
-                <div class="form-group" style="margin-top: 10px; border-top: var(--border-width) solid var(--shadow-color); padding-top: 24px;">
-                    <label for="slugInput">🔗 Custom Link (Opsional)</label>
-                    <div class="slug-input-wrapper">
-                        <div class="slug-prefix" id="domainPrefix">imajiko.com/ultah.html?id=</div>
-                        <input type="text" id="slugInput" placeholder="untuk-ayang">
-                    </div>
-                </div>
+
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn-submit" id="btnSubmit">
@@ -687,6 +680,8 @@
     </div>
 
     <!-- External JS Logic -->
-    <script src="generator.js"></script>
+    <script src="/js/templates.config.js"></script>
+    <script src="/js/supabase.js"></script>
+    <script src="/js/generator.js"></script>
 </body>
 </html>

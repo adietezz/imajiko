@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>The Graduation Post | Wisuda Spesial 🎓✨</title>
+    <meta name="description" content="Edisi spesial koran The Graduation Post: Merayakan kelulusan wisudawan terbaik. Baca album memori dan hadiri pesta perayaannya!">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/card/Graduation/css/style.css">
+</head>
+<body>
+
+    <!-- SCREEN CAMERA FLASH OVERLAY -->
+    <div id="flash-overlay" aria-hidden="true"></div>
+
+    <!-- BACKGROUND AUDIO PLAYER -->
+    <audio id="bg-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutar musik.
+    </audio>
+
+    <!-- ==========================================================================
+       1. INTRO SCREEN: ROLLED NEWSPAPER
+       ========================================================================== -->
+    <div id="intro-overlay" role="dialog" aria-labelledby="intro-headline">
+        <h2 id="intro-headline" style="display:none;">Undangan Wisuda</h2>
+        <div class="newspaper-3d-roll" id="newspaper-roll" title="Klik untuk membuka koran wisuda">
+            <div class="roll-ribbon">
+                <div class="roll-seal" aria-hidden="true">S</div>
+            </div>
+            <div class="roll-edge-lines"></div>
+            <div class="roll-text">Graduation Post</div>
+        </div>
+        <div class="intro-instruction">Klik Untuk Membuka Koran Wisuda</div>
+    </div>
+
+    <!-- ==========================================================================
+       2. MAIN NEWSPAPER CONTENT
+       ========================================================================== -->
+    <main class="newspaper-workspace" id="newspaper-workspace">
+        <div class="newspaper-paper">
+            <div class="paper-grain" aria-hidden="true"></div>
+
+            <!-- Meta Top Line -->
+            <div class="newspaper-meta-top">
+                <span>Edisi Khusus</span>
+                <span id="label-tanggal-edisi">Sabtu, 13 Juni 2026</span>
+                <span>Graduation Edition</span>
+            </div>
+
+            <!-- Brand Newspaper Title Header -->
+            <header class="newspaper-brand-section border-double-bottom">
+                <span class="dot-pattern" aria-hidden="true"></span>
+                <h1>The Graduation Post</h1>
+                <span class="dot-pattern" aria-hidden="true"></span>
+            </header>
+
+            <!-- Subbrand Meta Info Line -->
+            <div class="newspaper-subbrand-meta">
+                <span>VOL. CLXVI ... NO. 88</span>
+                <span>Harga: Satu Senyuman Kebanggaan</span>
+                <span>Edisi Spesial Wisuda</span>
+            </div>
+
+            <!-- Headline Title -->
+            <section class="headline-container">
+                <h2 class="headline-main">A New Chapter Begins</h2>
+            </section>
+
+            <!-- Main Newspaper Grid Layout -->
+            <div class="newspaper-grid">
+                
+                <!-- Main Feature Section (Main Portrait Photo) -->
+                <section class="main-feature-section">
+                    <div class="photo-frame-main" id="main-photo-frame" tabindex="0" role="button" aria-label="Klik untuk melihat album memori">
+                        <img id="foto_url" src="/card/Graduation/angelina_cover.png" alt="Foto Wisudawan Berpose">
+                        <div class="photo-interactive-overlay">
+                            <span>📷</span> KLIK UNTUK ALBUM MEMORI
+                        </div>
+                        <div class="camera-shutter-flash" id="photo-flash" aria-hidden="true"></div>
+                    </div>
+                    <div class="photo-caption">
+                        Merayakan kelulusan dengan penuh tawa kebahagiaan menyambut babak baru kehidupan akademik. Foto oleh Tim Dokumentasi Kampus.
+                    </div>
+                </section>
+
+                <!-- Polaroid Memory Album Slider (Initially Hidden, Toggles Open) -->
+                <section class="polaroid-slider-section" id="polaroid-album" aria-label="Album Memori Perjalanan Akademik">
+                    <div class="album-header-bar">
+                        <h3 class="album-title">Album Memori Akademik</h3>
+                        <button class="album-close-btn" id="album-close-btn" aria-label="Tutup album">&times;</button>
+                    </div>
+
+                    <div class="polaroid-stack-container">
+                        <!-- Polaroid 1: Freshman -->
+                        <article class="polaroid-card card-active">
+                            <div class="polaroid-img-box">
+                                <img id="foto_url_inset_1" src="/card/Graduation/angelina_inset.png" alt="Foto tahun pertama kuliah" style="filter: sepia(30%) contrast(110%) zoom; transform: scale(1.15);">
+                            </div>
+                            <div class="polaroid-handwriting">Freshman Year</div>
+                            <div class="polaroid-label-year">Tahun Ke-1: Langkah Awal</div>
+                        </article>
+
+                        <!-- Polaroid 2: Sophomore -->
+                        <article class="polaroid-card card-next">
+                            <div class="polaroid-img-box">
+                                <img id="foto_url_polaroid_1" src="/card/Graduation/angelina_cover.png" alt="Foto tahun kedua kuliah" style="filter: grayscale(100%) sepia(10%); transform: scale(1.1) rotate(1deg);">
+                            </div>
+                            <div class="polaroid-handwriting">Sophomore Year</div>
+                            <div class="polaroid-label-year">Tahun Ke-2: Projek Riset</div>
+                        </article>
+
+                        <!-- Polaroid 3: Junior -->
+                        <article class="polaroid-card card-next-next">
+                            <div class="polaroid-img-box">
+                                <img id="foto_url_polaroid_2" src="/card/Graduation/angelina_inset.png" alt="Foto tahun ketiga kuliah" style="filter: sepia(40%) hue-rotate(-10deg) saturate(80%);">
+                            </div>
+                            <div class="polaroid-handwriting">Junior Year</div>
+                            <div class="polaroid-label-year">Tahun Ke-3: Magang Industri</div>
+                        </article>
+
+                        <!-- Polaroid 4: Senior -->
+                        <article class="polaroid-card card-hidden">
+                            <div class="polaroid-img-box">
+                                <img id="foto_url_polaroid_3" src="/card/Graduation/angelina_cover.png" alt="Foto tahun keempat wisuda" style="filter: sepia(10%) contrast(102%) brightness(98%);">
+                            </div>
+                            <div class="polaroid-handwriting">Senior Year</div>
+                            <div class="polaroid-label-year">Tahun Ke-4: Sidang Akhir!</div>
+                        </article>
+                    </div>
+
+                    <div class="polaroid-controls">
+                        <button class="vintage-btn" id="btn-next-polaroid">Memori Selanjutnya &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- Columnar Section: Side Inset Photo & Invitation Details Card -->
+                <section class="details-split-columns border-double-top">
+                    
+                    <!-- Left Column: Smaller Inset Photo -->
+                    <div class="photo-frame-inset">
+                        <img id="foto_url_inset_2" src="/card/Graduation/angelina_inset.png" alt="Momen Pelepasan Kelulusan">
+                        <div class="photo-caption">She did it! Momen pelepasan kelulusan resmi.</div>
+                    </div>
+
+                    <!-- Right Column: Premium Cream Invitation Card -->
+                    <article class="invitation-editorial-card">
+                        <span class="invite-intro">Join us as we honor the graduation in <strong id="jurusan">Teknik</strong> of</span>
+                        <h3 class="invite-star-name" id="nama_penerima">Penerima</h3>
+                        <p class="invite-tagline" id="pesan" style="white-space: pre-line;">
+                            Dengan rasa bangga atas perjuangan masa lalu dan antusias menyongsong apa yang ada di depan, kami berkumpul untuk merayakan pencapaian berharga ini!
+                        </p>
+                        
+                        <div class="invite-datetime" id="label-tanggal-acara">Sabtu, 4 Juli 2026</div>
+                        <div class="invite-venue">Di Borcelle Hall | 17.00 - 21.00 WIB</div>
+                        
+                        <div class="invite-rsvp">RSVP to Family & Friends</div>
+
+                        <!-- Live Countdown Timer -->
+                        <div class="countdown-box">
+                            <h4>Hitung Mundur Acara</h4>
+                            <div class="countdown-digits">
+                                <div class="digit-group">
+                                    <span class="digit-num" id="days-num">00</span>
+                                    <span class="digit-label">Hari</span>
+                                </div>
+                                <div class="digit-group">
+                                    <span class="digit-num" id="hours-num">00</span>
+                                    <span class="digit-label">Jam</span>
+                                </div>
+                                <div class="digit-group">
+                                    <span class="digit-num" id="mins-num">00</span>
+                                    <span class="digit-label">Menit</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Invite CTA Buttons -->
+                        <div class="invite-buttons">
+                            <a href="https://maps.google.com/?q=Borcelle+Hall+New+York" class="vintage-btn" target="_blank" rel="noopener noreferrer">📍 Buka Peta</a>
+                            <button onclick="addToCalendar()" class="vintage-btn btn-outline">📅 Simpan Kalender</button>
+                        </div>
+                    </article>
+
+                </section>
+
+                <!-- Classified Ads Section (Guestbook Wishes Board) -->
+                <section class="classifieds-section border-double-top" aria-label="Wishes classified board">
+                    <h3 class="classifieds-headline">Classifieds: Ucapan Selamat</h3>
+                    <div class="classifieds-board">
+                        <div class="classifieds-grid" id="classifieds-list">
+                            <!-- Classified Ads wishes are rendered dynamically here -->
+                        </div>
+
+                        <!-- Telegram/Typewriter Guestbook Form -->
+                        <div class="guestbook-input-section">
+                            <h4 class="form-title">Kirim Telegram Ucapan Selamat</h4>
+                            <form id="classified-form">
+                                <div class="telegram-inputs">
+                                    <div class="form-group-telegram">
+                                        <label for="guest-name">Pengirim Telegram</label>
+                                        <input type="text" id="guest-name" placeholder="Nama Anda" required>
+                                    </div>
+                                    <div class="form-group-telegram">
+                                        <label for="guest-category">Kategori Berita</label>
+                                        <select id="guest-category" style="border: none; background: transparent; padding: 4px 8px 8px 8px; font-family: 'Courier Prime', monospace; font-size: 0.78rem; outline: none; width: 100%;">
+                                            <option value="CONGRATS">CONGRATS</option>
+                                            <option value="WISHES">WISHES</option>
+                                            <option value="ADVICE">ADVICE</option>
+                                            <option value="CLASSIFIED">CLASSIFIED</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group-telegram textarea-span">
+                                        <label for="guest-message">Isi Pesan Telegram</label>
+                                        <textarea id="guest-message" rows="3" placeholder="Tulis ucapan selamat Anda di sini..." required></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="vintage-btn" style="width: 100%; margin-top: 15px; display: block;">Kirim Telegram Ucapan</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+            </div> <!-- End Grid -->
+        </div> <!-- End Paper -->
+    </main>
+
+    <!-- ==========================================================================
+       3. FLOATING MUSIC PLAYER (Vinyl Record Spinning)
+       ========================================================================== -->
+    <div class="vinyl-audio-dock" id="vinyl-dock" role="button" aria-label="Putar/Jeda musik latar" tabindex="0">
+        <div class="vinyl-disc-container">
+            <div class="vinyl-record"></div>
+        </div>
+        <div class="vinyl-info">
+            <span class="vinyl-info-title">Celebration Swing</span>
+            <span class="vinyl-info-status" id="vinyl-status">PAUSED</span>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       4. FOOTER RUNNING TICKER MARQUEE
+       ========================================================================== -->
+    <footer class="footer-ticker-bar" aria-hidden="true">
+        <div class="ticker-wrap">
+            <div class="ticker-content" id="running-ticker">
+                <span class="ticker-item">Class of 2026</span>
+                <span class="ticker-item">The Graduation Post Special Edition</span>
+                <span class="ticker-item">Congrats Graduate!</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Setup Env variables and load logic -->
+    <script>
+        // Set local fallbacks if not defined by hosting
+        window.SUPABASE_URL = window.SUPABASE_URL || "https://xxxxx.supabase.co";
+        window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJ...";
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/supabase.js"></script>
+    <script src="/card/_base.js"></script>
+    <script src="/card/wisuda-retro.js"></script>
+</body>
+</html>

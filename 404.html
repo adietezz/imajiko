@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Halaman Tidak Ditemukan | Imajiko</title>
+
+    <!-- Meta SEO -->
+    <meta name="description" content="Halaman tidak ditemukan atau tautan tidak valid di Imajiko. Hubungi layanan pelanggan jika Anda memerlukan bantuan.">
+
+    <!-- Google Fonts: Space Grotesk for Pop-Art Neo-Brutalism -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #f4efe2;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --accent-pink: #ff5e97;
+            --accent-yellow: #ffe066;
+            --accent-yellow-hover: #ffd11a;
+            --accent-teal: #00f5d4;
+            --border-width: 3.5px;
+            --shadow-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(var(--shadow-color) 1.5px, transparent 1.5px), radial-gradient(var(--shadow-color) 1.5px, var(--bg-color) 1.5px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .error-container {
+            background-color: var(--card-bg);
+            border: var(--border-width) solid var(--shadow-color);
+            box-shadow: 10px 10px 0px var(--shadow-color);
+            border-radius: 12px;
+            padding: 45px 35px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .error-badge {
+            background-color: var(--accent-pink);
+            color: white;
+            border: var(--border-width) solid var(--shadow-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+            font-size: 1.2rem;
+            transform: rotate(-3deg);
+            box-shadow: 4px 4px 0px var(--shadow-color);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        p {
+            font-weight: 500;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .reasons-list {
+            text-align: left;
+            background: #fafaf8;
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 4px 4px 0px var(--shadow-color);
+        }
+
+        .reasons-list h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--shadow-color);
+            padding-bottom: 5px;
+        }
+
+        .reasons-list ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .reasons-list li {
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reasons-list li::before {
+            content: "•";
+            color: var(--accent-pink);
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: var(--accent-teal);
+            color: var(--text-color);
+            border: var(--border-width) solid var(--shadow-color);
+            border-radius: 8px;
+            padding: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 4px 4px 0px var(--shadow-color);
+            text-transform: uppercase;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--shadow-color);
+        }
+
+        .btn-action:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--shadow-color);
+        }
+
+        .btn-wa {
+            background-color: var(--accent-yellow);
+        }
+
+        .btn-wa:hover {
+            background-color: var(--accent-yellow-hover);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .error-container {
+                padding: 35px 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-container">
+        <div class="error-badge">404 Error</div>
+        <h1>Halaman Hilang / Tautan Rusak</h1>
+        <p>Tautan yang Anda coba buka tidak ditemukan, salah ketik, atau telah kedaluwarsa.</p>
+
+        <div class="reasons-list">
+            <h3>Kemungkinan Masalah:</h3>
+            <ul>
+                <li>ID Kartu ucapan (`?id=...`) di tautan Anda salah.</li>
+                <li>Tautan token pembeli sudah kedaluwarsa setelah 24 jam.</li>
+                <li>Token sudah terpakai untuk membuat halaman ucapan.</li>
+                <li>Proses pembersihan database tahunan sedang berjalan.</li>
+            </ul>
+        </div>
+
+        <!-- WhatsApp contact and back buttons -->
+        <a href="https://wa.me/6281234567890?text=Halo%20Admin%20Imajiko,%20saya%20mendapatkan%20error%20404%20pada%20halaman%20ucapan%20saya.%20Mohon%20bantuannya." 
+           class="btn-action btn-wa" 
+           target="_blank">
+           💬 Hubungi Admin via WhatsApp
+        </a>
+
+        <a href="/index.html" class="btn-action">
+            🏠 Kembali Ke Toko Imajiko
+        </a>
+    </div>
+
+</body>
+</html>
